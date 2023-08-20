@@ -31,6 +31,45 @@ nav .nav-link:hover {
 nav i {
   font-size: 1.5rem;
 }
+nav .mobile-menu, nav .menu-btn {
+  display: none;
+}
+@media screen and (max-width: 767px) {
+  nav .menu {
+    display: none;
+  }
+  nav .menu-btn {
+    display: block;
+    display: flex;
+    transform: scale(1.2);
+    align-items: center;
+    color: #ffffff;
+  }
+  nav .mobile-menu {
+    display: block;
+    position: absolute;
+    width: 70%;
+    right: 50%;
+    left: 50%;
+    transform: translate(-50%);
+    border-radius: 10px;
+    top: -10rem;
+    background-color: #ffffff;
+    transition: 0.3s ease-in-out;
+  }
+  nav .mobile-menu ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  nav .mobile-menu ul li a {
+    color: #1A1A1A;
+  }
+  nav .mobile-menu ul li:hover {
+    border-bottom: 2px solid #1A1A1A;
+  }
+}
 
 footer {
   background-color: #1A1A1A;
