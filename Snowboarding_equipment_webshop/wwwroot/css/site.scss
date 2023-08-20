@@ -1,0 +1,93 @@
+﻿/*colors*/
+$primary-black: #1A1A1A;
+$primary-white: #ffffff;
+$primary-yellow: #FFEA2E;
+$nav-link: #9A9A9A;
+
+/*fonts*/
+$navlink-font-size: 1.25rem;
+
+* {
+    font-family: 'Paytone One', sans-serif;
+}
+
+html {
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
+    scroll-behavior: smooth;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+nav {
+    background-color: $primary-black;
+    color: $nav-link;
+    height: 5rem;
+    padding: 0 4rem;
+
+    .nav-link {
+        color: $nav-link;
+
+        &:hover {
+            color: $primary-white;
+        }
+    }
+
+    i{
+        font-size: 1.5rem;
+    }
+}
+
+footer {
+    background-color: $primary-black;
+    min-height: 15.4375rem;
+    padding: 3rem 4rem;
+    color: $primary-white;
+
+    .logo-phrase {
+        .logo-img {
+            width: 50%;
+        }
+
+        .phrase {
+            font-size: 1.3rem;
+        }
+    }
+
+    .footer-section {
+        display: flex;
+        flex-direction: column;
+
+        .links {
+            display: flex;
+            flex-direction: column;
+
+            a {
+                text-decoration: none;
+                color: $primary-white;
+                font-family: 'Poppins', sans-serif;
+                transition: .1s ease-in-out;
+
+                &:hover {
+                    font-weight: bold;
+                }
+            }
+        }
+
+        .social-media-links {
+            a {
+                color: $primary-white;
+                transition: .2s ease-in-out;
+
+                &:hover {
+                    transform: scale(1.2);
+                }
+            }
+        }
+    }
+}

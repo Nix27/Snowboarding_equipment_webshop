@@ -1,0 +1,70 @@
+﻿/*colors*/
+/*fonts*/
+* {
+  font-family: "Paytone One", sans-serif;
+}
+
+html {
+  font-size: 14px;
+  position: relative;
+  min-height: 100%;
+  scroll-behavior: smooth;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+nav {
+  background-color: #1A1A1A;
+  color: #9A9A9A;
+  height: 5rem;
+  padding: 0 4rem;
+}
+nav .nav-link {
+  color: #9A9A9A;
+}
+nav .nav-link:hover {
+  color: #ffffff;
+}
+nav i {
+  font-size: 1.5rem;
+}
+
+footer {
+  background-color: #1A1A1A;
+  min-height: 15.4375rem;
+  padding: 3rem 4rem;
+  color: #ffffff;
+}
+footer .logo-phrase .logo-img {
+  width: 50%;
+}
+footer .logo-phrase .phrase {
+  font-size: 1.3rem;
+}
+footer .footer-section {
+  display: flex;
+  flex-direction: column;
+}
+footer .footer-section .links {
+  display: flex;
+  flex-direction: column;
+}
+footer .footer-section .links a {
+  text-decoration: none;
+  color: #ffffff;
+  font-family: "Poppins", sans-serif;
+  transition: 0.1s ease-in-out;
+}
+footer .footer-section .links a:hover {
+  font-weight: bold;
+}
+footer .footer-section .social-media-links a {
+  color: #ffffff;
+  transition: 0.2s ease-in-out;
+}
+footer .footer-section .social-media-links a:hover {
+  transform: scale(1.2);
+}
