@@ -42,7 +42,7 @@ nav {
         font-size: 1.5rem;
     }
 
-    .mobile-menu, .menu-btn{
+    .mobile-menu, .menu-btn {
         display: none;
     }
 
@@ -51,7 +51,7 @@ nav {
             display: none;
         }
 
-        .menu-btn{
+        .menu-btn {
             display: block;
             display: flex;
             transform: scale(1.2);
@@ -67,25 +67,34 @@ nav {
             left: 50%;
             transform: translate(-50%);
             border-radius: 10px;
-            top: -10rem;
+            top: -50rem;
             background-color: $primary-white;
             transition: .3s ease-in-out;
+            border-left: 2px solid $primary-black;
+            border-right: 2px solid $primary-black;
+            border-bottom: 2px solid $primary-black;
+            z-index: 1;
 
-            ul{
+            ul {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 width: 100%;
+                margin-bottom: 15px;
 
-                li{
-                    a{
+                li {
+                    a {
                         color: $primary-black;
                     }
 
-                    &:hover{
+                    &:hover {
                         border-bottom: 2px solid $primary-black;
                     }
                 }
+            }
+
+            button {
+                bottom: -15px;
             }
         }
     }

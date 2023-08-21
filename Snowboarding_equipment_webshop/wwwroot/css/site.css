@@ -53,21 +53,29 @@ nav .mobile-menu, nav .menu-btn {
     left: 50%;
     transform: translate(-50%);
     border-radius: 10px;
-    top: -10rem;
+    top: -50rem;
     background-color: #ffffff;
     transition: 0.3s ease-in-out;
+    border-left: 2px solid #1A1A1A;
+    border-right: 2px solid #1A1A1A;
+    border-bottom: 2px solid #1A1A1A;
+    z-index: 1;
   }
   nav .mobile-menu ul {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
+    margin-bottom: 15px;
   }
   nav .mobile-menu ul li a {
     color: #1A1A1A;
   }
   nav .mobile-menu ul li:hover {
     border-bottom: 2px solid #1A1A1A;
+  }
+  nav .mobile-menu button {
+    bottom: -15px;
   }
 }
 
