@@ -14,5 +14,10 @@ namespace DAL.Repositories.Implementations
         public CategoryRepository(ApplicationDbContext db) : base(db)
         {
         }
+
+        public void Update(Category category)
+        {
+            dbSet.Update(category);
+        }
     }
 }

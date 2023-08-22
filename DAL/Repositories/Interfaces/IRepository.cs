@@ -11,7 +11,7 @@ namespace DAL.Repositories.Interfaces
     {
         Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null);
         Task<T> GetFirstOrDefaultAsync(Expression<Func<T, bool>> filter, string? includeProperties = null);
-        void Create(T entity);
+        Task CreateAsync(T entity);
         void Delete(T entity);
         void DeleteMultiple(IEnumerable<T> entities);
     }

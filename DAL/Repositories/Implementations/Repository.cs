@@ -55,9 +55,9 @@ namespace DAL.Repositories.Implementations
             return query.FirstOrDefaultAsync();
         }
 
-        public void Create(T entity)
+        public async Task CreateAsync(T entity)
         {
-            dbSet.Add(entity);
+            await dbSet.AddAsync(entity);
         }
 
         public void Delete(T entity)
