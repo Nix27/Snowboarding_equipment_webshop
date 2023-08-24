@@ -10,7 +10,9 @@ namespace BL.Services.Interfaces
     public interface ICategoryService
     {
         Task<IEnumerable<CategoryDto>> GetAllAsync();
-        Task<CategoryDto> GetByIdAsync(int id); 
+        Task<CategoryDto> GetByIdAsync(int id);
+        Task<IEnumerable<CategoryDto>> GetPagedCategoriesAsync(int page, int size);
+        Task<int> GetNumberOfCategoriesAsync();
         Task CreateAsync(CategoryDto newCategory);
         Task UpdateAsync(CategoryDto updatedCategory);
         Task<bool> DeleteAsync(int id);

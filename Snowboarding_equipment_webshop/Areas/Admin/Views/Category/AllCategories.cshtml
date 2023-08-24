@@ -1,24 +1,52 @@
-﻿<div class="container p-2">
+﻿@model IEnumerable<CategoryVM>
+
+@{
+    ViewData["Title"] = "All categories";
+
+    var page = (int)ViewData["page"];
+    var size = (int)ViewData["size"];
+    var pages = (int)ViewData["pages"] - 1;
+
+    ViewData["action"] = "AllCountries";
+}
+
+<input id="hiddenData" data-pages="@pages" data-size="@size" data-url="CategoryTableBodyPartial" hidden />
+
+<div class="container p-2">
     <div class="row">
         <div class="col-6 mb-4">
             <h2>Add New Category</h2>
         </div>
         <div class="col-6 text-end">
-            <a asp-action="CreateCategory" class="btn btn-primary"><i class="bi bi-plus-circle"></i> &nbsp; Add</a>
+            <a asp-action="CreateCategory" class="btn btn-primary py-2 px-5"><i class="bi bi-plus-circle"></i> &nbsp; Add</a>
         </div>
     </div>
 
-    <table id="category-table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th></th>
-            </tr>
-        </thead>
-    </table>
+    <div class="table-responsive">
+        <table id="category-table" class="w-100 table table-responsive">
+            <thead>
+                <tr class="pb-2">
+                    <th>Name</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="content">
+                <partial name="_CategoryTableBodyPartial" />
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2">
+                        @await Component.InvokeAsync("Pagination")
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
 </div>
 
 @section Scripts{
-    <script src="/js/category.js"></script>
+    <partial name="_NotificationPartial" />
+    <script src="~/js/delete-warning.js"></script>
+    <script src="~/js/pagination.js"></script>
 }
 

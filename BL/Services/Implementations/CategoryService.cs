@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using BL.DTOs;
-using BL.Exceptions;
 using BL.Services.Interfaces;
 using DAL.Models;
 using DAL.UnitOfWork;
@@ -24,71 +23,49 @@ namespace BL.Services.Implementations
 
         public async Task CreateAsync(CategoryDto newCategory)
         {
-            try
-            {
-                await _unitOfWork.Category.CreateAsync(_mapper.Map<Category>(newCategory));
-                await _unitOfWork.SaveAsync();
-            }
-            catch
-            {
-                throw new DbCommandException();
-            }
+             await _unitOfWork.Category.CreateAsync(_mapper.Map<Category>(newCategory));
+             await _unitOfWork.SaveAsync();
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
-            try
-            {
-                var categoryForDelete = await _unitOfWork.Category.GetFirstOrDefaultAsync(c => c.Id == id);
-                if (categoryForDelete == null) return false;
+            var categoryForDelete = await _unitOfWork.Category.GetFirstOrDefaultAsync(c => c.Id == id);
+            if (categoryForDelete == null) return false;
 
-                _unitOfWork.Category.Delete(categoryForDelete);
-                await _unitOfWork.SaveAsync();
-                return true;
-            }
-            catch
-            {
-                throw new DbCommandException();
-            }
+            _unitOfWork.Category.Delete(categoryForDelete);
+            await _unitOfWork.SaveAsync();
+            return true;
         }
 
         public async Task<IEnumerable<CategoryDto>> GetAllAsync()
         {
-            try
-            {
-                var allCategories = await _unitOfWork.Category.GetAllAsync();
-                return _mapper.Map<IEnumerable<CategoryDto>>(allCategories);
-            }
-            catch
-            {
-                throw new DbQueryException();
-            }
+            var allCategories = await _unitOfWork.Category.GetAllAsync();
+            return _mapper.Map<IEnumerable<CategoryDto>>(allCategories);
         }
 
         public async Task<CategoryDto> GetByIdAsync(int id)
         {
-            try
-            {
-                var category = await _unitOfWork.Category.GetFirstOrDefaultAsync(c => c.Id == id);
-                return _mapper.Map<CategoryDto>(category);
-            }
-            catch
-            {
-                throw new DbQueryException();
-            }
+            var category = await _unitOfWork.Category.GetFirstOrDefaultAsync(c => c.Id == id);
+            return _mapper.Map<CategoryDto>(category);
+        }
+
+        public async Task<int> GetNumberOfCategoriesAsync() => _unitOfWork.Category.GetAllAsync()
+                                                                              .GetAwaiter()
+                                                                              .GetResult()
+                                                                              .Count();
+
+        public async Task<IEnumerable<CategoryDto>> GetPagedCategoriesAsync(int page, int size)
+        {
+            var allCategories = await _unitOfWork.Category.GetAllAsync();
+            var pagedCategories = allCategories.Skip(page * size).Take(size);
+
+            return _mapper.Map<IEnumerable<CategoryDto>>(pagedCategories);
         }
 
         public Task UpdateAsync(CategoryDto updatedCategory)
         {
-            try
-            {
-                _unitOfWork.Category.Update(_mapper.Map<Category>(updatedCategory));
-                return _unitOfWork.SaveAsync();
-            }
-            catch
-            {
-                throw new DbCommandException();
-            }
+            _unitOfWork.Category.Update(_mapper.Map<Category>(updatedCategory));
+            return _unitOfWork.SaveAsync();
         }
     }
 }

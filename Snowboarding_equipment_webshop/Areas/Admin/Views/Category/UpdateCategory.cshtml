@@ -1,14 +1,21 @@
 ﻿@model CategoryVM
 
 <div class="conatiner p-2">
-    <input asp-for="Id" hidden />
-    <h2 class="mb-5">Add New Category</h2>
+    <div class="row">
+        <h2 class="mb-5">Update Category</h2>
+        <hr />
+    </div>
     <form method="post">
-        <label asp-for="Name"></label>
-        <input asp-for="Name" class="w-100 rounded-3 p-2 my-2" placeholder="Input name..." />
-        <span asp-validation-for="Name" class="text-danger"></span>
-        <button type="submit">Submit</button>
-        <a asp-action="AllCategories" class="btn">Back</a>
+        <input asp-for="Id" hidden />
+        <div class="row">
+            <div class="col-12 mb-3">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="w-100 rounded-3 p-2 my-2" placeholder="Input name..." />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary py-2 px-3">Update</button>
+        <a asp-action="AllCategories" class="btn btn-secondary py-2 px-4">Back</a>
     </form>
 </div>
 

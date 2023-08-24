@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using BL.DTOs;
-using BL.Exceptions;
 using BL.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Snowboarding_equipment_webshop.ViewModels;
@@ -13,6 +12,7 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
         private readonly ICategoryService _categoryService;
         private readonly IMapper _mapper;
         private readonly ILogger<CategoryVM> _logger;
+        private const string errorMessage = "Something went wrong. Try again later!";
 
         public CategoryController(ICategoryService categoryService, IMapper mapper, ILogger<CategoryVM> logger)
         {
@@ -21,9 +21,52 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
             _logger = logger;
         }
 
-        public IActionResult AllCategories()
+        public async Task<IActionResult> AllCategories(int page, int size)
         {
-            return View();
+            try
+            {
+                if (size == 0)
+                    size = 5;
+
+                var pagedCategories = await _categoryService.GetPagedCategoriesAsync(page, size);
+                var numberOfCategories = await _categoryService.GetNumberOfCategoriesAsync();
+
+                ViewData["page"] = page;
+                ViewData["size"] = size;
+                ViewData["pages"] = (int)Math.Ceiling((double)numberOfCategories / size);
+
+                return View(_mapper.Map<IEnumerable<CategoryVM>>(pagedCategories));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.StackTrace);
+                TempData["error"] = "Unable to get categories. Please, try again later";
+                return StatusCode(500);
+            }
+        }
+
+        public async Task<IActionResult> CategoryTableBodyPartial(int page, int size)
+        {
+            try
+            {
+                if (size == 0)
+                    size = 5;
+
+                var pagedCategories = await _categoryService.GetPagedCategoriesAsync(page, size);
+                var numberOfCategories = await _categoryService.GetNumberOfCategoriesAsync();
+
+                ViewData["page"] = page;
+                ViewData["size"] = size;
+                ViewData["pages"] = (int)Math.Ceiling((double)numberOfCategories / size);
+
+                return PartialView("_CategoryTableBodyPartial", _mapper.Map<IEnumerable<CategoryVM>>(pagedCategories));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.StackTrace);
+                TempData["error"] = "Unable to get categories. Please, try again later.";
+                return StatusCode(500);
+            }
         }
 
         public IActionResult CreateCategory()
@@ -32,19 +75,22 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateCategory(CategoryVM newCategory)
         {
             if(!ModelState.IsValid) return View(newCategory);
 
             try
             {
-                await _categoryService.CreateAsync(_mapper.Map<CategoryDto>(newCategory));
-                return View(nameof(AllCategories));
+                await _categoryService.CreateAsync(_mapper.Map<CategoryDto>(newCategory)).ConfigureAwait(false);
+                TempData["success"] = "Category added successfully";
+                return RedirectToAction(nameof(AllCategories));
             }
-            catch (DbCommandException ex)
+            catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
-                return RedirectToAction("Error", "Home", new { area = "Customer" });
+                _logger.LogError(ex.Message, ex.StackTrace);
+                TempData["error"] = errorMessage;
+                return View(nameof(AllCategories));
             }
         }
 
@@ -57,46 +103,35 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
                 var requestedCategory = await _categoryService.GetByIdAsync(id);
                 return View(_mapper.Map<CategoryVM>(requestedCategory));
             }
-            catch (DbQueryException ex)
+            catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
-                return RedirectToAction("Error", "Home", new { area = "Customer" });
+                _logger.LogError(ex.Message, ex.StackTrace);
+                TempData["error"] = errorMessage;
+                return StatusCode(500);
             }
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateCategory(CategoryVM updatedCategory)
         {
             if(!ModelState.IsValid) return View(updatedCategory);
 
             try
             {
-                await _categoryService.UpdateAsync(_mapper.Map<CategoryDto>(updatedCategory));
-                return View(nameof(AllCategories));
+                await _categoryService.UpdateAsync(_mapper.Map<CategoryDto>(updatedCategory)).ConfigureAwait(false);
+                TempData["success"] = "Category updated successfully";
+                return RedirectToAction(nameof(AllCategories));
             }
-            catch (DbCommandException ex)
+            catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
-                return RedirectToAction("Error", "Home", new { area = "Customer" });
+                _logger.LogError(ex.Message, ex.StackTrace);
+                TempData["error"] = errorMessage;
+                return View(nameof(AllCategories));
             }
         }
 
         #region API Calls
-        [HttpGet]
-        public async Task<IActionResult> GetAllCategoriesAsync()
-        {
-            try
-            {
-                var allCategories = await _categoryService.GetAllAsync();
-                return Json(new { data = allCategories });
-            }
-            catch (DbQueryException ex)
-            {
-                _logger.LogError(ex.Message);
-                return RedirectToAction("Error", "Home", new { area = "Customer" });
-            }
-        }
-
         [HttpDelete]
         public async Task<IActionResult> DeleteCategory(int id)
         {
@@ -104,15 +139,16 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
             {
                 var isDeleted = await _categoryService.DeleteAsync(id);
 
-                if(!isDeleted)
+                if (!isDeleted)
                     return Json(new { success = false, message = "Category not found" });
 
                 return Json(new { success = true, message = "Successfully deleted category" });
             }
-            catch (Exception ex) when (ex is DbQueryException || ex is DbCommandException)
+            catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
-                return RedirectToAction("Error", "Home", new { area = "Customer" });
+                _logger.LogError(ex.Message, ex.StackTrace);
+                TempData["error"] = errorMessage;
+                return StatusCode(500);
             }
         }
         #endregion

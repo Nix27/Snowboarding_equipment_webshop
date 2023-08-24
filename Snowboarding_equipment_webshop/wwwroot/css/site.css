@@ -2,13 +2,13 @@
 /*fonts*/
 * {
   font-family: "Paytone One", sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 html {
   font-size: 14px;
-  position: relative;
-  min-height: 100%;
-  scroll-behavior: smooth;
 }
 
 @media (min-width: 768px) {
@@ -16,6 +16,14 @@ html {
     font-size: 16px;
   }
 }
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+/*body {
+    margin-bottom: 60px;
+}*/
 nav {
   background-color: #1A1A1A;
   color: #9A9A9A;
@@ -79,39 +87,79 @@ nav .mobile-menu, nav .menu-btn {
   }
 }
 
-footer {
+.footer {
   background-color: #1A1A1A;
   min-height: 15.4375rem;
   padding: 3rem 4rem;
   color: #ffffff;
 }
-footer .logo-phrase .logo-img {
+.footer .logo-phrase .logo-img {
   width: 50%;
 }
-footer .logo-phrase .phrase {
+.footer .logo-phrase .phrase {
   font-size: 1.3rem;
 }
-footer .footer-section {
+.footer .footer-section {
   display: flex;
   flex-direction: column;
 }
-footer .footer-section .links {
+.footer .footer-section .links {
   display: flex;
   flex-direction: column;
 }
-footer .footer-section .links a {
+.footer .footer-section .links a {
   text-decoration: none;
   color: #ffffff;
   font-family: "Poppins", sans-serif;
   transition: 0.1s ease-in-out;
 }
-footer .footer-section .links a:hover {
+.footer .footer-section .links a:hover {
   font-weight: bold;
 }
-footer .footer-section .social-media-links a {
+.footer .footer-section .social-media-links a {
   color: #ffffff;
   transition: 0.2s ease-in-out;
 }
-footer .footer-section .social-media-links a:hover {
+.footer .footer-section .social-media-links a:hover {
   transform: scale(1.2);
+}
+
+.btn-primary {
+  background-color: #1A1A1A;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: 0.3s ease-in-out;
+}
+.btn-primary:hover {
+  transform: scale(1.1);
+  background-color: #1A1A1A;
+  color: #ffffff;
+}
+.btn-primary:active {
+  border: none;
+}
+
+.btn-danger {
+  transition: 0.3s ease-in-out;
+}
+.btn-danger:hover {
+  transform: scale(1.1);
+  background-color: #DC3545;
+}
+
+.btn-secondary {
+  background-color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  border: 2px solid #1A1A1A;
+  color: #1A1A1A;
+  transition: 0.3s ease-in-out;
+}
+.btn-secondary:hover {
+  background-color: #ffffff;
+  color: #1A1A1A;
+  border: 2px solid #1A1A1A;
+  transform: scale(1.1);
 }
