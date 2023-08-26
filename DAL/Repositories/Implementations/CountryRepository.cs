@@ -14,5 +14,10 @@ namespace DAL.Repositories.Implementations
         public CountryRepository(ApplicationDbContext db) : base(db)
         {
         }
+
+        public void Update(Country country)
+        {
+            dbSet.Update(country);
+        }
     }
 }

@@ -9,8 +9,10 @@ namespace Snowboarding_equipment_webshop.Mapping
     {
         public AutoMapperProfile()
         {
-            CreateMap<Category, CategoryDto>().ReverseMap();
+            CreateMap<CategoryDto, Category>().ReverseMap();
             CreateMap<CategoryVM, CategoryDto>().ReverseMap();
+            CreateMap<CountryDto, Country>().ReverseMap();
+            CreateMap<CountryVM, CountryDto>().ReverseMap();
         }
     }
 }

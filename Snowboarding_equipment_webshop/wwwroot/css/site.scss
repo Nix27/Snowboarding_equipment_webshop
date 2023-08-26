@@ -1,11 +1,4 @@
-﻿/*colors*/
-$primary-black: #1A1A1A;
-$primary-white: #ffffff;
-$primary-yellow: #FFEA2E;
-$nav-link: #9A9A9A;
-
-/*fonts*/
-$navlink-font-size: 1.25rem;
+﻿@import 'variables';
 
 * {
     font-family: 'Paytone One', sans-serif;
@@ -24,10 +17,6 @@ html {
 html{
     position: relative;
     min-height: 100%;
-}
-
-body {
-    margin-bottom: 60px;
 }
 
 nav {
@@ -154,7 +143,8 @@ nav {
     }
 }
 
-.btn-primary {
+.primary-btn {
+    display: inline-block;
     background-color: $primary-black;
     color: $primary-white;
     border: none;
@@ -164,7 +154,6 @@ nav {
 
     &:hover {
         transform: scale(1.1);
-        background-color: $primary-black;
         color: $primary-white;
     }
 
@@ -182,7 +171,8 @@ nav {
     }
 }
 
-.btn-secondary {
+.secondary-btn {
+    display: inline-block;
     background-color: $primary-white;
     border: none;
     border-radius: 10px;
@@ -191,9 +181,34 @@ nav {
     transition: .3s ease-in-out;
 
     &:hover {
-        background-color: $primary-white;
         color: $primary-black;
-        border: 2px solid $primary-black;
+        transform: scale(1.1);
+    }
+}
+
+.btn-pagination {
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    background-color: $primary-black;
+    color: $primary-white;
+    transition: .3s ease-in-out;
+
+    &:hover {
+        color: $primary-white;
+        transform: scale(1.1);
+    }
+}
+
+.btn-pagination-active {
+    @extend .btn-pagination;
+    background-color: $primary-white;
+    color: $primary-black;
+    border: 2px solid $primary-black;
+    transition: .3s ease-in-out;
+
+    &:hover {
+        color: $primary-black;
         transform: scale(1.1);
     }
 }

@@ -6,7 +6,7 @@
         <td>@category.Name</td>
         <td class="text-end">
             <div class="w-25 btn-group" role="group">
-                <a asp-action="UpdateCategory" asp-route-id="@category.Id" class="btn btn-primary mx-2">
+                <a asp-action="UpdateCategory" asp-route-id="@category.Id" class="primary-btn mx-2 px-5 py-2">
                     <i class="bi bi-pencil"></i>
                 </a>
                 <a onclick="deleteWarning('/Admin/Category/DeleteCategory/'+@category.Id, ' #category-table')" class="btn btn-danger mx-2">

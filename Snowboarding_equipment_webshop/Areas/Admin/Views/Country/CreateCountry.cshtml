@@ -1,12 +1,10 @@
-﻿@model CategoryVM
+﻿@model CountryVM
 
 <div class="conatiner p-2">
     <div class="row">
-        <h2 class="mb-5">Update Category</h2>
-        <hr />
+        <h2 class="mb-5">Add New Country</h2>
     </div>
     <form method="post">
-        <input asp-for="Id" hidden />
         <div class="row">
             <div class="col-12 mb-3">
                 <label asp-for="Name"></label>
@@ -14,8 +12,8 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
         </div>
-        <button type="submit" class="primary-btn py-2 px-3">Update</button>
-        <a asp-action="AllCategories" class="secondary-btn text-decoration-none py-2 px-4">Back</a>
+        <button type="submit" class="primary-btn py-2 px-5">Add</button>
+        <a asp-action="AllCountries" class="secondary-btn text-decoration-none py-2 px-5">Back</a>
     </form>
 </div>
 

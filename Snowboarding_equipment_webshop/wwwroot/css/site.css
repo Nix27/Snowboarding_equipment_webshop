@@ -1,5 +1,4 @@
 ﻿/*colors*/
-/*fonts*/
 * {
   font-family: "Paytone One", sans-serif;
 }
@@ -16,10 +15,6 @@ html {
 html {
   position: relative;
   min-height: 100%;
-}
-
-body {
-  margin-bottom: 60px;
 }
 
 nav {
@@ -121,7 +116,8 @@ nav .mobile-menu, nav .menu-btn {
   transform: scale(1.2);
 }
 
-.btn-primary {
+.primary-btn {
+  display: inline-block;
   background-color: #1A1A1A;
   color: #ffffff;
   border: none;
@@ -129,12 +125,11 @@ nav .mobile-menu, nav .menu-btn {
   text-decoration: none;
   transition: 0.3s ease-in-out;
 }
-.btn-primary:hover {
+.primary-btn:hover {
   transform: scale(1.1);
-  background-color: #1A1A1A;
   color: #ffffff;
 }
-.btn-primary:active {
+.primary-btn:active {
   border: none;
 }
 
@@ -146,7 +141,8 @@ nav .mobile-menu, nav .menu-btn {
   background-color: #DC3545;
 }
 
-.btn-secondary {
+.secondary-btn {
+  display: inline-block;
   background-color: #ffffff;
   border: none;
   border-radius: 10px;
@@ -154,9 +150,31 @@ nav .mobile-menu, nav .menu-btn {
   color: #1A1A1A;
   transition: 0.3s ease-in-out;
 }
-.btn-secondary:hover {
+.secondary-btn:hover {
+  color: #1A1A1A;
+  transform: scale(1.1);
+}
+
+.btn-pagination, .btn-pagination-active {
+  display: block;
+  padding: 10px 20px;
+  text-decoration: none;
+  background-color: #1A1A1A;
+  color: #ffffff;
+  transition: 0.3s ease-in-out;
+}
+.btn-pagination:hover, .btn-pagination-active:hover {
+  color: #ffffff;
+  transform: scale(1.1);
+}
+
+.btn-pagination-active {
   background-color: #ffffff;
   color: #1A1A1A;
   border: 2px solid #1A1A1A;
+  transition: 0.3s ease-in-out;
+}
+.btn-pagination-active:hover {
+  color: #1A1A1A;
   transform: scale(1.1);
 }

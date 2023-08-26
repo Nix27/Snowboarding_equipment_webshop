@@ -9,5 +9,6 @@ namespace DAL.Repositories.Interfaces
 {
     public interface ICountryRepository : IRepository<Country>
     {
+        void Update(Country country);
     }
 }

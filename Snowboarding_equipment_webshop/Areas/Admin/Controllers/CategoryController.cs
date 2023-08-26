@@ -40,7 +40,7 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex.StackTrace);
-                TempData["error"] = "Unable to get categories. Please, try again later";
+                TempData["error"] = errorMessage;
                 return StatusCode(500);
             }
         }
@@ -64,7 +64,7 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex.StackTrace);
-                TempData["error"] = "Unable to get categories. Please, try again later.";
+                TempData["error"] = errorMessage;
                 return StatusCode(500);
             }
         }
@@ -96,12 +96,10 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
 
         public async Task<IActionResult> UpdateCategory(int id)
         {
-            if(id == 0) return RedirectToAction("Error", "Home", new { area = "Customer" });
-
             try
             {
-                var requestedCategory = await _categoryService.GetByIdAsync(id);
-                return View(_mapper.Map<CategoryVM>(requestedCategory));
+                var categoryForUpdate = await _categoryService.GetByIdAsync(id);
+                return View(_mapper.Map<CategoryVM>(categoryForUpdate));
             }
             catch (Exception ex)
             {

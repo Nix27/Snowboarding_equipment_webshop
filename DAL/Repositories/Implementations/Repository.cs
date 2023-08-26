@@ -13,7 +13,7 @@ namespace DAL.Repositories.Implementations
     public class Repository<T> : IRepository<T> where T : class
     {
         private readonly ApplicationDbContext _db;
-        internal readonly DbSet<T> dbSet;
+        protected readonly DbSet<T> dbSet;
 
         public Repository(ApplicationDbContext db)
         {

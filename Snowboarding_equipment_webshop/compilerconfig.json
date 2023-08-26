@@ -2,5 +2,17 @@
   {
     "outputFile": "wwwroot/css/site.css",
     "inputFile": "wwwroot/css/site.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/general.css",
+    "inputFile": "wwwroot/css/general.scss"
+  },
+  {
+    "outputFile": "Views/Shared/Components/Pagination/Default.cshtml.css",
+    "inputFile": "Views/Shared/Components/Pagination/Default.cshtml.scss"
+  },
+  {
+    "outputFile": "Areas/Admin/Views/Category/AllCategories.cshtml.css",
+    "inputFile": "Areas/Admin/Views/Category/AllCategories.cshtml.scss"
   }
 ]

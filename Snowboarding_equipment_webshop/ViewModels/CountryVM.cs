@@ -2,10 +2,10 @@
 
 namespace Snowboarding_equipment_webshop.ViewModels
 {
-    public class CategoryVM
+    public class CountryVM
     {
         public int Id { get; set; }
-        [Required(ErrorMessage = "Name of category is required")]
+        [Required(ErrorMessage = "Name of country is required")]
         public string Name { get; set; }
     }
 }

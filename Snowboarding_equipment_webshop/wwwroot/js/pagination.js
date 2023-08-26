@@ -67,11 +67,11 @@ function getPagedData(page, size, url) {
         success: function (data) {
             $('#content').html(data);
 
-            $('.pager-btn').removeClass('btn-secondary');
-            $('.pager-btn').addClass('btn-primary');
+            $('.pager-btn').removeClass('btn-pagination-active');
+            $('.pager-btn').addClass('btn-pagination');
 
-            $('.pager-btn[data-page=' + page + ']').removeClass('btn-primary');
-            $('.pager-btn[data-page=' + page + ']').addClass('btn-secondary');
+            $('.pager-btn[data-page=' + page + ']').removeClass('btn-pagination');
+            $('.pager-btn[data-page=' + page + ']').addClass('btn-pagination-active');
         },
         error: function (data) {
             console.log('error', data);

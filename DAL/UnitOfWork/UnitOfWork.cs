@@ -17,7 +17,6 @@ namespace DAL.UnitOfWork
         {
             _db = db;
             Category = new CategoryRepository(_db);
-            Company = new CompanyRepository(_db);
             Country = new CountryRepository(_db);
             Product = new ProductRepository(_db);
             ThumbnailImage = new ThumbnailImageRepository(_db);
@@ -26,8 +25,6 @@ namespace DAL.UnitOfWork
         }
 
         public ICategoryRepository Category { get; init; }
-
-        public ICompanyRepository Company { get; init; }
 
         public ICountryRepository Country { get; init; }
 
