@@ -9,9 +9,6 @@ $navlink-font-size: 1.25rem;
 
 * {
     font-family: 'Paytone One', sans-serif;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
 }
 
 html {
@@ -29,9 +26,9 @@ html{
     min-height: 100%;
 }
 
-/*body {
+body {
     margin-bottom: 60px;
-}*/
+}
 
 nav {
     background-color: $primary-black;
@@ -111,7 +108,6 @@ nav {
 
 .footer {
     background-color: $primary-black;
-    min-height: 15.4375rem;
     padding: 3rem 4rem;
     color: $primary-white;
 

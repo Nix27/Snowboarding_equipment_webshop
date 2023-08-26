@@ -54,9 +54,17 @@ namespace BL.Services.Implementations
                                                                               .GetResult()
                                                                               .Count();
 
-        public async Task<IEnumerable<CategoryDto>> GetPagedCategoriesAsync(int page, int size)
+        public async Task<IEnumerable<CategoryDto>> GetPagedCategoriesAsync(int page, int size, string? searchTerm)
         {
+            searchTerm = searchTerm?.ToLower();
+
             var allCategories = await _unitOfWork.Category.GetAllAsync();
+
+            if(searchTerm != null)
+            {
+                allCategories = allCategories.Where(c => c.Name.ToLower().Contains(searchTerm));
+            }
+
             var pagedCategories = allCategories.Skip(page * size).Take(size);
 
             return _mapper.Map<IEnumerable<CategoryDto>>(pagedCategories);

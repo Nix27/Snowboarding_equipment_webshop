@@ -21,14 +21,14 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> AllCategories(int page, int size)
+        public async Task<IActionResult> AllCategories(int page, int size, string? searchTerm)
         {
             try
             {
                 if (size == 0)
                     size = 5;
 
-                var pagedCategories = await _categoryService.GetPagedCategoriesAsync(page, size);
+                var pagedCategories = await _categoryService.GetPagedCategoriesAsync(page, size, searchTerm);
                 var numberOfCategories = await _categoryService.GetNumberOfCategoriesAsync();
 
                 ViewData["page"] = page;
@@ -45,14 +45,14 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
             }
         }
 
-        public async Task<IActionResult> CategoryTableBodyPartial(int page, int size)
+        public async Task<IActionResult> CategoryTableBodyPartial(int page, int size, string? searchTerm)
         {
             try
             {
                 if (size == 0)
                     size = 5;
 
-                var pagedCategories = await _categoryService.GetPagedCategoriesAsync(page, size);
+                var pagedCategories = await _categoryService.GetPagedCategoriesAsync(page, size, searchTerm);
                 var numberOfCategories = await _categoryService.GetNumberOfCategoriesAsync();
 
                 ViewData["page"] = page;

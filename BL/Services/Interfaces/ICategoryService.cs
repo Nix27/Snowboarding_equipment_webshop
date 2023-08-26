@@ -11,7 +11,7 @@ namespace BL.Services.Interfaces
     {
         Task<IEnumerable<CategoryDto>> GetAllAsync();
         Task<CategoryDto> GetByIdAsync(int id);
-        Task<IEnumerable<CategoryDto>> GetPagedCategoriesAsync(int page, int size);
+        Task<IEnumerable<CategoryDto>> GetPagedCategoriesAsync(int page, int size, string? searchTerm);
         Task<int> GetNumberOfCategoriesAsync();
         Task CreateAsync(CategoryDto newCategory);
         Task UpdateAsync(CategoryDto updatedCategory);

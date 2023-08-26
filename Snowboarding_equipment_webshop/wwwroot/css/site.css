@@ -2,9 +2,6 @@
 /*fonts*/
 * {
   font-family: "Paytone One", sans-serif;
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 html {
@@ -21,9 +18,10 @@ html {
   min-height: 100%;
 }
 
-/*body {
-    margin-bottom: 60px;
-}*/
+body {
+  margin-bottom: 60px;
+}
+
 nav {
   background-color: #1A1A1A;
   color: #9A9A9A;
@@ -89,7 +87,6 @@ nav .mobile-menu, nav .menu-btn {
 
 .footer {
   background-color: #1A1A1A;
-  min-height: 15.4375rem;
   padding: 3rem 4rem;
   color: #ffffff;
 }
