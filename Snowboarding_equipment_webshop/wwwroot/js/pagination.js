@@ -65,7 +65,7 @@ function getPagedData(page, size, url) {
         url: url,
         data: ajaxData,
         success: function (data) {
-            $('#content').html(data);
+            $('.content').html(data);
 
             $('.pager-btn').removeClass('btn-pagination-active');
             $('.pager-btn').addClass('btn-pagination');

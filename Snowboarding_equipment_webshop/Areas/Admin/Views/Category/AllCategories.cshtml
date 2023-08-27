@@ -24,23 +24,8 @@
 
     @await Component.InvokeAsync("Search")
     <div class="table-responsive">
-        <table id="category-table" class="w-100 table table-responsive">
-            <thead>
-                <tr class="pb-2">
-                    <th>Name</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody id="content">
-                <partial name="_CategoryTableBodyPartial" />
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="2">
-                        @await Component.InvokeAsync("Pagination")
-                    </td>
-                </tr>
-            </tfoot>
+        <table id="category-table" class="w-100 table table-responsive content">
+            <partial name="_CategoryTableBodyPartial" />
         </table>
     </div>
 </div>

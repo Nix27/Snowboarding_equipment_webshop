@@ -24,23 +24,8 @@
 
     @await Component.InvokeAsync("Search")
     <div class="table-responsive">
-        <table id="country-table" class="w-100 table table-responsive">
-            <thead>
-                <tr class="pb-2">
-                    <th>Name</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody id="content">
-                <partial name="_CountryTableBodyPartial" />
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="2">
-                        @await Component.InvokeAsync("Pagination")
-                    </td>
-                </tr>
-            </tfoot>
+        <table id="country-table" class="w-100 table table-responsive content">
+            <partial name="_CountryTableBodyPartial" />
         </table>
     </div>
 </div>
@@ -48,6 +33,6 @@
 @section Scripts{
     <partial name="_NotificationPartial" />
     <script src="~/js/delete-warning.js"></script>
-    <script src="~/js/pagination.js"></script>
-    <script src="~/js/search.js"></script>
+    <script src="~/js/pagination.js" asp-append-version="true"></script>
+    <script src="~/js/search.js" asp-append-version="true"></script>
 }

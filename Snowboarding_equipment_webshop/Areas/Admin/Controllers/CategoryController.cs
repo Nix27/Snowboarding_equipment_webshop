@@ -60,6 +60,7 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
                 ViewData["page"] = page;
                 ViewData["size"] = size;
                 ViewData["pages"] = (int)Math.Ceiling((double)numberOfAllCategories / size);
+                ViewData["action"] = nameof(AllCategories);
 
                 return PartialView("_CategoryTableBodyPartial", _mapper.Map<IEnumerable<CategoryVM>>(pagedCategories));
             }

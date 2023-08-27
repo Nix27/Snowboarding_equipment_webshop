@@ -1,6 +1,12 @@
 ﻿using AutoMapper;
 using BL.DTOs;
-using BL.Services.Interfaces;
+using BL.Features.Countries.Commands.CreateCountry;
+using BL.Features.Countries.Commands.DeleteCountry;
+using BL.Features.Countries.Commands.UpdateCountry;
+using BL.Features.Countries.Queries.GetAllCountries;
+using BL.Features.Countries.Queries.GetCountryById;
+using BL.Features.Countries.Queries.GetPagedCountries;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Snowboarding_equipment_webshop.ViewModels;
 
@@ -9,64 +15,73 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
     [Area("Admin")]
     public class CountryController : Controller
     {
-        private readonly ICountryService _countryService;
+        private readonly IMediator _mediator;
         private readonly IMapper _mapper;
-        private readonly ILogger<CountryVM> _logger;
         private const string errorMessage = "Something went wrong. Try again later!";
 
-        public CountryController(ICountryService countryService, IMapper mapper, ILogger<CountryVM> logger)
+        public CountryController(IMediator mediator, IMapper mapper)
         {
-            _countryService = countryService;
+            _mediator = mediator;
             _mapper = mapper;
-            _logger = logger;
         }
 
-        public async Task<IActionResult> AllCountries(int page, int size, string? searchTerm)
+        public async Task<IActionResult> AllCountries(int page, int size)
         {
-            try
+            if (size == 0)
+                size = 5;
+
+            var pagedCountries = await _mediator.Send(new GetPagedCountriesQuery(page, size));
+            int? numberOfAllCountries = _mediator.Send(new GetAllCountriesQuery()).GetAwaiter().GetResult()?.Count();
+
+            if(pagedCountries != null && numberOfAllCountries != null)
             {
-                if (size == 0)
-                    size = 5;
-
-                var pagedCountries = await _countryService.GetPagedCountriesAsync(page, size, searchTerm);
-                var numberOfAllCountries = await _countryService.GetNumberOfCountriesAsync();
-
                 ViewData["page"] = page;
                 ViewData["size"] = size;
                 ViewData["pages"] = (int)Math.Ceiling((double)numberOfAllCountries / size);
 
                 return View(_mapper.Map<IEnumerable<CountryVM>>(pagedCountries));
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex.StackTrace);
-                TempData["error"] = errorMessage;
-                return StatusCode(500);
-            }
+
+            TempData["error"] = errorMessage;
+            return StatusCode(500);
         }
 
         public async Task<IActionResult> CountryTableBodyPartial(int page, int size, string? searchTerm)
         {
-            try
+            if (size == 0)
+                size = 5;
+
+            var pagedCountries = await _mediator.Send(new GetPagedCountriesQuery(page, size, searchTerm));
+            int? numberOfAllCountries;
+
+            if (searchTerm != null)
             {
-                if (size == 0)
-                    size = 5;
+                numberOfAllCountries = _mediator.Send(new GetAllCountriesQuery())
+                                                 .GetAwaiter()
+                                                 .GetResult()?
+                                                 .Where(c => c.Name.ToLower().Contains(searchTerm))
+                                                 .Count();
+            }
+            else
+            {
+                numberOfAllCountries = _mediator.Send(new GetAllCountriesQuery())
+                                                 .GetAwaiter()
+                                                 .GetResult()?
+                                                 .Count();
+            }
 
-                var pagedCountries = await _countryService.GetPagedCountriesAsync(page, size, searchTerm);
-                var numberOfAllCountries = await _countryService.GetNumberOfCountriesAsync();
-
+            if (pagedCountries != null && numberOfAllCountries != null)
+            {
                 ViewData["page"] = page;
                 ViewData["size"] = size;
                 ViewData["pages"] = (int)Math.Ceiling((double)numberOfAllCountries / size);
+                ViewData["action"] = nameof(AllCountries);
 
                 return PartialView("_CountryTableBodyPartial", _mapper.Map<IEnumerable<CountryVM>>(pagedCountries));
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex.StackTrace);
-                TempData["error"] = errorMessage;
-                return StatusCode(500);
-            }
+
+            TempData["error"] = errorMessage;
+            return StatusCode(500);
         }
 
         public IActionResult CreateCountry()
@@ -80,74 +95,63 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid) return View(newCountry);
 
-            try
+            var createdCountry = await _mediator.Send(new CreateCountryCommand(_mapper.Map<CountryDto>(newCountry)));
+
+            if(createdCountry != null)
             {
-                await _countryService.CreateAsync(_mapper.Map<CountryDto>(newCountry));
                 TempData["success"] = "Country added successfully";
                 return RedirectToAction(nameof(AllCountries));
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex.StackTrace);
-                TempData["error"] = errorMessage;
-                return StatusCode(500);
-            }
+
+            TempData["error"] = errorMessage;
+            return StatusCode(500);
         }
 
         public async Task<IActionResult> UpdateCountry(int id)
         {
-            try
-            {
-                var countryForUpdate = await _countryService.GetByIdAsync(id);
+            var countryForUpdate = await _mediator.Send(new GetCountryByIdQuery(id));
+
+            if(countryForUpdate != null)
                 return View(_mapper.Map<CountryVM>(countryForUpdate));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex.StackTrace);
-                TempData["error"] = errorMessage;
-                return StatusCode(500);
-            }
+
+            TempData["error"] = errorMessage;
+            return StatusCode(500);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateCountry(CountryVM updatedCountry)
+        public async Task<IActionResult> UpdateCountry(CountryVM countryForUpdate)
         {
-            if (!ModelState.IsValid) return View(updatedCountry);
+            if (!ModelState.IsValid) return View(countryForUpdate);
 
-            try
+            var updatedCountry = await _mediator.Send(new UpdateCountryCommand(_mapper.Map<CountryDto>(countryForUpdate)));
+
+            if(updatedCountry != null)
             {
-                await _countryService.UpdateAsync(_mapper.Map<CountryDto>(updatedCountry));
                 TempData["success"] = "Country updated successfully";
                 return RedirectToAction(nameof(AllCountries));
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex.StackTrace);
-                TempData["error"] = errorMessage;
-                return StatusCode(500);
-            }
+
+            TempData["error"] = errorMessage;
+            return StatusCode(500);
         }
 
         #region API Calls
         [HttpDelete]
         public async Task<IActionResult> DeleteCountry(int id)
         {
-            try
-            {
-                var isDeleted = await _countryService.DeleteAsync(id);
+            var countryForDelete = await _mediator.Send(new GetCountryByIdQuery(id, false));
 
-                if (!isDeleted)
-                    return Json(new { success = false, message = "Country not found." });
+            if(countryForDelete == null)
+                return Json(new { success = false, message = "Country not found." });
 
+            var deletedCountry = await _mediator.Send(new DeleteCountryCommand(countryForDelete));
+
+            if(deletedCountry != null)
                 return Json(new { success = true, message = "Successfully deleted country." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex.StackTrace);
-                TempData["error"] = errorMessage;
-                return StatusCode(500);
-            }
+
+            TempData["error"] = errorMessage;
+            return StatusCode(500);
         }
         #endregion
     }
