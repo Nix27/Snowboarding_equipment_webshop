@@ -5,6 +5,7 @@ using DAL.UnitOfWork;
 using BL.Services.Interfaces;
 using BL.Services.Implementations;
 using Snowboarding_equipment_webshop.Mapping;
+using BL.Features.Categories.Queries.GetPagedCategories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,8 @@ builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICountryService, CountryService>();
+
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetPagedCategoriesQueryHandler).Assembly));
 
 var app = builder.Build();
 
