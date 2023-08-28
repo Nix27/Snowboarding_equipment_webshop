@@ -13,6 +13,8 @@ namespace Snowboarding_equipment_webshop.Mapping
             CreateMap<CategoryVM, CategoryDto>().ReverseMap();
             CreateMap<CountryDto, Country>().ReverseMap();
             CreateMap<CountryVM, CountryDto>().ReverseMap();
+            CreateMap<ProductDto, Product>().ReverseMap();
+            CreateMap<ProductVM, ProductDto>().ReverseMap();
         }
     }
 }

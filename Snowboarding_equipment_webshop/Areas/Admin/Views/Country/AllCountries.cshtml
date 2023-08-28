@@ -15,7 +15,7 @@
 <div class="container p-2">
     <div class="row">
         <div class="col-6 mb-4">
-            <h2>Add New Country</h2>
+            <h2>All Countries</h2>
         </div>
         <div class="col-6 text-end">
             <a asp-action="CreateCountry" class="primary-btn py-2 px-5"><i class="bi bi-plus-circle"></i> &nbsp; Add</a>
@@ -24,7 +24,7 @@
 
     @await Component.InvokeAsync("Search")
     <div class="table-responsive">
-        <table id="country-table" class="w-100 table table-responsive content">
+        <table id="country-table" class="w-100 table content">
             <partial name="_CountryTableBodyPartial" />
         </table>
     </div>

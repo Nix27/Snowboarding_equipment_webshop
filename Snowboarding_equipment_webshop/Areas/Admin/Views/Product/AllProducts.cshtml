@@ -1,0 +1,53 @@
+﻿@model IEnumerable<ProductVM>
+
+@{
+    ViewData["Title"] = "All products";
+
+    var page = (int)ViewData["page"];
+    var size = (int)ViewData["size"];
+    var pages = (int)ViewData["pages"];
+
+    ViewData["action"] = "AllProducts";
+}
+
+<input id="hiddenData" data-size="@size" 
+                       data-pages="@pages" 
+                       data-url="ProductTableBodyPartial" 
+                       data-keyfilterby="productFilterBy" 
+                       data-keysearchTerm="productSearchTerm" 
+                       data-keypage="productPage" hidden />
+
+<div class="container p-2">
+    <div class="row">
+        <div class="col-6">
+            <h2>All Products</h2>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-action="CreateProduct" class="primary-btn py-2 px-5"><i class="bi bi-plus-circle"></i> &nbsp; Add</a>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <div class="d-flex">
+            <label for="filterBy" class="me-3 pt-1">Filter by:</label>
+            <select id="filterBy">
+                <option value="name" selected>Name</option>
+                <option value="category">Category</option>
+            </select>
+        </div>
+        @await Component.InvokeAsync("Search")
+    </div>
+
+    <div class="table-responsive">
+        <table id="product-table" class="w-100 table content">
+            <partial name="_ProductTableBodyPartial" />
+        </table>
+    </div>
+</div>
+
+@section Scripts{
+    <partial name="_NotificationPartial" />
+    <script src="~/js/delete-warning.js"></script>
+    <script src="~/js/pagination.js"></script>
+    <script src="~/js/search-with-filtering.js"></script>
+}

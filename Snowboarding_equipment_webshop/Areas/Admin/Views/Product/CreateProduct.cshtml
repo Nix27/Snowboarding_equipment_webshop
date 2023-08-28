@@ -1,0 +1,65 @@
+﻿@model ProductVM;
+
+<div class="container p-2">
+    <div class="row">
+        <h2 class="mb-5">Add New Product</h2>
+    </div>
+    <form method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-4">
+                <img src="" alt="Product thumbnail" />
+            </div>
+            <div class="col-8">
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <label asp-for="Name"></label>
+                        <input asp-for="Name" class="border border-2" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label asp-for="QuantityInStock"></label>
+                        <input asp-for="QuantityInStock" class="border border-2" />
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label asp-for="Description"></label>
+                        <textarea asp-for="Description"></textarea>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label asp-for="Price"></label>
+                        <input asp-for="Price" class="border border-2" />
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label asp-for="PriceFor5To10"></label>
+                        <input asp-for="PriceFor5To10" class="border border-2" />
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label asp-for="PriceForMoreThan10"></label>
+                        <input asp-for="PriceForMoreThan10" class="border border-2" />
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label asp-for="OldPrice"></label>
+                        <input asp-for="OldPrice" class="border border-2" />
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label asp-for="CategoryId"></label>
+                        <select asp-for="CategoryId" asp-items="@Model.Categories" class="border border-2">
+                            <option disabled selected>--Select Category--</option>
+                        </select>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label asp-for="ThumbnailImage"></label>
+                        <input type="file" id="thumbnail-image" name="thumbnailimage" class="border border-2" />
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label asp-for="GalleryImages"></label>
+                        <input type="file" id="gallery-images" name="galleryimages" class="border border-2" multiple />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

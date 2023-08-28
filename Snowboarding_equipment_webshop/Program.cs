@@ -19,8 +19,6 @@ builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<App
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<ICountryService, CountryService>();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetPagedCategoriesQueryHandler).Assembly));
 
