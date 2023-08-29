@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BL.Features.Categories.Commands.CreateCategory
+namespace BL.Features.Products.Queries.GetProductById
 {
-    public record CreateCategoryCommand(CategoryDto newCategory) : IRequest<int?>;
+    public record GetProductByIdQuery(int id, bool isTracked = true) : IRequest<ProductDto?>;
 }

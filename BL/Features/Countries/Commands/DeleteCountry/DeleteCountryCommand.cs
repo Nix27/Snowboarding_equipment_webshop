@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 
 namespace BL.Features.Countries.Commands.DeleteCountry
 {
-    public record DeleteCountryCommand(CountryDto countryForDelete) : IRequest<CountryDto?>;
+    public record DeleteCountryCommand(CountryDto countryForDelete) : IRequest<int?>;
 }

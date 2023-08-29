@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
-using BL.DTOs;
-using BL.Features.Countries.Commands.CreateCountry;
+using BL.Features.ThumbnailImages.Commands.CreateThumbnailImage;
 using DAL.Models;
 using DAL.UnitOfWork;
 using MediatR;
@@ -11,34 +10,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BL.Features.Countries.Commands.DeleteCountry
+namespace BL.Features.ThumbnailImages.Commands.DeleteThumbnailImage
 {
-    public class DeleteCountryCommandHandler : IRequestHandler<DeleteCountryCommand, int?>
+    public class DeleteThumbnailImageCommandHandler : IRequestHandler<DeleteThumbnailImageCommand, int?>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly ILogger<DeleteCountryCommand> _logger;
+        private readonly ILogger<DeleteThumbnailImageCommand> _logger;
 
-        public DeleteCountryCommandHandler(
+        public DeleteThumbnailImageCommandHandler(
             IUnitOfWork unitOfWork,
             IMapper mapper,
-            ILogger<DeleteCountryCommand> logger)
+            ILogger<DeleteThumbnailImageCommand> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
         }
 
-        public async Task<int?> Handle(DeleteCountryCommand request, CancellationToken cancellationToken)
+        public async Task<int?> Handle(DeleteThumbnailImageCommand request, CancellationToken cancellationToken)
         {
             try
             {
-                var countryForDelete = _mapper.Map<Country>(request.countryForDelete);
+                var thumbnailImageForDelete = _mapper.Map<ThumbnailImage>(request.thumbnailImageForDelete);
 
-                _unitOfWork.Country.Delete(countryForDelete);
+                _unitOfWork.ThumbnailImage.Delete(thumbnailImageForDelete);
                 await _unitOfWork.SaveAsync();
 
-                return countryForDelete.Id;
+                return thumbnailImageForDelete.Id;
             }
             catch (Exception ex)
             {

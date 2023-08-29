@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BL.Features.Categories.Commands.CreateCategory
+namespace BL.Features.Products.Commands.DeleteProduct
 {
-    public record CreateCategoryCommand(CategoryDto newCategory) : IRequest<int?>;
+    public record DeleteProductCommand(ProductDto productForDelete) : IRequest<int?>;
 }

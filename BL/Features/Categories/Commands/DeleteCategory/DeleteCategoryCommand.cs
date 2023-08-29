@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 
 namespace BL.Features.Categories.Commands.DeleteCategory
 {
-    public record DeleteCategoryCommand(CategoryDto categoryForDelete) : IRequest<CategoryDto?>;
+    public record DeleteCategoryCommand(CategoryDto categoryForDelete) : IRequest<int?>;
 }

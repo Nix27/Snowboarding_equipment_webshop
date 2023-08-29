@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 
 namespace BL.Features.Categories.Commands.UpdateCategory
 {
-    public record UpdateCategoryCommand(CategoryDto categoryForUpdate) : IRequest<CategoryDto?>;
+    public record UpdateCategoryCommand(CategoryDto categoryForUpdate) : IRequest<int?>;
 }

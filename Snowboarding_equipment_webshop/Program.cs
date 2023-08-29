@@ -2,8 +2,6 @@ using DAL.AppDbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using DAL.UnitOfWork;
-using BL.Services.Interfaces;
-using BL.Services.Implementations;
 using Snowboarding_equipment_webshop.Mapping;
 using BL.Features.Categories.Queries.GetPagedCategories;
 

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using BL.DTOs;
-using BL.Features.Countries.Commands.CreateCountry;
 using DAL.Models;
 using DAL.UnitOfWork;
 using MediatR;
@@ -11,34 +10,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BL.Features.Countries.Commands.DeleteCountry
+namespace BL.Features.Products.Commands.CreateProduct
 {
-    public class DeleteCountryCommandHandler : IRequestHandler<DeleteCountryCommand, int?>
+    public class CeateProductCommandHandler : IRequestHandler<CreateProductCommand, int?>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly ILogger<DeleteCountryCommand> _logger;
+        private readonly ILogger<CreateProductCommand> _logger;
 
-        public DeleteCountryCommandHandler(
-            IUnitOfWork unitOfWork,
+        public CeateProductCommandHandler(
+            IUnitOfWork unitOfWork, 
             IMapper mapper,
-            ILogger<DeleteCountryCommand> logger)
+            ILogger<CreateProductCommand> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
         }
 
-        public async Task<int?> Handle(DeleteCountryCommand request, CancellationToken cancellationToken)
+        public async Task<int?> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
             try
             {
-                var countryForDelete = _mapper.Map<Country>(request.countryForDelete);
+                var newProduct = _mapper.Map<Product>(request.newProduct);
 
-                _unitOfWork.Country.Delete(countryForDelete);
+                await _unitOfWork.Product.CreateAsync(newProduct);
                 await _unitOfWork.SaveAsync();
 
-                return countryForDelete.Id;
+                return newProduct.Id;
             }
             catch (Exception ex)
             {

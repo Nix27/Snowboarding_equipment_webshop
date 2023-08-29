@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BL.Features.Categories.Commands.CreateCategory
+namespace BL.Features.Products.Commands.CreateProduct
 {
-    public record CreateCategoryCommand(CategoryDto newCategory) : IRequest<int?>;
+    public record CreateProductCommand(ProductDto newProduct) : IRequest<int?>;
 }

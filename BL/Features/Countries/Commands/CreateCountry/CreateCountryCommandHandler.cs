@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace BL.Features.Countries.Commands.CreateCountry
 {
-    public class CreateCountryCommandHandler : IRequestHandler<CreateCountryCommand, CountryDto?>
+    public class CreateCountryCommandHandler : IRequestHandler<CreateCountryCommand, int?>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -28,7 +28,7 @@ namespace BL.Features.Countries.Commands.CreateCountry
             _logger = logger;
         }
 
-        public async Task<CountryDto?> Handle(CreateCountryCommand request, CancellationToken cancellationToken)
+        public async Task<int?> Handle(CreateCountryCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace BL.Features.Countries.Commands.CreateCountry
                 await _unitOfWork.Country.CreateAsync(newCountry);
                 await _unitOfWork.SaveAsync();
 
-                return _mapper.Map<CountryDto>(newCountry);
+                return newCountry.Id;
             }
             catch (Exception ex)
             {

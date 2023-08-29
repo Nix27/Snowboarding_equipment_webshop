@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BL.DTOs;
-using BL.Features.Countries.Commands.CreateCountry;
-using DAL.Models;
+using BL.Features.Products.Queries.GetAllProducts;
 using DAL.UnitOfWork;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -11,34 +10,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BL.Features.Countries.Commands.DeleteCountry
+namespace BL.Features.Products.Queries.GetProductById
 {
-    public class DeleteCountryCommandHandler : IRequestHandler<DeleteCountryCommand, int?>
+    public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, ProductDto?>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly ILogger<DeleteCountryCommand> _logger;
+        private readonly ILogger<GetProductByIdQuery> _logger;
 
-        public DeleteCountryCommandHandler(
+        public GetProductByIdQueryHandler(
             IUnitOfWork unitOfWork,
             IMapper mapper,
-            ILogger<DeleteCountryCommand> logger)
+            ILogger<GetProductByIdQuery> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
         }
 
-        public async Task<int?> Handle(DeleteCountryCommand request, CancellationToken cancellationToken)
+        public async Task<ProductDto?> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
         {
             try
             {
-                var countryForDelete = _mapper.Map<Country>(request.countryForDelete);
-
-                _unitOfWork.Country.Delete(countryForDelete);
-                await _unitOfWork.SaveAsync();
-
-                return countryForDelete.Id;
+                var requestedProduct = await _unitOfWork.Product.GetFirstOrDefaultAsync(p => p.Id == request.id, isTracked: request.isTracked);
+                return _mapper.Map<ProductDto>(requestedProduct);
             }
             catch (Exception ex)
             {

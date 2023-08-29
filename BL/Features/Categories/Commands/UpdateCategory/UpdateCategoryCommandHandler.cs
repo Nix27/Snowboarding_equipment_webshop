@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace BL.Features.Categories.Commands.UpdateCategory
 {
-    public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryCommand, CategoryDto?>
+    public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryCommand, int?>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -28,7 +28,7 @@ namespace BL.Features.Categories.Commands.UpdateCategory
             _logger = logger;
         }
 
-        public async Task<CategoryDto?> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<int?> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace BL.Features.Categories.Commands.UpdateCategory
                 _unitOfWork.Category.Update(categoryForUpdate);
                 await _unitOfWork.SaveAsync();
 
-                return _mapper.Map<CategoryDto>(categoryForUpdate);
+                return categoryForUpdate.Id;
             }
             catch (Exception ex)
             {

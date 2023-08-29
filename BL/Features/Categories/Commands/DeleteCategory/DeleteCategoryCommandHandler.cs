@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace BL.Features.Categories.Commands.DeleteCategory
 {
-    public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryCommand, CategoryDto?>
+    public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryCommand, int?>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -28,7 +28,7 @@ namespace BL.Features.Categories.Commands.DeleteCategory
             _logger = logger;
         }
 
-        public async Task<CategoryDto?> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<int?> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace BL.Features.Categories.Commands.DeleteCategory
                 _unitOfWork.Category.Delete(categoryForDelete);
                 await _unitOfWork.SaveAsync();
 
-                return _mapper.Map<CategoryDto>(categoryForDelete);
+                return categoryForDelete.Id;
             }
             catch (Exception ex)
             {

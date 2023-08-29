@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace BL.Features.Categories.Commands.CreateCategory
 {
-    public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, CategoryDto?>
+    public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, int?>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -28,7 +28,7 @@ namespace BL.Features.Categories.Commands.CreateCategory
             _logger = logger;
         }
 
-        public async Task<CategoryDto?> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<int?> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace BL.Features.Categories.Commands.CreateCategory
                 await _unitOfWork.Category.CreateAsync(newCategory);
                 await _unitOfWork.SaveAsync();
 
-                return _mapper.Map<CategoryDto>(newCategory);
+                return newCategory.Id;
             }
             catch (Exception ex)
             {

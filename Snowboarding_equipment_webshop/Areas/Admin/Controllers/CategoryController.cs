@@ -6,7 +6,6 @@ using BL.Features.Categories.Commands.UpdateCategory;
 using BL.Features.Categories.Queries.GetAllCategories;
 using BL.Features.Categories.Queries.GetCategoryById;
 using BL.Features.Categories.Queries.GetPagedCategories;
-using BL.Services.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Snowboarding_equipment_webshop.ViewModels;
