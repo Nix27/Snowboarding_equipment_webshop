@@ -3,6 +3,7 @@ using BL.Features.Products.Commands.CreateProduct;
 using DAL.Models;
 using DAL.UnitOfWork;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -32,18 +33,43 @@ namespace BL.Features.ThumbnailImages.Commands.CreateThumbnailImage
         {
             try
             {
-                var newThumbnailImage = _mapper.Map<ThumbnailImage>(request.newThumbnailImage);
+                var imageAsStream = GetImageAsMemoryStream(request.newThumbnailImage) ?? 
+                    throw new InvalidOperationException("Image file can't be null");
+
+                ThumbnailImage newThumbnailImage = new()
+                {
+                    Content = Convert.ToBase64String(imageAsStream),
+                    Title = request.title
+                };
 
                 await _unitOfWork.ThumbnailImage.CreateAsync(newThumbnailImage);
                 await _unitOfWork.SaveAsync();
 
                 return newThumbnailImage.Id;
+
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex.StackTrace);
                 return null;
             }
+        }
+
+        private byte[]? GetImageAsMemoryStream(IFormFile image)
+        {
+            if (image != null)
+            {
+                if (image.Length > 0)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        image.CopyTo(memoryStream);
+                        return memoryStream.ToArray();
+                    }
+                }
+            }
+
+            return null;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DAL.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,8 @@ namespace BL.DTOs
         public double PriceForMoreThan10 { get; set; }
         public double? OldPrice { get; set; }
         public int CategoryId { get; set; }
+        public Category Category { get; set; }
         public int ThumbnailImageId { get; set; }
+        public ThumbnailImage ThumbnailImage { get; set; }
     }
 }

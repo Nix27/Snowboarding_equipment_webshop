@@ -14,5 +14,13 @@
   {
     "outputFile": "Areas/Admin/Views/Category/AllCategories.cshtml.css",
     "inputFile": "Areas/Admin/Views/Category/AllCategories.cshtml.scss"
+  },
+  {
+    "outputFile": "Areas/Admin/Views/Product/_ProductTableBodyPartial.cshtml.css",
+    "inputFile": "Areas/Admin/Views/Product/_ProductTableBodyPartial.cshtml.scss"
+  },
+  {
+    "outputFile": "Areas/Admin/Views/Product/CreateProduct.cshtml.css",
+    "inputFile": "Areas/Admin/Views/Product/CreateProduct.cshtml.scss"
   }
 ]

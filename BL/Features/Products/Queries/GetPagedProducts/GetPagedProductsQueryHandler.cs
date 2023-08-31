@@ -32,7 +32,7 @@ namespace BL.Features.Products.Queries.GetPagedProducts
         {
             try
             {
-                var allProducts = await _unitOfWork.Product.GetAllAsync(includeProperties:"Category");
+                var allProducts = await _unitOfWork.Product.GetAllAsync(includeProperties:"Category,ThumbnailImage");
 
                 if(request.searchTerm != null)
                 {
