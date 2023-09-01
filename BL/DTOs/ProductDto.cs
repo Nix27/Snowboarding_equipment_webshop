@@ -21,5 +21,6 @@ namespace BL.DTOs
         public Category Category { get; set; }
         public int ThumbnailImageId { get; set; }
         public ThumbnailImage ThumbnailImage { get; set; }
+        public ICollection<GalleryImage> GalleryImages { get; set; }
     }
 }

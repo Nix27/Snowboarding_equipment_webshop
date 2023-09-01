@@ -1,2 +1,110 @@
 ﻿@model ProductVM
 
+@{
+    var thumbnailImage = Url.Action("GetImage", "Image", new { area = "Customer", imageType = ImageType.Thumbnail, id = Model.ThumbnailImageId });
+}
+
+<div class="container p-2">
+    <div class="row">
+        <h2 class="mb-5">Add New Product</h2>
+    </div>
+    <form method="post" enctype="multipart/form-data">
+        <input asp-for="Id" hidden />
+        <div class="row">
+            <div class="col-4 d-flex flex-column">
+                <img id="thumbnail" src="@thumbnailImage" alt="Product thumbnail" class="mb-5 align-self-center" />
+                <div id="gallery" class="d-flex flex-wrap gap-1">
+                    @if(Model.GalleryImages != null && Model.GalleryImages.Count > 0)
+                    {
+                        foreach(var galleryImage in Model.GalleryImages)
+                        {
+                            var galleryImageUrl = Url.Action("GetImage", "Image", new { area = "Customer", imageType = ImageType.Gallery, id = galleryImage.Id });
+                            <img src='@galleryImageUrl' alt='Gallery image' class="gallery-image" />
+                        }
+                    }
+                </div>
+            </div>
+            <div class="col-8">
+                <div class="row">
+                    <div class="col-6 d-flex flex-column mb-3">
+                        <label asp-for="Name"></label>
+                        <input asp-for="Name" class="border-2 p-2" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="col-6 d-flex flex-column mb-3">
+                        <label asp-for="QuantityInStock"></label>
+                        <input asp-for="QuantityInStock" class="border-2 p-2" />
+                    </div>
+                    <div class="col-12 d-flex flex-column mb-3">
+                        <label asp-for="Description"></label>
+                        <textarea asp-for="Description" class="border-2 p-2"></textarea>
+                    </div>
+                    <div class="col-6 d-flex flex-column mb-3">
+                        <label asp-for="Price"></label>
+                        <input asp-for="Price" class="border-2 p-2" />
+                    </div>
+                    <div class="col-6 d-flex flex-column mb-3">
+                        <label asp-for="PriceFor5To10"></label>
+                        <input asp-for="PriceFor5To10" class="border-2 p-2" />
+                    </div>
+                    <div class="col-6 d-flex flex-column mb-3">
+                        <label asp-for="PriceForMoreThan10"></label>
+                        <input asp-for="PriceForMoreThan10" class="border-2 p-2" />
+                    </div>
+                    <div class="col-6 d-flex flex-column mb-3">
+                        <label asp-for="OldPrice"></label>
+                        <input asp-for="OldPrice" class="border-2 p-2" />
+                    </div>
+                    <div class="col-6 d-flex flex-column mb-3">
+                        <label asp-for="CategoryId"></label>
+                        <select asp-for="CategoryId" asp-items="@Model.Categories" class="border-2 p-2">
+                            <option disabled selected>--Select Category--</option>
+                        </select>
+                    </div>
+                    <div class="col-6 d-flex flex-column mb-3">
+                        <label asp-for="ThumbnailImage"></label>
+                        <input type="file" id="thumbnail-image" name="newThumbnailImage" class="border border-2" />
+                    </div>
+                    <div class="col-6 d-flex flex-column mb-3">
+                        <label asp-for="GalleryImages"></label>
+                        <input type="file" id="gallery-images" name="newGalleryImages" class="border border-2" multiple />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="primary-btn py-2 px-5">Save</button>
+        <a asp-action="AllProducts" class="secondary-btn text-decoration-none py-2 px-5">Back</a>
+    </form>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $('#thumbnail-image').on('change', function() {
+            let image = this.files[0];
+            let reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#thumbnail').attr('src', e.target.result);
+            };
+
+            reader.readAsDataURL(image);
+        });
+
+        $('#gallery-images').on('change', function() {
+            let images = Array.from(this.files);
+            
+            images.forEach(image => {
+                let reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#gallery').append(`<img src='${e.target.result}' width='70px' height='70px' alt='Gallery image' />`);
+                };
+
+                reader.readAsDataURL(image);
+            });
+        })
+    </script>
+}
+

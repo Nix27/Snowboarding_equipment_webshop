@@ -103,7 +103,7 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
 
                 var createdProduct = await _mediator.Send(new CreateProductCommand(_mapper.Map<ProductDto>(newProduct)));
 
-                var createdGalleryImages = await _mediator.Send(new CreateGalleryImagesCommand(newProduct.GalleryImages, (int)createdProduct, newProduct.Name));
+                var createdGalleryImages = await _mediator.Send(new CreateGalleryImagesCommand(newProduct.NewGalleryImages, (int)createdProduct, newProduct.Name));
 
                 transaction.Complete();
             }
@@ -115,16 +115,27 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
         public async Task<IActionResult> UpdateProduct(int id)
         {
             var productForUpdate = await _mediator.Send(new GetProductByIdQuery(id));
+            var allCategories = await _mediator.Send(new GetAllCategoriesQuery());
 
-            if(productForUpdate != null)
+            if (productForUpdate != null && allCategories != null)
             {
-                return View(_mapper.Map<ProductVM>(productForUpdate));
+                var productVM = _mapper.Map<ProductVM>(productForUpdate);
+
+                productVM.Categories = allCategories.Select(c => new SelectListItem()
+                {
+                    Text = c.Name,
+                    Value = c.Id.ToString()
+                });
+
+                return View(productVM);
             }
 
             TempData["error"] = errorMessage;
             return StatusCode(500);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateProduct(ProductVM productForUpdate)
         {
             if(!ModelState.IsValid) return View(productForUpdate);
@@ -140,5 +151,13 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
             TempData["error"] = errorMessage;
             return StatusCode(500);
         }
+
+        #region API Calls
+        [HttpDelete]
+        public async Task<IActionResult> Deleteproduct(int id)
+        {
+
+        }
+        #endregion
     }
 }

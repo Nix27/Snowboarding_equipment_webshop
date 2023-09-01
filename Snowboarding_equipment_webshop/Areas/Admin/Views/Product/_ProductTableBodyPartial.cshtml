@@ -1,4 +1,5 @@
-﻿@model IEnumerable<ProductVM>
+﻿@using System.Web;
+@model IEnumerable<ProductVM>
 
 @{
     var page = (int)ViewData["page"];
@@ -20,7 +21,7 @@
 <tbody>
     @foreach(var product in Model)
     {
-        var thumbnailImage = Url.Action("GetImage", "Image", new { area = "Customer", id = product.ThumbnailImageId });
+        var thumbnailImage = Url.Action("GetImage", "Image", new { area = "Customer", imageType = ImageType.Thumbnail, id = product.ThumbnailImageId });
 
         <tr>
             <td>

@@ -21,17 +21,26 @@ namespace Snowboarding_equipment_webshop.ViewModels
         public double PriceForMoreThan10 { get; set; }
         public double? OldPrice { get; set; }
         public int CategoryId { get; set; }
+
+        [ValidateNever]
         public Category Category { get; set; }
         public int ThumbnailImageId { get; set; }
+
+        [ValidateNever]
         public ThumbnailImage ThumbnailImage { get; set; }
+
+        [ValidateNever]
+        public ICollection<GalleryImage> GalleryImages { get; set; }
 
         [ValidateNever]
         public IEnumerable<SelectListItem> Categories { get; set; }
 
+        [ValidateNever]
         [DisplayName("Thumbnail image")]
         public IFormFile NewThumbnailImage { get; set; }
 
+        [ValidateNever]
         [DisplayName("Gallery images")]
-        public IEnumerable<IFormFile> GalleryImages { get; set; }
+        public IEnumerable<IFormFile> NewGalleryImages { get; set; }
     }
 }

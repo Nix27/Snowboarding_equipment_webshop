@@ -22,5 +22,9 @@
   {
     "outputFile": "Areas/Admin/Views/Product/CreateProduct.cshtml.css",
     "inputFile": "Areas/Admin/Views/Product/CreateProduct.cshtml.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/product.css",
+    "inputFile": "wwwroot/css/product.scss"
   }
 ]

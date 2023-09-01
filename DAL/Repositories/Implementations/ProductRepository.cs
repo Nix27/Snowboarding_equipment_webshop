@@ -30,7 +30,11 @@ namespace DAL.Repositories.Implementations
                 productFromDb.PriceForMoreThan10 = productForUpdate.PriceForMoreThan10;
                 productFromDb.OldPrice = productForUpdate.OldPrice;
                 productFromDb.CategoryId = productForUpdate.CategoryId;
-                productFromDb.ThumbnailImageId = productForUpdate.ThumbnailImageId;
+
+                if(productForUpdate.ThumbnailImageId > 0)
+                {
+                    productFromDb.ThumbnailImageId = productForUpdate.ThumbnailImageId;
+                }
             }
         }
     }

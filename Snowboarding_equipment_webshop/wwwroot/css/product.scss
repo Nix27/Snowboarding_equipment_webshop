@@ -1,16 +1,16 @@
-﻿@import '../../../../wwwroot/css/variables';
+﻿@import 'variables';
 
 .gallery-image {
-    width: 20px;
-    height: 20px;
+    width: 70px;
+    height: 70px;
 }
 
-#thumbnail{
+#thumbnail {
     width: 200px;
     height: 200px;
 }
 
-#gallery{
+#gallery {
     max-height: 200px;
     overflow: auto;
     border-top: 2px solid $primary-black;

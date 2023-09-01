@@ -32,7 +32,7 @@ namespace BL.Features.Products.Queries.GetProductById
         {
             try
             {
-                var requestedProduct = await _unitOfWork.Product.GetFirstOrDefaultAsync(p => p.Id == request.id, isTracked: request.isTracked);
+                var requestedProduct = await _unitOfWork.Product.GetFirstOrDefaultAsync(p => p.Id == request.id, isTracked: request.isTracked, includeProperties: "Category,ThumbnailImage,GalleryImages");
                 return _mapper.Map<ProductDto>(requestedProduct);
             }
             catch (Exception ex)
