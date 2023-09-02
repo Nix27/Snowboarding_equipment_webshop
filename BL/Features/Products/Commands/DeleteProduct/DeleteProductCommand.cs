@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 
 namespace BL.Features.Products.Commands.DeleteProduct
 {
-    public record DeleteProductCommand(ProductDto productForDelete) : IRequest<int?>;
+    public record DeleteProductCommand(ProductDto productForDelete) : IRequest<int>;
 }

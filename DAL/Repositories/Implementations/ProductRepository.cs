@@ -16,7 +16,7 @@ namespace DAL.Repositories.Implementations
         {
         }
 
-        public async void UpdateAsync(Product productForUpdate)
+        public async Task UpdateAsync(Product productForUpdate)
         {
             var productFromDb = await dbSet.FirstOrDefaultAsync(p => p.Id == productForUpdate.Id);
 
@@ -30,11 +30,7 @@ namespace DAL.Repositories.Implementations
                 productFromDb.PriceForMoreThan10 = productForUpdate.PriceForMoreThan10;
                 productFromDb.OldPrice = productForUpdate.OldPrice;
                 productFromDb.CategoryId = productForUpdate.CategoryId;
-
-                if(productForUpdate.ThumbnailImageId > 0)
-                {
-                    productFromDb.ThumbnailImageId = productForUpdate.ThumbnailImageId;
-                }
+                productFromDb.ThumbnailImageId = productForUpdate.ThumbnailImageId;
             }
         }
     }

@@ -17,13 +17,23 @@ namespace Snowboarding_equipment_webshop.ViewModels
         [DisplayName("Quantity in stock")]
         public int QuantityInStock { get; set; }
         public double Price { get; set; }
+
+        [DisplayName("Price for 5 To 10")]
         public double PriceFor5To10 { get; set; }
+
+        [DisplayName("Price for more than 10")]
         public double PriceForMoreThan10 { get; set; }
+
+        [DisplayName("Old price")]
         public double? OldPrice { get; set; }
+
+        [Required(ErrorMessage = "Category of product is required")]
+        [DisplayName("Category")]
         public int CategoryId { get; set; }
 
         [ValidateNever]
         public Category Category { get; set; }
+
         public int ThumbnailImageId { get; set; }
 
         [ValidateNever]
@@ -37,10 +47,10 @@ namespace Snowboarding_equipment_webshop.ViewModels
 
         [ValidateNever]
         [DisplayName("Thumbnail image")]
-        public IFormFile NewThumbnailImage { get; set; }
+        public IFormFile? NewThumbnailImage { get; set; }
 
         [ValidateNever]
         [DisplayName("Gallery images")]
-        public IEnumerable<IFormFile> NewGalleryImages { get; set; }
+        public IEnumerable<IFormFile>? NewGalleryImages { get; set; }
     }
 }

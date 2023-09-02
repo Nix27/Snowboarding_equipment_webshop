@@ -21,9 +21,14 @@ namespace DAL.Repositories.Implementations
             dbSet = _db.Set<T>();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
+        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null, bool isTracked = true)
         {
-            IQueryable<T> query = dbSet;
+            IQueryable<T> query;
+
+            if (isTracked)
+                query = dbSet;
+            else
+                query = dbSet.AsNoTracking();
 
             if(filter != null)
                 query = query.Where(filter);

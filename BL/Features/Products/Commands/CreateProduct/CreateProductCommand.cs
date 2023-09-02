@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 
 namespace BL.Features.Products.Commands.CreateProduct
 {
-    public record CreateProductCommand(ProductDto newProduct) : IRequest<int?>;
+    public record CreateProductCommand(ProductDto newProduct) : IRequest<int>;
 }

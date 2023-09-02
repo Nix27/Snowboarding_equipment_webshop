@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 
 namespace BL.Features.ThumbnailImages.Queries.GetThumbnailById
 {
-    public record GetThumbnailImageByIdQuery(int id) : IRequest<ThumbnailImageDto?>;
+    public record GetThumbnailImageByIdQuery(int id, bool isTracked = true) : IRequest<ThumbnailImageDto>;
 }

@@ -1,13 +1,18 @@
 ﻿using AutoMapper;
 using BL.DTOs;
 using BL.Features.Categories.Queries.GetAllCategories;
-using BL.Features.GalleryImages.Commands;
+using BL.Features.GalleryImages.Commands.CreateGalleryImages;
+using BL.Features.GalleryImages.Commands.DeleteGalleryImages;
+using BL.Features.GalleryImages.Queries.GetGalleryImagesByProductId;
 using BL.Features.Products.Commands.CreateProduct;
+using BL.Features.Products.Commands.DeleteProduct;
 using BL.Features.Products.Commands.UpdateProduct;
 using BL.Features.Products.Queries.GetAllProducts;
 using BL.Features.Products.Queries.GetPagedProducts;
 using BL.Features.Products.Queries.GetProductById;
 using BL.Features.ThumbnailImages.Commands.CreateThumbnailImage;
+using BL.Features.ThumbnailImages.Commands.DeleteThumbnailImage;
+using BL.Features.ThumbnailImages.Queries.GetThumbnailById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -21,13 +26,15 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
+        private readonly ILogger<ProductController> _logger;
 
         private const string errorMessage = "Something went wrong. Try again later!";
 
-        public ProductController(IMediator mediator, IMapper mapper)
+        public ProductController(IMediator mediator, IMapper mapper, ILogger<ProductController> logger)
         {
             _mediator = mediator;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<IActionResult> AllProducts(int page, int size, string filterBy, string? searchTerm)
@@ -35,11 +42,11 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
             if (size == 0)
                 size = 5;
 
-            var pagedProducts = await _mediator.Send(new GetPagedProductsQuery(page, size, filterBy, searchTerm));
-            int? numberOfAllProducts = _mediator.Send(new GetAllProductsQuery()).GetAwaiter().GetResult()?.Count();
-
-            if(pagedProducts != null && numberOfAllProducts != null)
+            try
             {
+                var pagedProducts = await _mediator.Send(new GetPagedProductsQuery(page, size, filterBy, searchTerm));
+                int numberOfAllProducts = _mediator.Send(new GetAllProductsQuery()).GetAwaiter().GetResult().Count();
+
                 ViewData["page"] = page;
                 ViewData["size"] = size;
                 ViewData["pages"] = (int)Math.Ceiling((double)numberOfAllProducts / size);
@@ -48,9 +55,12 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
 
                 return View(pagedProductsVm);
             }
-
-            TempData["error"] = errorMessage;
-            return StatusCode(500);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message + "\n" + ex.StackTrace);
+                TempData["error"] = errorMessage;
+                return StatusCode(500);
+            }
         }
 
         public async Task<IActionResult> ProductTableBodyPartial(int page, int size, string filterBy, string? searchTerm)
@@ -58,67 +68,101 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
             if (size == 0)
                 size = 5;
 
-            var pagedProducts = await _mediator.Send(new GetPagedProductsQuery(page, size, filterBy, searchTerm));
-            int? numberOfAllProducts = _mediator.Send(new GetAllProductsQuery()).GetAwaiter().GetResult()?.Count();
-
-            if (pagedProducts != null && numberOfAllProducts != null)
+            try
             {
+                var pagedProducts = await _mediator.Send(new GetPagedProductsQuery(page, size, filterBy, searchTerm));
+                int numberOfAllProducts = _mediator.Send(new GetAllProductsQuery()).GetAwaiter().GetResult().Count();
+
                 ViewData["page"] = page;
                 ViewData["size"] = size;
                 ViewData["pages"] = (int)Math.Ceiling((double)numberOfAllProducts / size);
 
+                var pagedProductsVm = _mapper.Map<IEnumerable<ProductVM>>(pagedProducts);
+
                 return PartialView("_ProductTableBodyPartial", _mapper.Map<IEnumerable<ProductVM>>(pagedProducts));
             }
-
-            TempData["error"] = errorMessage;
-            return StatusCode(500);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message + "\n" + ex.StackTrace);
+                TempData["error"] = errorMessage;
+                return StatusCode(500);
+            }
         }
 
         public async Task<IActionResult> CreateProduct()
         {
-            var allCategories = await _mediator.Send(new GetAllCategoriesQuery());
-
-            ProductVM productVm = new()
+            try
             {
-                Categories = allCategories.Select(c => new SelectListItem()
-                {
-                    Text = c.Name,
-                    Value = c.Id.ToString()
-                })
-            };
+                var allCategories = await _mediator.Send(new GetAllCategoriesQuery());
 
-            return View(productVm);
+                ProductVM productVm = new()
+                {
+                    Categories = allCategories.Select(c => new SelectListItem()
+                    {
+                        Text = c.Name,
+                        Value = c.Id.ToString()
+                    })
+                };
+
+                return View(productVm);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message + "\n" + ex.StackTrace);
+                TempData["error"] = errorMessage;
+                return NoContent();
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateProduct(ProductVM newProduct)
         {
-            using(var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            try
             {
-                var createdThumbnailImageId = await _mediator.Send(new CreateThumbnailImageCommand(newProduct.NewThumbnailImage, newProduct.Name));
+                if (!ModelState.IsValid)
+                {
+                    var allCategories = await _mediator.Send(new GetAllCategoriesQuery());
 
-                if (createdThumbnailImageId != null)
-                    newProduct.ThumbnailImageId = (int)createdThumbnailImageId;
+                    newProduct.Categories = allCategories.Select(c => new SelectListItem()
+                    {
+                        Text = c.Name,
+                        Value = c.Id.ToString()
+                    });
 
-                var createdProduct = await _mediator.Send(new CreateProductCommand(_mapper.Map<ProductDto>(newProduct)));
+                    return View(newProduct);
+                }
 
-                var createdGalleryImages = await _mediator.Send(new CreateGalleryImagesCommand(newProduct.NewGalleryImages, (int)createdProduct, newProduct.Name));
+                using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    var createdThumbnailImageId = await _mediator.Send(new CreateThumbnailImageCommand(newProduct.NewThumbnailImage, newProduct.Name));
+                    newProduct.ThumbnailImageId = createdThumbnailImageId;
 
-                transaction.Complete();
+                    var createdProductId = await _mediator.Send(new CreateProductCommand(_mapper.Map<ProductDto>(newProduct)));
+
+                    await _mediator.Send(new CreateGalleryImagesCommand(newProduct.NewGalleryImages, createdProductId, newProduct.Name));
+
+                    transaction.Complete();
+                }
+
+                TempData["success"] = "Product created successfully";
+                return RedirectToAction(nameof(AllProducts));
             }
-
-            TempData["success"] = "Product created successfully";
-            return RedirectToAction(nameof(AllProducts));
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message + "\n" + ex.StackTrace);
+                TempData["error"] = errorMessage;
+                return RedirectToAction(nameof(AllProducts));
+            }
         }
 
         public async Task<IActionResult> UpdateProduct(int id)
         {
-            var productForUpdate = await _mediator.Send(new GetProductByIdQuery(id));
-            var allCategories = await _mediator.Send(new GetAllCategoriesQuery());
-
-            if (productForUpdate != null && allCategories != null)
+            try
             {
+                var productForUpdate = await _mediator.Send(new GetProductByIdQuery(id));
+                var allCategories = await _mediator.Send(new GetAllCategoriesQuery());
+
                 var productVM = _mapper.Map<ProductVM>(productForUpdate);
 
                 productVM.Categories = allCategories.Select(c => new SelectListItem()
@@ -129,34 +173,84 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
 
                 return View(productVM);
             }
-
-            TempData["error"] = errorMessage;
-            return StatusCode(500);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message + "\n" + ex.StackTrace);
+                TempData["error"] = errorMessage;
+                return NoContent();
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateProduct(ProductVM productForUpdate)
         {
-            if(!ModelState.IsValid) return View(productForUpdate);
-
-            var updatedProduct = await _mediator.Send(new UpdateProductCommand(_mapper.Map<ProductDto>(productForUpdate)));
-
-            if(updatedProduct != null)
+            try
             {
+                if (!ModelState.IsValid) return View(productForUpdate);
+
+                var oldThumbnailImageId = productForUpdate.ThumbnailImageId;
+
+                using(var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    if (productForUpdate.NewThumbnailImage != null)
+                    {
+                        var updatedThumbnailImageId = await _mediator.Send(new CreateThumbnailImageCommand(productForUpdate.NewThumbnailImage, productForUpdate.Name));
+                        productForUpdate.ThumbnailImageId = updatedThumbnailImageId;
+                    }
+
+                    var updatedProductId = await _mediator.Send(new UpdateProductCommand(_mapper.Map<ProductDto>(productForUpdate)));
+
+                    if (productForUpdate.NewThumbnailImage != null)
+                    {
+                        var thumbnailImageForDelete = await _mediator.Send(new GetThumbnailImageByIdQuery(oldThumbnailImageId, false));
+                        var deletedThumbnailImage = await _mediator.Send(new DeleteThumbnailImageCommand(thumbnailImageForDelete));
+                    }
+
+                    if (productForUpdate.NewGalleryImages != null)
+                    {
+                        var galleryImagesForDelete = await _mediator.Send(new GetGalleryImagesByProductIdQuery(updatedProductId, false));
+                        await _mediator.Send(new DeleteGalleryImagesCommand(galleryImagesForDelete));
+                        await _mediator.Send(new CreateGalleryImagesCommand(productForUpdate.NewGalleryImages, updatedProductId, productForUpdate.Name));
+                    }
+
+                    transaction.Complete();
+                }
+
                 TempData["success"] = "Product updated successfully";
                 return RedirectToAction(nameof(AllProducts));
             }
-
-            TempData["error"] = errorMessage;
-            return StatusCode(500);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message + "\n" + ex.StackTrace);
+                TempData["error"] = errorMessage;
+                return RedirectToAction(nameof(AllProducts));
+            }
         }
 
         #region API Calls
         [HttpDelete]
-        public async Task<IActionResult> Deleteproduct(int id)
+        public async Task<IActionResult> DeleteProduct(int id)
         {
+            try
+            {
+                var galleryImagesForDelete = await _mediator.Send(new GetGalleryImagesByProductIdQuery(id, false));
+                await _mediator.Send(new DeleteGalleryImagesCommand(galleryImagesForDelete));
 
+                var productForDelete = await _mediator.Send(new GetProductByIdQuery(id, false));
+
+                if (productForDelete == null)
+                    return Json(new { success = false, message = "Product not found." });
+
+                var deletedProduct = await _mediator.Send(new DeleteProductCommand(productForDelete));
+
+                return Json(new { success = true, message = "Successfully deleted product" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message + "\n" + ex.StackTrace);
+                return Json(new { success = false, message = errorMessage });
+            }
         }
         #endregion
     }

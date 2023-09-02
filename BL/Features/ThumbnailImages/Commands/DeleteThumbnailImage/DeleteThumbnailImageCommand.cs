@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 
 namespace BL.Features.ThumbnailImages.Commands.DeleteThumbnailImage
 {
-    public record DeleteThumbnailImageCommand(ThumbnailImageDto thumbnailImageForDelete) : IRequest<int?>;
+    public record DeleteThumbnailImageCommand(ThumbnailImageDto thumbnailImageForDelete) : IRequest<int>;
 }

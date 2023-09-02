@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 
 namespace BL.Features.GalleryImages.Queries.GetGalleryImageById
 {
-    public record GetGalleryImageByIdQuery(int id) : IRequest<GalleryImageDto?>;
+    public record GetGalleryImageByIdQuery(int id) : IRequest<GalleryImageDto>;
 }

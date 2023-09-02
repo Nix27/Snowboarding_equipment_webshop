@@ -9,5 +9,5 @@ using System.Threading.Tasks;
 
 namespace BL.Features.ThumbnailImages.Commands.CreateThumbnailImage
 {
-    public record CreateThumbnailImageCommand(IFormFile newThumbnailImage, string title) : IRequest<int?>;
+    public record CreateThumbnailImageCommand(IFormFile newThumbnailImage, string title) : IRequest<int>;
 }

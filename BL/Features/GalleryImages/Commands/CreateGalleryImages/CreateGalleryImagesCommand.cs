@@ -6,10 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BL.Features.GalleryImages.Commands
+namespace BL.Features.GalleryImages.Commands.CreateGalleryImages
 {
     public record CreateGalleryImagesCommand(
-        IEnumerable<IFormFile> newGalleryImages, 
-        int productId, 
-        string title) : IRequest<bool>;
+        IEnumerable<IFormFile> newGalleryImages,
+        int productId,
+        string title) : IRequest;
 }
