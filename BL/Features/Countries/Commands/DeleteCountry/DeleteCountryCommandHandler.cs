@@ -1,50 +1,29 @@
 ﻿using AutoMapper;
-using BL.DTOs;
-using BL.Features.Countries.Commands.CreateCountry;
 using DAL.Models;
 using DAL.UnitOfWork;
 using MediatR;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BL.Features.Countries.Commands.DeleteCountry
 {
-    public class DeleteCountryCommandHandler : IRequestHandler<DeleteCountryCommand, int?>
+    public class DeleteCountryCommandHandler : IRequestHandler<DeleteCountryCommand, int>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly ILogger<DeleteCountryCommand> _logger;
 
-        public DeleteCountryCommandHandler(
-            IUnitOfWork unitOfWork,
-            IMapper mapper,
-            ILogger<DeleteCountryCommand> logger)
+        public DeleteCountryCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _logger = logger;
         }
 
-        public async Task<int?> Handle(DeleteCountryCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(DeleteCountryCommand request, CancellationToken cancellationToken)
         {
-            try
-            {
-                var countryForDelete = _mapper.Map<Country>(request.countryForDelete);
+            var countryForDelete = _mapper.Map<Country>(request.countryForDelete);
 
-                _unitOfWork.Country.Delete(countryForDelete);
-                await _unitOfWork.SaveAsync();
+            _unitOfWork.Country.Delete(countryForDelete);
+            await _unitOfWork.SaveAsync();
 
-                return countryForDelete.Id;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex.StackTrace);
-                return null;
-            }
+            return countryForDelete.Id;
         }
     }
 }

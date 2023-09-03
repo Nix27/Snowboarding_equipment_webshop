@@ -1,49 +1,29 @@
 ﻿using AutoMapper;
-using BL.DTOs;
 using DAL.Models;
 using DAL.UnitOfWork;
 using MediatR;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BL.Features.Categories.Commands.CreateCategory
 {
-    public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, int?>
+    public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, int>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly ILogger<CreateCategoryCommand> _logger;
 
-        public CreateCategoryCommandHandler(
-            IUnitOfWork unitOfWork, 
-            IMapper mapper, 
-            ILogger<CreateCategoryCommand> logger)
+        public CreateCategoryCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _logger = logger;
         }
 
-        public async Task<int?> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
         {
-            try
-            {
-                var newCategory = _mapper.Map<Category>(request.newCategory);
+            var newCategory = _mapper.Map<Category>(request.newCategory);
 
-                await _unitOfWork.Category.CreateAsync(newCategory);
-                await _unitOfWork.SaveAsync();
+            await _unitOfWork.Category.CreateAsync(newCategory);
+            await _unitOfWork.SaveAsync();
 
-                return newCategory.Id;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex.StackTrace);
-                return null;
-            }
+            return newCategory.Id;
         }
     }
 }

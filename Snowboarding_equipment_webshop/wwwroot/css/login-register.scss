@@ -36,3 +36,13 @@
         color: $primary-black;
     }
 }
+
+#logout{
+    background-color: $primary-black;
+    color: $nav-link;
+    border: none;
+
+    &:hover{
+        color: $primary-white;
+    }
+}

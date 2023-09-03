@@ -17,12 +17,14 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
+        private readonly ILogger<CategoryController> _logger;
         private const string errorMessage = "Something went wrong. Try again later!";
 
-        public CategoryController(IMediator mediator, IMapper mapper)
+        public CategoryController(IMediator mediator, IMapper mapper, ILogger<CategoryController> logger)
         {
             _mediator = mediator;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<IActionResult> AllCategories(int page, int size, string? searchTerm)
@@ -30,20 +32,23 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
             if (size == 0)
                 size = 5;
 
-            var pagedCategories = await _mediator.Send(new GetPagedCategoriesQuery(page, size, searchTerm));
-            int? numberOfAllCategories = _mediator.Send(new GetAllCategoriesQuery()).GetAwaiter().GetResult()?.Count();
-
-            if (pagedCategories != null && numberOfAllCategories != null)
+            try
             {
+                var pagedCategories = await _mediator.Send(new GetPagedCategoriesQuery(page, size, searchTerm));
+                int? numberOfAllCategories = _mediator.Send(new GetAllCategoriesQuery()).GetAwaiter().GetResult()?.Count();
+
                 ViewData["page"] = page;
                 ViewData["size"] = size;
                 ViewData["pages"] = (int)Math.Ceiling((double)numberOfAllCategories / size);
 
                 return View(_mapper.Map<IEnumerable<CategoryVM>>(pagedCategories));
             }
-
-            TempData["error"] = errorMessage;
-            return StatusCode(500);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message + "\n" + ex.StackTrace);
+                TempData["error"] = errorMessage;
+                return StatusCode(500);
+            }
         }
 
         public async Task<IActionResult> CategoryTableBodyPartial(int page, int size, string? searchTerm)
@@ -51,11 +56,27 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
             if (size == 0)
                 size = 5;
 
-            var pagedCategories = await _mediator.Send(new GetPagedCategoriesQuery(page, size, searchTerm));
-            int? numberOfAllCategories = _mediator.Send(new GetAllCategoriesQuery()).GetAwaiter().GetResult()?.Count();
-
-            if (pagedCategories != null && numberOfAllCategories != null)
+            try
             {
+                var pagedCategories = await _mediator.Send(new GetPagedCategoriesQuery(page, size, searchTerm));
+                int? numberOfAllCategories;
+
+                if (searchTerm != null)
+                {
+                    numberOfAllCategories = _mediator.Send(new GetAllCategoriesQuery())
+                                                     .GetAwaiter()
+                                                     .GetResult()?
+                                                     .Where(c => c.Name.ToLower().Contains(searchTerm))
+                                                     .Count();
+                }
+                else
+                {
+                    numberOfAllCategories = _mediator.Send(new GetAllCategoriesQuery())
+                                                     .GetAwaiter()
+                                                     .GetResult()?
+                                                     .Count();
+                }
+
                 ViewData["page"] = page;
                 ViewData["size"] = size;
                 ViewData["pages"] = (int)Math.Ceiling((double)numberOfAllCategories / size);
@@ -63,9 +84,12 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
 
                 return PartialView("_CategoryTableBodyPartial", _mapper.Map<IEnumerable<CategoryVM>>(pagedCategories));
             }
-
-            TempData["error"] = errorMessage;
-            return StatusCode(500);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message + "\n" + ex.StackTrace);
+                TempData["error"] = errorMessage;
+                return StatusCode(500);
+            }
         }
 
         public IActionResult CreateCategory()
@@ -79,27 +103,34 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
         {
             if(!ModelState.IsValid) return View(newCategory);
 
-            var createdCategory = await _mediator.Send(new CreateCategoryCommand(_mapper.Map<CategoryDto>(newCategory)));
-
-            if(createdCategory != null)
+            try
             {
+                await _mediator.Send(new CreateCategoryCommand(_mapper.Map<CategoryDto>(newCategory)));
+
                 TempData["success"] = "Category added successfully";
                 return RedirectToAction(nameof(AllCategories));
             }
-
-            TempData["error"] = errorMessage;
-            return View(nameof(AllCategories));
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message + "\n" + ex.StackTrace);
+                TempData["error"] = errorMessage;
+                return StatusCode(500);
+            }
         }
 
         public async Task<IActionResult> UpdateCategory(int id)
         {
-            var categoryForUpdate = await _mediator.Send(new GetCategoryByIdQuery(id));
-
-            if(categoryForUpdate != null)
+            try
+            {
+                var categoryForUpdate = await _mediator.Send(new GetCategoryByIdQuery(id));
                 return View(_mapper.Map<CategoryVM>(categoryForUpdate));
-
-            TempData["error"] = errorMessage;
-            return StatusCode(500);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message + "\n" + ex.StackTrace);
+                TempData["error"] = errorMessage;
+                return StatusCode(500);
+            }
         }
 
         [HttpPost]
@@ -108,34 +139,41 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
         {
             if(!ModelState.IsValid) return View(categoryForUpdate);
 
-            var updatedCategory = await _mediator.Send(new UpdateCategoryCommand(_mapper.Map<CategoryDto>(categoryForUpdate)));
-
-            if(updatedCategory != null)
+            try
             {
+                await _mediator.Send(new UpdateCategoryCommand(_mapper.Map<CategoryDto>(categoryForUpdate)));
+
                 TempData["success"] = "Category updated successfully";
                 return RedirectToAction(nameof(AllCategories));
             }
-
-            TempData["error"] = errorMessage;
-            return View(nameof(AllCategories));
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message + "\n" + ex.StackTrace);
+                TempData["error"] = errorMessage;
+                return StatusCode(500);
+            }
         }
 
         #region API Calls
         [HttpDelete]
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            var categoryForDelete = await _mediator.Send(new GetCategoryByIdQuery(id, false));
+            try
+            {
+                var categoryForDelete = await _mediator.Send(new GetCategoryByIdQuery(id, false));
 
-            if(categoryForDelete == null)
-                return Json(new { success = false, message = "Category not found" });
+                if (categoryForDelete == null)
+                    return Json(new { success = false, message = "Category not found" });
 
-            var deletedCategory = await _mediator.Send(new DeleteCategoryCommand(categoryForDelete));
+                await _mediator.Send(new DeleteCategoryCommand(categoryForDelete));
 
-            if(deletedCategory != null)
                 return Json(new { success = true, message = "Successfully deleted category" });
-
-            TempData["error"] = errorMessage;
-            return StatusCode(500);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message + "\n" + ex.StackTrace);
+                return Json(new { success = false, message = errorMessage });
+            }
         }
         #endregion
     }

@@ -7,7 +7,7 @@
     var size = (int)ViewData["size"];
     var pages = (int)ViewData["pages"] - 1;
 
-    ViewData["action"] = "AllCountries";
+    ViewData["action"] = "AllCategories";
 }
 
 <input id="hiddenData" data-pages="@pages" data-size="@size" data-url="CategoryTableBodyPartial" hidden />
@@ -33,7 +33,7 @@
 @section Scripts{
     <partial name="_NotificationPartial" />
     <script src="~/js/delete-warning.js"></script>
-    <script src="~/js/pagination.js"></script>
-    <script src="~/js/search.js"></script>
+    <script src="~/js/pagination.js" asp-append-version="true"></script>
+    <script src="~/js/search.js" asp-append-version="true"></script>
 }
 

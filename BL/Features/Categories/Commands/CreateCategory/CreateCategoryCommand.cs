@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 
 namespace BL.Features.Categories.Commands.CreateCategory
 {
-    public record CreateCategoryCommand(CategoryDto newCategory) : IRequest<int?>;
+    public record CreateCategoryCommand(CategoryDto newCategory) : IRequest<int>;
 }

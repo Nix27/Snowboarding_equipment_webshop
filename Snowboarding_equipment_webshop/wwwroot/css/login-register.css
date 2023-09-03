@@ -31,3 +31,12 @@
 .register-link:hover {
   color: #1A1A1A;
 }
+
+#logout {
+  background-color: #1A1A1A;
+  color: #9A9A9A;
+  border: none;
+}
+#logout:hover {
+  color: #ffffff;
+}

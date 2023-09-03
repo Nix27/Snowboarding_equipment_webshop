@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 
 namespace BL.Features.Categories.Queries.GetAllCategories
 {
-    public record GetAllCategoriesQuery : IRequest<IEnumerable<CategoryDto>?>;
+    public record GetAllCategoriesQuery : IRequest<IEnumerable<CategoryDto>>;
 }

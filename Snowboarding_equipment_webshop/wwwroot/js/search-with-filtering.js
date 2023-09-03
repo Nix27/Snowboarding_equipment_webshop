@@ -4,7 +4,7 @@ let pageKey = $('#hiddenData').data('keypage');
 
 let loadedPage = localStorage.getItem(pageKey);
 let loadedFilterBy = localStorage.getItem(filterByKey);
-let loadedSearchTerm = localStorage.getItem(filterKey);
+let loadedSearchTerm = localStorage.getItem(searchTermKey);
 
 $(() => {
     if (loadedPage !== null) {

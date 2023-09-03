@@ -9,5 +9,5 @@ using System.Threading.Tasks;
 
 namespace BL.Features.Countries.Queries.GetAllCountries
 {
-    public record GetAllCountriesQuery() : IRequest<IEnumerable<CountryDto>?>;
+    public record GetAllCountriesQuery() : IRequest<IEnumerable<CountryDto>>;
 }
