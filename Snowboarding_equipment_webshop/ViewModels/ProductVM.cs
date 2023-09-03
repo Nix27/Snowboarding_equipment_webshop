@@ -34,10 +34,10 @@ namespace Snowboarding_equipment_webshop.ViewModels
         [ValidateNever]
         public Category Category { get; set; }
 
-        public int ThumbnailImageId { get; set; }
+        public int? ThumbnailImageId { get; set; }
 
         [ValidateNever]
-        public ThumbnailImage ThumbnailImage { get; set; }
+        public ThumbnailImage? ThumbnailImage { get; set; }
 
         [ValidateNever]
         public ICollection<GalleryImage> GalleryImages { get; set; }

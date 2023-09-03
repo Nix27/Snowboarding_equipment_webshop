@@ -80,32 +80,6 @@
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
-
-    <script>
-        $('#thumbnail-image').on('change', function() {
-            let image = this.files[0];
-            let reader = new FileReader();
-
-            reader.onload = function (e) {
-                $('#thumbnail').attr('src', e.target.result);
-            };
-
-            reader.readAsDataURL(image);
-        });
-
-        $('#gallery-images').on('change', function() {
-            let images = Array.from(this.files);
-            
-            images.forEach(image => {
-                let reader = new FileReader();
-
-                reader.onload = function (e) {
-                    $('#gallery').append(`<img src='${e.target.result}' width='70px' height='70px' alt='Gallery image' />`);
-                };
-
-                reader.readAsDataURL(image);
-            });
-        })
-    </script>
+    <script src="~/js/product.js"></script>
 }
 

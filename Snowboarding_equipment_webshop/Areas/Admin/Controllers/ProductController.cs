@@ -135,13 +135,19 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
 
                 using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    var createdThumbnailImageId = await _mediator.Send(new CreateThumbnailImageCommand(newProduct.NewThumbnailImage, newProduct.Name));
-                    newProduct.ThumbnailImageId = createdThumbnailImageId;
+                    if(newProduct.NewThumbnailImage != null)
+                    {
+                        var createdThumbnailImageId = await _mediator.Send(new CreateThumbnailImageCommand(newProduct.NewThumbnailImage, newProduct.Name));
+                        newProduct.ThumbnailImageId = createdThumbnailImageId;
+                    }
 
                     var createdProductId = await _mediator.Send(new CreateProductCommand(_mapper.Map<ProductDto>(newProduct)));
 
-                    await _mediator.Send(new CreateGalleryImagesCommand(newProduct.NewGalleryImages, createdProductId, newProduct.Name));
-
+                    if(newProduct.NewGalleryImages != null)
+                    {
+                        await _mediator.Send(new CreateGalleryImagesCommand(newProduct.NewGalleryImages, createdProductId, newProduct.Name));
+                    }
+                    
                     transaction.Complete();
                 }
 
@@ -201,9 +207,9 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
 
                     var updatedProductId = await _mediator.Send(new UpdateProductCommand(_mapper.Map<ProductDto>(productForUpdate)));
 
-                    if (productForUpdate.NewThumbnailImage != null)
+                    if (oldThumbnailImageId != null && productForUpdate.NewThumbnailImage != null)
                     {
-                        var thumbnailImageForDelete = await _mediator.Send(new GetThumbnailImageByIdQuery(oldThumbnailImageId, false));
+                        var thumbnailImageForDelete = await _mediator.Send(new GetThumbnailImageByIdQuery((int)oldThumbnailImageId, false));
                         var deletedThumbnailImage = await _mediator.Send(new DeleteThumbnailImageCommand(thumbnailImageForDelete));
                     }
 
@@ -234,9 +240,6 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
         {
             try
             {
-                var galleryImagesForDelete = await _mediator.Send(new GetGalleryImagesByProductIdQuery(id, false));
-                await _mediator.Send(new DeleteGalleryImagesCommand(galleryImagesForDelete));
-
                 var productForDelete = await _mediator.Send(new GetProductByIdQuery(id, false));
 
                 if (productForDelete == null)

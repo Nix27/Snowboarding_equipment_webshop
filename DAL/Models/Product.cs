@@ -25,9 +25,9 @@ namespace DAL.Models
         [ForeignKey(nameof(CategoryId))]
         public Category Category { get; set; }
 
-        public int ThumbnailImageId { get; set; }
+        public int? ThumbnailImageId { get; set; }
         [ForeignKey(nameof(ThumbnailImageId))]
-        public ThumbnailImage ThumbnailImage { get; set; }
+        public ThumbnailImage? ThumbnailImage { get; set; }
 
         public ICollection<GalleryImage> GalleryImages { get; set; }
     }

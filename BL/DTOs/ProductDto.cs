@@ -19,8 +19,8 @@ namespace BL.DTOs
         public double? OldPrice { get; set; }
         public int CategoryId { get; set; }
         public Category Category { get; set; }
-        public int ThumbnailImageId { get; set; }
-        public ThumbnailImage ThumbnailImage { get; set; }
+        public int? ThumbnailImageId { get; set; }
+        public ThumbnailImage? ThumbnailImage { get; set; }
         public ICollection<GalleryImage> GalleryImages { get; set; }
     }
 }

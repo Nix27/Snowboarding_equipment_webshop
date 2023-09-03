@@ -4,6 +4,7 @@ using DAL.AppDbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230903150839_ChangeProductThumbnailImageToNullable")]
+    partial class ChangeProductThumbnailImageToNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,6 +119,7 @@ namespace DAL.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("ThumbnailImageId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -411,7 +415,9 @@ namespace DAL.Migrations
 
                     b.HasOne("DAL.Models.ThumbnailImage", "ThumbnailImage")
                         .WithMany()
-                        .HasForeignKey("ThumbnailImageId");
+                        .HasForeignKey("ThumbnailImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Category");
 
