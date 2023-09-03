@@ -1,0 +1,38 @@
+﻿@import 'variables';
+
+.title {
+    &::before {
+        content: '';
+        width: 32%;
+        height: 3px;
+        background-color: $primary-black;
+        margin-right: 20px;
+    }
+
+    &::after {
+        content: '';
+        width: 32%;
+        height: 3px;
+        background-color: $primary-black;
+        margin-left: 20px;
+    }
+}
+
+#login-submit, #registerSubmit {
+    border-radius: 20px;
+    padding: 0.525rem 0;
+}
+
+.registration-question {
+    font-family: 'Poppins', sans-serif;
+}
+
+.register-link{
+    text-decoration: none;
+    color: $primary-black;
+    font-size: 1.2rem;
+
+    &:hover{
+        color: $primary-black;
+    }
+}
