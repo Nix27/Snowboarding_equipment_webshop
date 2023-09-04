@@ -1,6 +1,9 @@
 ﻿/*colors*/
 * {
   font-family: "Paytone One", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 html {
@@ -177,4 +180,10 @@ nav .mobile-menu, nav .menu-btn {
 .btn-pagination-active:hover {
   color: #1A1A1A;
   transform: scale(1.1);
+}
+
+/*for home page*/
+.slide-img {
+  height: 60vh;
+  object-fit: cover;
 }
