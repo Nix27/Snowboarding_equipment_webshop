@@ -1,4 +1,6 @@
 ﻿/*colors*/
+/*font size*/
+/*admin*/
 .gallery-image {
   width: 70px;
   height: 70px;
@@ -14,4 +16,46 @@
   overflow: auto;
   border-top: 2px solid #1A1A1A;
   padding-top: 10px;
+}
+
+/*customer*/
+.bestseller-product-image {
+  width: 100%;
+}
+
+.bestseller-image {
+  width: 50%;
+  height: 200px;
+}
+
+.old-price {
+  text-decoration: line-through;
+  font-size: 0.8rem;
+}
+
+.stock, .out-of-stock, .on-stock {
+  font-size: 0.9rem;
+}
+
+.on-stock {
+  color: limegreen;
+}
+
+.out-of-stock {
+  color: red;
+}
+
+.btn-buy {
+  text-decoration: none;
+  color: #1A1A1A;
+  display: block;
+  width: 100%;
+  text-align: center;
+  background: url("../images/bg-btn-buy.jpg");
+  border-radius: 1.0625rem;
+  transition: 0.2s ease-in-out;
+}
+.btn-buy:hover {
+  color: #1A1A1A;
+  transform: scale(1.1);
 }

@@ -1,4 +1,5 @@
 ﻿/*colors*/
+/*font size*/
 * {
   font-family: "Paytone One", sans-serif;
   margin: 0;
@@ -182,8 +183,31 @@ nav .mobile-menu, nav .menu-btn {
   transform: scale(1.1);
 }
 
-/*for home page*/
+.title::before {
+  content: "";
+  width: 32%;
+  height: 3px;
+  background-color: #1A1A1A;
+  margin-right: 20px;
+}
+.title::after {
+  content: "";
+  width: 32%;
+  height: 3px;
+  background-color: #1A1A1A;
+  margin-left: 20px;
+}
+
+.poppins-font-family {
+  font-family: "Poppins", sans-serif;
+}
+
+/*for home page elements where css isolation not working*/
 .slide-img {
   height: 60vh;
   object-fit: cover;
+}
+
+.title-image {
+  width: 15%;
 }

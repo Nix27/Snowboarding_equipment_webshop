@@ -1,5 +1,6 @@
 ﻿@import 'variables';
 
+/*admin*/
 .gallery-image {
     width: 70px;
     height: 70px;
@@ -15,4 +16,49 @@
     overflow: auto;
     border-top: 2px solid $primary-black;
     padding-top: 10px;
+}
+
+/*customer*/
+.bestseller-product-image {
+    width: 100%;
+}
+
+.bestseller-image {
+    width: 50%;
+    height: 200px;
+}
+
+.old-price {
+    text-decoration: line-through;
+    font-size: $extra-small;
+}
+
+.stock{
+    font-size: $small;
+}
+
+.on-stock{
+    @extend .stock;
+    color: limegreen;
+}
+
+.out-of-stock {
+    @extend .stock;
+    color: red;
+}
+
+.btn-buy {
+    text-decoration: none;
+    color: $primary-black;
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: url('../images/bg-btn-buy.jpg');
+    border-radius: 1.0625rem;
+    transition: .2s ease-in-out;
+
+    &:hover{
+        color: $primary-black;
+        transform: scale(1.1);
+    }
 }

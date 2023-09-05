@@ -216,8 +216,34 @@ nav {
     }
 }
 
-/*for home page*/
+.title {
+    &::before {
+        content: '';
+        width: 32%;
+        height: 3px;
+        background-color: $primary-black;
+        margin-right: 20px;
+    }
+
+    &::after {
+        content: '';
+        width: 32%;
+        height: 3px;
+        background-color: $primary-black;
+        margin-left: 20px;
+    }
+}
+
+.poppins-font-family {
+    font-family: 'Poppins', sans-serif;
+}
+
+/*for home page elements where css isolation not working*/
 .slide-img {
     height: 60vh;
     object-fit: cover;
+}
+
+.title-image {
+    width: 15%;
 }
