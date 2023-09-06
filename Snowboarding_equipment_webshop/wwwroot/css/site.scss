@@ -246,4 +246,13 @@ nav {
 
 .title-image {
     width: 15%;
+
+    @media only screen and (max-width: 767px){
+        width: 50%;
+    }
+}
+
+.newsletter {
+    height: 300px;
+    background: url('../images/bg-newsletter.jpg');
 }

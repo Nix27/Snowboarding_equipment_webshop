@@ -211,3 +211,13 @@ nav .mobile-menu, nav .menu-btn {
 .title-image {
   width: 15%;
 }
+@media only screen and (max-width: 767px) {
+  .title-image {
+    width: 50%;
+  }
+}
+
+.newsletter {
+  height: 300px;
+  background: url("../images/bg-newsletter.jpg");
+}
