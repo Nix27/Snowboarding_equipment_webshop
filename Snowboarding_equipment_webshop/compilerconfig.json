@@ -34,5 +34,9 @@
   {
     "outputFile": "Areas/Customer/Views/Home/Index.cshtml.css",
     "inputFile": "Areas/Customer/Views/Home/Index.cshtml.scss"
+  },
+  {
+    "outputFile": "Areas/Customer/Views/Products/OurProducts.cshtml.css",
+    "inputFile": "Areas/Customer/Views/Products/OurProducts.cshtml.scss"
   }
 ]

@@ -33,13 +33,20 @@
                                 <a class="nav-link pt-4" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link pt-4" asp-area="Admin" asp-controller="Category" asp-action="AllCategories">Categories</a>
+                                <a class="nav-link pt-4" asp-area="Customer" asp-controller="Products" asp-action="OurProducts">Products</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link pt-4" asp-area="Admin" asp-controller="Country" asp-action="AllCountries">Countries</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link pt-4" asp-area="Admin" asp-controller="Product" asp-action="AllProducts">Products</a>
+                                <div class="dropdown pt-3">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Manage
+                                    </a>
+
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="AllCategories">Categories</a></li>
+                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Country" asp-action="AllCountries">Countries</a></li>
+                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="AllProducts">Products</a></li>
+                                    </ul>
+                                </div>
                             </li>
                         </ul>
                     </div>
@@ -67,13 +74,23 @@
                                 <partial name="_LoginPartial" />
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link pt-4" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                <a class="nav-link pt-1" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link pt-4" asp-area="Admin" asp-controller="Category" asp-action="AllCategories">Categories</a>
+                                <a class="nav-link pt-1" asp-area="Customer" asp-controller="Products" asp-action="OurProducts">Products</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link pt-4" asp-area="Admin" asp-controller="Country" asp-action="AllCountries">Countries</a>
+                                <div class="dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Manage
+                                    </a>
+
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="AllCategories">Categories</a></li>
+                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Country" asp-action="AllCountries">Countries</a></li>
+                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="AllProducts">Products</a></li>
+                                    </ul>
+                                </div>
                             </li>
                         </ul>
                         <button id="btn-close" class="rounded-circle position-absolute start-50 top-25 translate-middle-x">X</button>
