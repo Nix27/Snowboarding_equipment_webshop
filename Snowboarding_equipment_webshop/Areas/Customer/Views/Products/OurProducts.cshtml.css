@@ -11,3 +11,52 @@
   flex-direction: column;
   color: #ffffff;
 }
+
+input[type=checkbox] {
+  appearance: none;
+  background-color: white;
+  margin: 0;
+  width: 1em;
+  height: 1em;
+  border: 2px solid #1A1A1A;
+  display: grid;
+  place-content: center;
+}
+
+input[type=checkbox]::before {
+  content: "";
+  width: 1em;
+  height: 1em;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em #1A1A1A;
+}
+
+input[type=checkbox]:checked::before {
+  transform: scale(0.5);
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+input[type=number] {
+  background-color: #D9D9D9;
+}
+
+#filter-area {
+  border-right: 1px solid #1A1A1A;
+}
+
+.product-item {
+  height: 300px;
+}
+.product-item .product-item-header {
+  width: 100%;
+  height: 60%;
+}
+.product-item .product-item-body {
+  background-color: #D9D9D9;
+}

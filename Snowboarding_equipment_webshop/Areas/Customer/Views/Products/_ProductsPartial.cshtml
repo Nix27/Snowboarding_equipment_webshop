@@ -1,0 +1,27 @@
+﻿@model IEnumerable<ProductVM>
+
+@foreach(var product in Model)
+{
+    <div class="col-sm-12 col-md-6 col-lg-3 product-item">
+        <div class="product-item-header">
+            @{ var imageUrl = Url.Action("GetImage", "Image", new{ area = "Customer", imageType = ImageType.Thumbnail, id = product.ThumbnailImageId }); }
+            <img src="@imageUrl" alt="product image" />
+        </div>
+        <div class="product-item-body">
+            <h3>@product.Name</h3>
+            <p>@product.Description</p>
+
+            @{ string stockClass = product.QuantityInStock > 0 ? "on-stock" : "out-of-stock"; }
+            <span class="poppins-font-family">@(product.QuantityInStock > 0 ? "On stock" : "Out of stock")</span>
+
+            @if(product.OldPrice != null)
+            {
+                <s class="poppins-font-family old-price">€@product.OldPrice</s>
+            }
+
+            <span class="poppins-font-family mb-3">€@product.Price</span>
+
+            <a asp-area="" asp-controller="" asp-action="" asp-route-id="@product.Id" class="btn-buy">Buy</a>
+        </div>
+    </div>
+}

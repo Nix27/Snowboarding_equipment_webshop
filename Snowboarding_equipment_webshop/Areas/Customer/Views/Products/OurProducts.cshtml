@@ -1,14 +1,83 @@
 ﻿@model IEnumerable<ProductVM>
 
-<div class="products-header">
+<div class="products-header mb-5">
     <div class="header-content">
         <h2>Everything You Need In One Place</h2>
         <p>Top quality</p>
     </div>
 </div>
 
-<div class="row">
-    <div class="row-3">
-        <h4>Categories</h4>
+<div class="px-3">
+    <div class="row">
+        <div class="col-2" id="filter-area">
+            <form method="post">
+                <div class="mb-4">
+                    <h4>Categories</h4>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="all" name="categories" value="all" />
+                        <label for="all">All</label><br />
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="snowboards" name="categories" value="snowboards" />
+                        <label for="snowboards">Snowboards</label><br />
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="googles" name="categories" value="googles" />
+                        <label for="googles">Googles</label><br />
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="helmets" name="categories" value="helmets" />
+                        <label for="helmets">Helmets</label><br />
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="jackets" name="categories" value="jackets" />
+                        <label for="jackets">Jackets</label><br />
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="gloves" name="categories" value="gloves" />
+                        <label for="gloves">Gloves</label><br />
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="trousers" name="categories" value="trousers" />
+                        <label for="trousers">Trousers</label><br />
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="boots" name="categories" value="boots" />
+                        <label for="boots">Boots</label>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <h4>Price</h4>
+                    <div class="d-flex">
+                        <input type="number" placeholder="Min" class="w-50" />
+                        <span class="mx-3">-</span>
+                        <input type="number" placeholder="Max" class="w-50" />
+                    </div>
+                </div>
+                <button type="submit" class="primary-btn px-5 py-1">Filter</button>
+            </form>
+        </div>
+        <div class="col-10 px-5">
+            <div class="row">
+                <div class="col-6">
+                    <label for="sort-by" class="me-2">Sort by:</label>
+                    <select>
+                    </select>
+                </div>
+                <div class="col-6 text-end">
+                    <label for="search" class="me-2">Search:</label>
+                    <input type="text" />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <partial name="_ProductsPartial" />
+            </div>
+            @await Component.InvokeAsync("Pagination")
+        </div>
     </div>
 </div>
+
+@section Scripts{
+    <script src="~/js/pagination.js"></script>
+    <script src="~/js/search-with-filtering.js"></script>
+}
