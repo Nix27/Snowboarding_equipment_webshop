@@ -1,32 +1,32 @@
-﻿let filterByKey = $('#hiddenData').data('keyfilterby');
+﻿let searchByKey = $('#hiddenData').data('keysearchby');
 let searchTermKey = $('#hiddenData').data('keysearchterm');
 let pageKey = $('#hiddenData').data('keypage');
 
 let loadedPage = localStorage.getItem(pageKey);
-let loadedFilterBy = localStorage.getItem(filterByKey);
+let loadedSearchBy = localStorage.getItem(searchByKey);
 let loadedSearchTerm = localStorage.getItem(searchTermKey);
 
 $(() => {
     if (loadedPage !== null) {
-        getFilteredData(loadedPage, size, url, loadedFilterBy, loadedSearchTerm);
+        getFilteredData(loadedPage, size, url, loadedSearchBy, loadedSearchTerm);
 
-        $('#filterBy').val(loadedFilterBy);
+        $('#filterBy').val(loadedSearchBy);
         $('#search-term').val(loadedSearchTerm);
     } else {
-        getFilteredData(0, size, url, loadedFilterBy, loadedSearchTerm);
+        getFilteredData(0, size, url, loadedSearchBy, loadedSearchTerm);
     }
 });
 
 $('#filter').on('keyup', function () {
     let page = $('.pager-btn.btn-dark').data('page');
-    let filterBy = $('#filterBy').val();
+    let searchBy = $('#searchBy').val();
     let searchTerm = $('#search-term').val();
 
     if (filterBy !== 'none') {
-        getFilteredData(page, size, url, filterBy, searchTerm);
+        getFilteredData(page, size, url, searchBy, searchTerm);
 
         localStorage.setItem(pageKey, page);
-        localStorage.setItem(filterByKey, filterBy);
+        localStorage.setItem(searchByKey, searchBy);
         localStorage.setItem(searchTermKey, searchTerm);
     }
 });
@@ -34,22 +34,22 @@ $('#filter').on('keyup', function () {
 $('#filterBy').on('change', function () {
     if ($('#filterBy').val() === 'none') {
         localStorage.removeItem(pageKey);
-        localStorage.removeItem(filterByKey);
+        localStorage.removeItem(searchByKey);
         localStorage.removeItem(searchTermKey);
         $('#search-term').val('');
 
         let page = $('.pager-btn.btn-dark').data('page');
-        let filterBy = $('#filterBy').val();
+        let searchBy = $('#searchBy').val();
         let searchTerm = $('#search-term').val();
-        getFilteredData(page, size, url, filterBy, searchTerm);
+        getFilteredData(page, size, url, searchBy, searchTerm);
     }
 });
 
-function getFilteredData(page, size, url, filterBy, searchTerm) {
+function getFilteredData(page, size, url, searchBy, searchTerm) {
     let ajaxData = {
         page: page,
         size: size,
-        filterBy: filterBy,
+        searchBy: searchBy,
         searchTerm: searchTerm
     };
 

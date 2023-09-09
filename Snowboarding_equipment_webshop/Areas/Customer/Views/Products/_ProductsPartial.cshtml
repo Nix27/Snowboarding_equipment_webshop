@@ -1,27 +1,34 @@
 ﻿@model IEnumerable<ProductVM>
 
 @foreach(var product in Model)
-{
-    <div class="col-sm-12 col-md-6 col-lg-3 product-item">
-        <div class="product-item-header">
+{ 
+    var description = product.Description.Length <= 22 ? product.Description : product.Description.Substring(0, 22) + "...";
+    string stockClass = product.QuantityInStock > 0 ? "on-stock" : "out-of-stock";
+
+    <div class="col-12 col-sm-6 col-md-6 col-lg-3 product-item mb-5">
+        <div class="product-item-header d-flex justify-content-center">
             @{ var imageUrl = Url.Action("GetImage", "Image", new{ area = "Customer", imageType = ImageType.Thumbnail, id = product.ThumbnailImageId }); }
-            <img src="@imageUrl" alt="product image" />
+            <img src="@imageUrl" alt="product image" class="product-image pb-1" />
         </div>
-        <div class="product-item-body">
-            <h3>@product.Name</h3>
-            <p>@product.Description</p>
+        <div class="product-item-body p-2">
+            <h4>@product.Name</h4>
 
-            @{ string stockClass = product.QuantityInStock > 0 ? "on-stock" : "out-of-stock"; }
-            <span class="poppins-font-family">@(product.QuantityInStock > 0 ? "On stock" : "Out of stock")</span>
+            <p class="poppins-font-family">@description</p>
 
-            @if(product.OldPrice != null)
-            {
-                <s class="poppins-font-family old-price">€@product.OldPrice</s>
-            }
+            <div class="d-flex flex-column">
+                <span class="poppins-font-family @stockClass">@(product.QuantityInStock > 0 ? "On stock" : "Out of stock")</span>
+                <br />
+                @if (product.OldPrice != null)
+                {
+                    <s class="poppins-font-family old-price">€@product.OldPrice</s>
+                }
 
-            <span class="poppins-font-family mb-3">€@product.Price</span>
+                <span class="poppins-font-family mb-3">€@product.Price</span>
+            </div>
 
             <a asp-area="" asp-controller="" asp-action="" asp-route-id="@product.Id" class="btn-buy">Buy</a>
         </div>
     </div>
 }
+
+@await Component.InvokeAsync("Pagination")

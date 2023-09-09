@@ -18,12 +18,6 @@ function getSearchedData(page, size, url, searchTerm) {
         data: ajaxData,
         success: function (data) {
             $('.content').html(data);
-
-            //$('.pager-btn').removeClass('btn-pagination');
-            //$('.pager-btn').addClass('btn-pagination-active');
-
-            //$('.pager-btn[data-page=' + page + ']').removeClass('btn-pagination-active');
-            //$('.pager-btn[data-page=' + page + ']').addClass('btn-pagination');
         },
         error: function (data) {
             console.log('error', data);

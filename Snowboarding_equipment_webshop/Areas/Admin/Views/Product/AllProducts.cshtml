@@ -13,7 +13,7 @@
 <input id="hiddenData" data-size="@size" 
                        data-pages="@pages" 
                        data-url="ProductTableBodyPartial" 
-                       data-keyfilterby="productFilterBy" 
+                       data-keysearchby="productSearchBy" 
                        data-keysearchTerm="productSearchTerm" 
                        data-keypage="productPage" hidden />
 
@@ -31,8 +31,8 @@
     {
         <div class="d-flex justify-content-between mb-2">
             <div class="d-flex">
-                <label for="filterBy" class="me-3 pt-1">Filter by:</label>
-                <select id="filterBy">
+                <label for="searchBy" class="me-3 pt-1">Search by:</label>
+                <select id="searchBy">
                     <option value="name" selected>Name</option>
                     <option value="category">Category</option>
                 </select>

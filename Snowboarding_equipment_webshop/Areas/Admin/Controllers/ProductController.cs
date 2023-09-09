@@ -37,19 +37,19 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> AllProducts(int page, int size, string filterBy, string? searchTerm)
+        public async Task<IActionResult> AllProducts(PageProductsRequestVM pageRequest)
         {
-            if (size == 0)
-                size = 5;
+            if (pageRequest.Size == 0)
+                pageRequest.Size = 5;
 
             try
             {
-                var pagedProducts = await _mediator.Send(new GetPagedProductsQuery(page, size, filterBy, searchTerm));
+                var pagedProducts = await _mediator.Send(new GetPagedProductsQuery(_mapper.Map<PageProductsRequestDto>(pageRequest)));
                 int numberOfAllProducts = _mediator.Send(new GetAllProductsQuery()).GetAwaiter().GetResult().Count();
 
-                ViewData["page"] = page;
-                ViewData["size"] = size;
-                ViewData["pages"] = (int)Math.Ceiling((double)numberOfAllProducts / size);
+                ViewData["page"] = pageRequest.Page;
+                ViewData["size"] = pageRequest.Size;
+                ViewData["pages"] = (int)Math.Ceiling((double)numberOfAllProducts / pageRequest.Size);
 
                 var pagedProductsVm = _mapper.Map<IEnumerable<ProductVM>>(pagedProducts);
 
@@ -63,21 +63,20 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
             }
         }
 
-        public async Task<IActionResult> ProductTableBodyPartial(int page, int size, string filterBy, string? searchTerm)
+        public async Task<IActionResult> ProductTableBodyPartial(PageProductsRequestVM pageRequest)
         {
-            if (size == 0)
-                size = 5;
+            if (pageRequest.Size == 0)
+                pageRequest.Size = 5;
 
             try
             {
-                var pagedProducts = await _mediator.Send(new GetPagedProductsQuery(page, size, filterBy, searchTerm));
+                var pagedProducts = await _mediator.Send(new GetPagedProductsQuery(_mapper.Map<PageProductsRequestDto>(pageRequest)));
                 int numberOfAllProducts = _mediator.Send(new GetAllProductsQuery()).GetAwaiter().GetResult().Count();
 
-                ViewData["page"] = page;
-                ViewData["size"] = size;
-                ViewData["pages"] = (int)Math.Ceiling((double)numberOfAllProducts / size);
-
-                var pagedProductsVm = _mapper.Map<IEnumerable<ProductVM>>(pagedProducts);
+                ViewData["page"] = pageRequest.Page;
+                ViewData["size"] = pageRequest.Size;
+                ViewData["pages"] = (int)Math.Ceiling((double)numberOfAllProducts / pageRequest.Size);
+                ViewData["action"] = nameof(AllProducts);
 
                 return PartialView("_ProductTableBodyPartial", _mapper.Map<IEnumerable<ProductVM>>(pagedProducts));
             }

@@ -20,19 +20,21 @@ namespace BL.Features.Products.Queries.GetPagedProducts
         {
             var allProducts = await _unitOfWork.Product.GetAllAsync(includeProperties: "Category,ThumbnailImage", isTracked: request.isTracked);
 
-            if (request.searchTerm != null)
+            if (request.productsRequest.SearchTerm != null)
             {
-                if (String.Compare(request.filterBy, "name", true) == 0)
+                request.productsRequest.SearchBy = request.productsRequest.SearchBy ?? "name";
+
+                if (String.Compare(request.productsRequest.SearchBy, "name", true) == 0)
                 {
-                    allProducts = allProducts.Where(p => p.Name.ToLower().Contains(request.searchTerm.ToLower()));
+                    allProducts = allProducts.Where(p => p.Name.ToLower().Contains(request.productsRequest.SearchTerm.ToLower()));
                 }
-                else if (String.Compare(request.filterBy, "category", true) == 0)
+                else if (String.Compare(request.productsRequest.SearchBy, "category", true) == 0)
                 {
-                    allProducts = allProducts.Where(p => p.Category.Name.ToLower().Contains(request.searchTerm.ToLower()));
+                    allProducts = allProducts.Where(p => p.Category.Name.ToLower().Contains(request.productsRequest.SearchTerm.ToLower()));
                 }
             }
 
-            var pagedProducts = allProducts.Skip(request.page * request.size).Take(request.size);
+            var pagedProducts = allProducts.Skip(request.productsRequest.Page * request.productsRequest.Size).Take(request.productsRequest.Size);
 
             return _mapper.Map<IEnumerable<ProductDto>>(pagedProducts);
         }
