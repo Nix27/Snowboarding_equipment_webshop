@@ -15,6 +15,7 @@ namespace DAL.UnitOfWork
         public IThumbnailImageRepository ThumbnailImage { get; }
         public IGalleryImageRepository GalleryImage { get; }
         public IUserRepository User { get; }
+        public IShoppingCartItemRepository ShoppingCartItem { get; }
 
         Task SaveAsync();
     }

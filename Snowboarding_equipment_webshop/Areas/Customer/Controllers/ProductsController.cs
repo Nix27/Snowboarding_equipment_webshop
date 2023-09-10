@@ -3,9 +3,12 @@ using BL.DTOs;
 using BL.Features.Products.Queries.GetAllProducts;
 using BL.Features.Products.Queries.GetPagedProducts;
 using BL.Features.Products.Queries.GetProductById;
+using BL.Features.ShoppingCartItem.Commands;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Snowboarding_equipment_webshop.ViewModels;
+using System.Security.Claims;
 
 namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
 {
@@ -61,6 +64,35 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
             {
                 var product = await _mediator.Send(new GetProductByIdQuery(productId));
                 return View(_mapper.Map<ProductVM>(product));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.StackTrace);
+                TempData["error"] = errorMessage;
+                return RedirectToAction(nameof(OurProducts));
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> AddProductItem(ProductVM product, int quantity)
+        {
+            try
+            {
+                var claimsIdentity = User.Identity as ClaimsIdentity;
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+                ShoppingCartItemDto newShoppingCartItem = new()
+                {
+                    ProductId = product.Id,
+                    UserId = claim.Value,
+                    Quantity = quantity
+                };
+
+                await _mediator.Send(new CreateShoppingCartItemCommand(newShoppingCartItem));
+
+                return RedirectToAction(nameof(OurProducts));
             }
             catch (Exception ex)
             {

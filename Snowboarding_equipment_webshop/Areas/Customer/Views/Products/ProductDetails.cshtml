@@ -1,61 +1,66 @@
 ﻿@model ProductVM
 
-<div class="container">
-    <div class="d-flex align-items-center my-4">
-        <a asp-action="OurProducts"><i class="bi bi-chevron-left"></i></a>
-        <h2>@Model.Name</h2>
-    </div>
-
-    <div class="row mx-4 justify-content-between">
-        <div class="col-4">
-            <div id="carouselExample" class="carousel slide carousel-dark">
-                <div class="carousel-inner">
-                    @foreach (var galleryImage in Model.GalleryImages.Select((image, index) => new { ImageId = image.Id, Index = index }))
-                    {
-                        var imageUrl = Url.Action("GetImage", "Image", new { area = "Customer", imageType = ImageType.Gallery, id = galleryImage.ImageId });
-                        string active = galleryImage.Index == 0 ? "active" : "";
-                        <div class="carousel-item text-center @active">
-                            <img src="@imageUrl" class="w-50" alt="product gallery image">
-                        </div>
-                    }
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                </button>
-            </div>
+<form method="post" asp-action="AddProductItem">
+    <input asp-for="Id" hidden />
+    <div class="container">
+        <div class="d-flex align-items-center my-4">
+            <a asp-action="OurProducts"><i class="bi bi-chevron-left"></i></a>
+            <h2>@Model.Name</h2>
         </div>
-        <div class="col-6">
-            <h3>@Model.Name</h3><br />
-            <div class="d-flex flex-column">
-                @{ string stockClass = Model.QuantityInStock > 0 ? "on-stock" : "out-of-stock"; }
-                <span class="poppins-font-family @stockClass">@(Model.QuantityInStock > 0 ? "On stock" : "Out of stock")</span>
-                <br />
 
-                @if (Model.OldPrice != null)
-                {
-                    <s class="poppins-font-family old-price">€@Model.OldPrice</s>
-                }
-
-                <div class="d-flex justify-content-between">
-                    <span class="mb-3">€@Model.Price</span>
-                    <div class="quantity">
-                        <label for="quantity" class="poppins-font-family me-2">Quantity:</label>
-                        <input type="number" id="quantity" name="quantity" min="1" value="1" class="poppins-font-family ps-2" />
+        <div class="row mx-4 justify-content-between">
+            <div class="col-4">
+                <div id="carouselExample" class="carousel slide carousel-dark">
+                    <div class="carousel-inner">
+                        @foreach (var galleryImage in Model.GalleryImages.Select((image, index) => new { ImageId = image.Id, Index = index }))
+                        {
+                            var imageUrl = Url.Action("GetImage", "Image", new { area = "Customer", imageType = ImageType.Gallery, id = galleryImage.ImageId });
+                            string active = galleryImage.Index == 0 ? "active" : "";
+                            <div class="carousel-item text-center @active">
+                                <img src="@imageUrl" class="w-50" alt="product gallery image">
+                            </div>
+                        }
                     </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    </button>
                 </div>
-                <a asp-action="CreateShoppingCartItem" class="primary-btn text-center py-1">Add to cart</a>
+            </div>
+            <div class="col-6">
+                <h3>@Model.Name</h3><br />
+                <div class="d-flex flex-column">
+                    @{
+                        string stockClass = Model.QuantityInStock > 0 ? "on-stock" : "out-of-stock";
+                    }
+                    <span class="poppins-font-family @stockClass">@(Model.QuantityInStock > 0 ? "On stock" : "Out of stock")</span>
+                    <br />
+
+                    @if (Model.OldPrice != null)
+                    {
+                        <s class="poppins-font-family old-price">€@Model.OldPrice</s>
+                    }
+
+                    <div class="d-flex justify-content-between">
+                        <span class="mb-3">€@Model.Price</span>
+                        <div class="quantity">
+                            <label for="quantity" class="poppins-font-family me-2">Quantity:</label>
+                            <input type="number" id="quantity" name="quantity" min="1" value="1" class="poppins-font-family ps-2" />
+                        </div>
+                    </div>
+                    <button type="submit" class="primary-btn text-center py-1">Add to cart</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center align-items-center title mb-4">
+                <img src="~/images/black-mountain-icon.png" class="description-icon" alt="description icon" />
+            </div>
+            <div class="col-12">
+                <p>@Model.Description</p>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-12 d-flex justify-content-center align-items-center title mb-4">
-            <img src="~/images/black-mountain-icon.png" class="description-icon" alt="description icon" />
-        </div>
-        <div class="col-12">
-            <p>@Model.Description</p>
-        </div>
-    </div>
-</div>
+</form>

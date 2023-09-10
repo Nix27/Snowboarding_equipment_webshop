@@ -1,11 +1,6 @@
 ﻿using DAL.AppDbContext;
 using DAL.Repositories.Implementations;
 using DAL.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL.UnitOfWork
 {
@@ -22,6 +17,7 @@ namespace DAL.UnitOfWork
             ThumbnailImage = new ThumbnailImageRepository(_db);
             GalleryImage = new GalleryImageRepository(_db);
             User = new UserRepository(_db);
+            ShoppingCartItem = new ShoppingCartItemRepository(_db);
         }
 
         public ICategoryRepository Category { get; init; }
@@ -35,6 +31,8 @@ namespace DAL.UnitOfWork
         public IGalleryImageRepository GalleryImage { get; init; }
 
         public IUserRepository User { get; init; }
+
+        public IShoppingCartItemRepository ShoppingCartItem { get; init; }
 
         public Task SaveAsync()
         {
