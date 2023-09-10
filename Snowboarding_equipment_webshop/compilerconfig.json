@@ -38,5 +38,9 @@
   {
     "outputFile": "Areas/Customer/Views/Products/OurProducts.cshtml.css",
     "inputFile": "Areas/Customer/Views/Products/OurProducts.cshtml.scss"
+  },
+  {
+    "outputFile": "Areas/Customer/Views/Products/ProductDetails.cshtml.css",
+    "inputFile": "Areas/Customer/Views/Products/ProductDetails.cshtml.scss"
   }
 ]

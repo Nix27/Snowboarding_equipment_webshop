@@ -235,16 +235,16 @@ nav {
 .title {
     &::before {
         content: '';
-        width: 32%;
         height: 3px;
+        flex: 1;
         background-color: $primary-black;
         margin-right: 20px;
     }
 
     &::after {
         content: '';
-        width: 32%;
         height: 3px;
+        flex: 1;
         background-color: $primary-black;
         margin-left: 20px;
     }

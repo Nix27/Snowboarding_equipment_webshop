@@ -19,6 +19,8 @@ namespace Snowboarding_equipment_webshop.Mapping
             CreateMap<GalleryImageDto, GalleryImage>().ReverseMap();
             CreateMap<PageProductsRequestVM, PageProductsRequestDto>().ReverseMap();
             CreateMap<FilterCustomerProductsRequestVM, FilterCustomerProductsRequestDto>().ReverseMap();
+            CreateMap<ShoppingCartItemDto, ShoppingCartItem>().ReverseMap();
+            CreateMap<ShoppingCartItemVM, ShoppingCartItemDto>().ReverseMap();
         }
     }
 }

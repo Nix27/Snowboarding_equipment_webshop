@@ -2,6 +2,7 @@
 using BL.DTOs;
 using BL.Features.Products.Queries.GetAllProducts;
 using BL.Features.Products.Queries.GetPagedProducts;
+using BL.Features.Products.Queries.GetProductById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Snowboarding_equipment_webshop.ViewModels;
@@ -49,6 +50,23 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
                 _logger.LogError(ex.Message + "\n" + ex.StackTrace);
                 TempData["error"] = errorMessage;
                 return RedirectToAction("Index", "Home");
+            }
+        }
+
+        //need to add a partial view for products
+
+        public async Task<IActionResult> ProductDetails(int productId)
+        {
+            try
+            {
+                var product = await _mediator.Send(new GetProductByIdQuery(productId));
+                return View(_mapper.Map<ProductVM>(product));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.StackTrace);
+                TempData["error"] = errorMessage;
+                return RedirectToAction(nameof(OurProducts));
             }
         }
     }

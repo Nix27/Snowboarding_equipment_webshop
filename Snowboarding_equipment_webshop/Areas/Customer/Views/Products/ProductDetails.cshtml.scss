@@ -1,0 +1,30 @@
+﻿@import '../../../../wwwroot/css/variables';
+
+.bi-chevron-left{
+    font-size: $extra-big;
+    color: $primary-black;
+    margin-right: 1rem;
+    transition: .2s ease-in-out;
+
+    &:hover{
+        font-size: 1.9rem;
+    }
+}
+
+.carousel-item{
+    height: 300px;
+
+    img{
+        object-fit: contain;
+    }
+}
+
+.quantity{
+    label{
+        font-size: $small;
+    }
+
+    input{
+        height: 25px;
+    }
+}

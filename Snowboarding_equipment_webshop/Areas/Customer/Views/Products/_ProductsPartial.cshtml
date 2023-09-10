@@ -26,7 +26,7 @@
                 <span class="poppins-font-family mb-3">€@product.Price</span>
             </div>
 
-            <a asp-area="" asp-controller="" asp-action="" asp-route-id="@product.Id" class="btn-buy">Buy</a>
+            <a asp-action="ProductDetails" asp-route-productId="@product.Id" class="btn-buy">Buy</a>
         </div>
     </div>
 }

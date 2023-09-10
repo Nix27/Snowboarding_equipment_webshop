@@ -194,15 +194,15 @@ nav .mobile-menu, nav .menu-btn {
 
 .title::before {
   content: "";
-  width: 32%;
   height: 3px;
+  flex: 1;
   background-color: #1A1A1A;
   margin-right: 20px;
 }
 .title::after {
   content: "";
-  width: 32%;
   height: 3px;
+  flex: 1;
   background-color: #1A1A1A;
   margin-left: 20px;
 }

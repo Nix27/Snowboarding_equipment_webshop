@@ -59,12 +59,6 @@ function getFilteredData(page, size, url, searchBy, searchTerm) {
         data: ajaxData,
         success: function (data) {
             $('#content').html(data);
-
-            $('.pager-btn').removeClass('btn-secondary');
-            $('.pager-btn').addClass('btn-primary');
-
-            $('.pager-btn[data-page=' + page + ']').removeClass('btn-primary');
-            $('.pager-btn[data-page=' + page + ']').addClass('btn-secondary');
         },
         error: function (data) {
             console.log('error', data);
