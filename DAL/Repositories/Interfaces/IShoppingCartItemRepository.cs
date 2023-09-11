@@ -9,5 +9,7 @@ namespace DAL.Repositories.Interfaces
 {
     public interface IShoppingCartItemRepository : IRepository<ShoppingCartItem>
     {
+        Task IncrementQuantity(int shoppingCartItemId, int quantity);
+        Task DecrementQuantity(int shoppingCartItemId, int quantity);
     }
 }

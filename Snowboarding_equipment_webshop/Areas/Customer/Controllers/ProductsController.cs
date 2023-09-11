@@ -3,7 +3,9 @@ using BL.DTOs;
 using BL.Features.Products.Queries.GetAllProducts;
 using BL.Features.Products.Queries.GetPagedProducts;
 using BL.Features.Products.Queries.GetProductById;
-using BL.Features.ShoppingCartItem.Commands;
+using BL.Features.ShoppingCartItem.Commands.CreateShoppingCartItem;
+using BL.Features.ShoppingCartItem.Commands.IncrementQuantityOfShoppingCartItem;
+using BL.Features.ShoppingCartItem.Queries.GetShoppingCartItemByFilter;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -83,14 +85,24 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
                 var claimsIdentity = User.Identity as ClaimsIdentity;
                 var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
-                ShoppingCartItemDto newShoppingCartItem = new()
-                {
-                    ProductId = product.Id,
-                    UserId = claim.Value,
-                    Quantity = quantity
-                };
+                var shoppingCartItemFromDb = await _mediator.Send(new GetShoppingCartItemByFilterQuery(s => s.ProductId == product.Id && s.UserId == claim.Value));
 
-                await _mediator.Send(new CreateShoppingCartItemCommand(newShoppingCartItem));
+                if(shoppingCartItemFromDb == null)
+                {
+                    ShoppingCartItemDto newShoppingCartItem = new()
+                    {
+                        ProductId = product.Id,
+                        UserId = claim.Value,
+                        Quantity = quantity
+                    };
+
+                    await _mediator.Send(new CreateShoppingCartItemCommand(newShoppingCartItem));
+                    //add session
+                }
+                else
+                {
+                    await _mediator.Send(new IncrementQuantityOfShoppingCartItemCommand(shoppingCartItemFromDb.Id, quantity));
+                }
 
                 return RedirectToAction(nameof(OurProducts));
             }

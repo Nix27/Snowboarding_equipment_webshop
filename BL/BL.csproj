@@ -19,8 +19,4 @@
     <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\ShoppingCartItem\Queries\" />
-  </ItemGroup>
-
 </Project>

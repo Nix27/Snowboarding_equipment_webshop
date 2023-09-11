@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Identity;
 using DAL.UnitOfWork;
 using Snowboarding_equipment_webshop.Mapping;
 using BL.Features.Categories.Queries.GetPagedCategories;
-using DAL.Models;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using BL.EmailService;
 

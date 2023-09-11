@@ -2,7 +2,7 @@
 using DAL.UnitOfWork;
 using MediatR;
 
-namespace BL.Features.ShoppingCartItem.Commands
+namespace BL.Features.ShoppingCartItem.Commands.CreateShoppingCartItem
 {
     public class CreateShoppingCartItemCommandHandler : IRequestHandler<CreateShoppingCartItemCommand, int>
     {
