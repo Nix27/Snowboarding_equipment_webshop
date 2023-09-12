@@ -5,7 +5,7 @@ using MediatR;
 
 namespace BL.Features.GalleryImages.Commands.DeleteGalleryImages
 {
-    public class DeleteGalleryImagesCommandHandler : IRequestHandler<DeleteGalleryImagesCommand>
+    internal class DeleteGalleryImagesCommandHandler : IRequestHandler<DeleteGalleryImagesCommand>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

@@ -4,7 +4,7 @@ using MediatR;
 
 namespace BL.Features.ShoppingCartItem.Commands.DecrementQuantityOfShoppingCartItem
 {
-    public class DecrementQuantityOfShoppingCartItemCommandHandler : IRequestHandler<DecrementQuantityOfShoppingCartItemCommand>
+    internal class DecrementQuantityOfShoppingCartItemCommandHandler : IRequestHandler<DecrementQuantityOfShoppingCartItemCommand>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

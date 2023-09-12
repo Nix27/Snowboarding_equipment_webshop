@@ -5,7 +5,7 @@ using MediatR;
 
 namespace BL.Features.GalleryImages.Queries.GetGalleryImagesByProductId
 {
-    public class GetGalleryImagesByProductIdQueryHandler : IRequestHandler<GetGalleryImagesByProductIdQuery, IEnumerable<GalleryImageDto>>
+    internal class GetGalleryImagesByProductIdQueryHandler : IRequestHandler<GetGalleryImagesByProductIdQuery, IEnumerable<GalleryImageDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

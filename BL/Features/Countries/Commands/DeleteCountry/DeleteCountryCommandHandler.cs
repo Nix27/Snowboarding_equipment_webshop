@@ -5,7 +5,7 @@ using MediatR;
 
 namespace BL.Features.Countries.Commands.DeleteCountry
 {
-    public class DeleteCountryCommandHandler : IRequestHandler<DeleteCountryCommand, int>
+    internal class DeleteCountryCommandHandler : IRequestHandler<DeleteCountryCommand, int>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

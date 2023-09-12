@@ -4,7 +4,7 @@ using MediatR;
 
 namespace BL.Features.ShoppingCartItem.Commands.CreateShoppingCartItem
 {
-    public class CreateShoppingCartItemCommandHandler : IRequestHandler<CreateShoppingCartItemCommand, int>
+    internal class CreateShoppingCartItemCommandHandler : IRequestHandler<CreateShoppingCartItemCommand, int>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

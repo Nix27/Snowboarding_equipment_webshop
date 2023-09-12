@@ -5,7 +5,7 @@ using MediatR;
 
 namespace BL.Features.Products.Queries.GetPagedProducts
 {
-    public class GetPagedProductsQueryHandler : IRequestHandler<GetPagedProductsQuery, IEnumerable<ProductDto>>
+    internal class GetPagedProductsQueryHandler : IRequestHandler<GetPagedProductsQuery, IEnumerable<ProductDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

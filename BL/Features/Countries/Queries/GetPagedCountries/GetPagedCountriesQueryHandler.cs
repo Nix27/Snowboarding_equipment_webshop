@@ -5,7 +5,7 @@ using MediatR;
 
 namespace BL.Features.Countries.Queries.GetPagedCountries
 {
-    public class GetPagedCountriesQueryHandler : IRequestHandler<GetPagedCountriesQuery, IEnumerable<CountryDto>?>
+    internal class GetPagedCountriesQueryHandler : IRequestHandler<GetPagedCountriesQuery, IEnumerable<CountryDto>?>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

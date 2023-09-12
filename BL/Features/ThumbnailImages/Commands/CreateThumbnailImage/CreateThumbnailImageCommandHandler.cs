@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace BL.Features.ThumbnailImages.Commands.CreateThumbnailImage
 {
-    public class CreateThumbnailImageCommandHandler : IRequestHandler<CreateThumbnailImageCommand, int>
+    internal class CreateThumbnailImageCommandHandler : IRequestHandler<CreateThumbnailImageCommand, int>
     {
         private readonly IUnitOfWork _unitOfWork;
 

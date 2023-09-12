@@ -5,7 +5,7 @@ using MediatR;
 
 namespace BL.Features.Categories.Queries.GetCategoryById
 {
-    public class GetCategoryByIdQueryHandler : IRequestHandler<GetCategoryByIdQuery, CategoryDto?>
+    internal class GetCategoryByIdQueryHandler : IRequestHandler<GetCategoryByIdQuery, CategoryDto?>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

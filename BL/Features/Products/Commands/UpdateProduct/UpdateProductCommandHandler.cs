@@ -5,7 +5,7 @@ using MediatR;
 
 namespace BL.Features.Products.Commands.UpdateProduct
 {
-    public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, int>
+    internal class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, int>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

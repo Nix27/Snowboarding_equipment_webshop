@@ -6,7 +6,7 @@ using MediatR;
 
 namespace BL.Features.ThumbnailImages.Queries.GetThumbnailImageById
 {
-    public class GetThumbnailImageByIdQueryHandler : IRequestHandler<GetThumbnailImageByIdQuery, ThumbnailImageDto>
+    internal class GetThumbnailImageByIdQueryHandler : IRequestHandler<GetThumbnailImageByIdQuery, ThumbnailImageDto>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

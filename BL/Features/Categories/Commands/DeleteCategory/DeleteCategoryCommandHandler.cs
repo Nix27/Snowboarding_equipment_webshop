@@ -5,7 +5,7 @@ using MediatR;
 
 namespace BL.Features.Categories.Commands.DeleteCategory
 {
-    public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryCommand, int>
+    internal class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryCommand, int>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

@@ -5,7 +5,7 @@ using MediatR;
 
 namespace BL.Features.ShoppingCartItem.Queries.GetShoppingCartItemByFilter
 {
-    public class GetShoppingCartItemByFilterQueryHandler : IRequestHandler<GetShoppingCartItemByFilterQuery, ShoppingCartItemDto?>
+    internal class GetShoppingCartItemByFilterQueryHandler : IRequestHandler<GetShoppingCartItemByFilterQuery, ShoppingCartItemDto?>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

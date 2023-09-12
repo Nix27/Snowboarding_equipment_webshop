@@ -42,5 +42,9 @@
   {
     "outputFile": "Areas/Customer/Views/Products/ProductDetails.cshtml.css",
     "inputFile": "Areas/Customer/Views/Products/ProductDetails.cshtml.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/shoppingcart.css",
+    "inputFile": "wwwroot/css/shoppingcart.scss"
   }
 ]

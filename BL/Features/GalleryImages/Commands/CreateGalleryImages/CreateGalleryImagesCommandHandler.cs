@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace BL.Features.GalleryImages.Commands.CreateGalleryImages
 {
-    public class CreateGalleryImagesCommandHandler : IRequestHandler<CreateGalleryImagesCommand>
+    internal class CreateGalleryImagesCommandHandler : IRequestHandler<CreateGalleryImagesCommand>
     {
         private readonly IUnitOfWork _unitOfWork;
 

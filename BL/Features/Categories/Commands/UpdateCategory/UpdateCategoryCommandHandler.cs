@@ -5,7 +5,7 @@ using MediatR;
 
 namespace BL.Features.Categories.Commands.UpdateCategory
 {
-    public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryCommand, int>
+    internal class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryCommand, int>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

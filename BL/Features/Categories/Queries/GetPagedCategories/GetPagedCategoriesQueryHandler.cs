@@ -5,7 +5,7 @@ using MediatR;
 
 namespace BL.Features.Categories.Queries.GetPagedCategories
 {
-    public class GetPagedCategoriesQueryHandler : IRequestHandler<GetPagedCategoriesQuery, IEnumerable<CategoryDto>>
+    internal class GetPagedCategoriesQueryHandler : IRequestHandler<GetPagedCategoriesQuery, IEnumerable<CategoryDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

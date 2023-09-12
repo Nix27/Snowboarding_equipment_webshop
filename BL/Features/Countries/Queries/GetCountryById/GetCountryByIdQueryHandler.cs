@@ -5,7 +5,7 @@ using MediatR;
 
 namespace BL.Features.Countries.Queries.GetCountryById
 {
-    public class GetCountryByIdQueryHandler : IRequestHandler<GetCountryByIdQuery, CountryDto?>
+    internal class GetCountryByIdQueryHandler : IRequestHandler<GetCountryByIdQuery, CountryDto?>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

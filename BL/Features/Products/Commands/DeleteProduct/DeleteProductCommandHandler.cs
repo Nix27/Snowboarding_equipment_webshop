@@ -5,7 +5,7 @@ using MediatR;
 
 namespace BL.Features.Products.Commands.DeleteProduct
 {
-    public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, int>
+    internal class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, int>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

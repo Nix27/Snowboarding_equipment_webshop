@@ -5,7 +5,7 @@ using MediatR;
 
 namespace BL.Features.Countries.Commands.UpdateCountry
 {
-    public class UpdateCountryCommandHandler : IRequestHandler<UpdateCountryCommand, int>
+    internal class UpdateCountryCommandHandler : IRequestHandler<UpdateCountryCommand, int>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

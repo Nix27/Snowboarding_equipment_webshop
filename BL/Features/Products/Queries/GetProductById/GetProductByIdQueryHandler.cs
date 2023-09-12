@@ -5,7 +5,7 @@ using MediatR;
 
 namespace BL.Features.Products.Queries.GetProductById
 {
-    public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, ProductDto?>
+    internal class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, ProductDto?>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

@@ -5,7 +5,7 @@ using MediatR;
 
 namespace BL.Features.ThumbnailImages.Commands.DeleteThumbnailImage
 {
-    public class DeleteThumbnailImageCommandHandler : IRequestHandler<DeleteThumbnailImageCommand, int>
+    internal class DeleteThumbnailImageCommandHandler : IRequestHandler<DeleteThumbnailImageCommand, int>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
