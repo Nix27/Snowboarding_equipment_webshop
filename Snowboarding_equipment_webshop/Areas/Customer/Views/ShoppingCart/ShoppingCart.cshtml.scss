@@ -1,0 +1,16 @@
+﻿@import '../../../../wwwroot/css/variables';
+
+.item-border-right {
+    border-right: 2px solid $primary-black;
+}
+
+.delete-item {
+    i {
+        font-size: 1.5rem;
+        transition: .2s ease-in-out;
+
+        &:hover {
+            font-size: 1.7rem;
+        }
+    }
+}

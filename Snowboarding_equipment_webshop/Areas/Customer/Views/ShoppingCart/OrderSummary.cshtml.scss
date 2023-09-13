@@ -1,0 +1,9 @@
+﻿@import '../../../../wwwroot/css/variables';
+
+.item-border-left{
+    border-left: 2px solid $primary-black;
+}
+
+.item-quantity{
+    font-size: 0.7rem;
+}

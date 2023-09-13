@@ -1,9 +1,4 @@
 ﻿using DAL.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL.UnitOfWork
 {
@@ -16,6 +11,8 @@ namespace DAL.UnitOfWork
         public IGalleryImageRepository GalleryImage { get; }
         public IUserRepository User { get; }
         public IShoppingCartItemRepository ShoppingCartItem { get; }
+        public IOrderHeaderRepository OrderHeader { get; }
+        public IOrderDetailRepository OrderDetail { get; }
 
         Task SaveAsync();
     }

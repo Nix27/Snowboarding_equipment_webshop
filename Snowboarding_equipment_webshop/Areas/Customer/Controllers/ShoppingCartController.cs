@@ -5,6 +5,8 @@ using BL.Features.ShoppingCartItem.Commands.DeleteShoppingCartItem;
 using BL.Features.ShoppingCartItem.Commands.IncrementQuantityOfShoppingCartItem;
 using BL.Features.ShoppingCartItem.Queries.GetAllShoppingCartItemsForUser;
 using BL.Features.ShoppingCartItem.Queries.GetShoppingCartItemById;
+using BL.Features.Users.Queries.GetUserById;
+using DAL.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,20 +37,22 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
             try
             {
                 var claimsIdentity = User.Identity as ClaimsIdentity;
-                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+                var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-                var shoppingCartItems = await _mediator.Send(new GetAllShoppingCartItemsForUserQuery(claim.Value));
+                var shoppingCartItems = await _mediator.Send(new GetAllShoppingCartItemsForUserQuery(userId));
 
-                double totalPrice = 0;
+                ShoppingCartVM shoppingCartVM = new()
+                {
+                    ShoppingCartItems = shoppingCartItems,
+                    OrderHeader = new()
+                };
 
                 foreach(var item in shoppingCartItems)
                 {
-                    totalPrice += item.Product.Price * item.Quantity;
+                    shoppingCartVM.OrderHeader.TotalPrice += item.Product.Price * item.Quantity;
                 }
 
-                ViewData["totalPrice"] = totalPrice;
-
-                return View(_mapper.Map<IEnumerable<ShoppingCartItemVM>>(shoppingCartItems));
+                return View(shoppingCartVM);
             }
             catch (Exception ex)
             {
@@ -121,6 +125,46 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
 
                 await _mediator.Send(new DeleteShoppingCartItemCommand(shoppingCartItemForDelete));
                 return RedirectToAction(nameof(ShoppingCart));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message + "\n" + ex.StackTrace);
+                TempData["error"] = errorMessage;
+                return RedirectToAction(nameof(ShoppingCart));
+            }
+        }
+
+        public async Task<IActionResult> OrderSummary()
+        {
+            try
+            {
+                var claimsIdentity = User.Identity as ClaimsIdentity;
+                var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                var shoppingCartItems = await _mediator.Send(new GetAllShoppingCartItemsForUserQuery(userId));
+
+                ShoppingCartVM shoppingCartVM = new()
+                {
+                    ShoppingCartItems = shoppingCartItems,
+                    OrderHeader = new()
+                };
+
+                var user = await _mediator.Send(new GetUserByIdQuery(userId));
+                shoppingCartVM.OrderHeader.User = _mapper.Map<User>(user);
+
+                shoppingCartVM.OrderHeader.Name = shoppingCartVM.OrderHeader.User.Name;
+                shoppingCartVM.OrderHeader.Phone = shoppingCartVM.OrderHeader.User.Phone;
+                shoppingCartVM.OrderHeader.StreetAddress = shoppingCartVM.OrderHeader.User.StreetAddress;
+                shoppingCartVM.OrderHeader.City = shoppingCartVM.OrderHeader.User.City;
+                shoppingCartVM.OrderHeader.PostalCode = shoppingCartVM.OrderHeader.User.PostalCode;
+                shoppingCartVM.OrderHeader.Country = shoppingCartVM.OrderHeader.User.Country.Name;
+
+                foreach (var item in shoppingCartItems)
+                {
+                    shoppingCartVM.OrderHeader.TotalPrice += item.Product.Price * item.Quantity;
+                }
+
+                return View(shoppingCartVM);
             }
             catch (Exception ex)
             {

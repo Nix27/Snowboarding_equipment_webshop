@@ -4,10 +4,6 @@
   width: 50px;
 }
 
-.shopping-cart-item {
-  border-right: 2px solid #1A1A1A;
-}
-
 .change-quantity-btn {
   display: block;
   padding: 10px 15px;
@@ -19,12 +15,4 @@
 .change-quantity-btn:hover {
   border: 2px solid #1A1A1A;
   color: #1A1A1A;
-}
-
-.delete-item i {
-  font-size: 1.5rem;
-  transition: 0.2s ease-in-out;
-}
-.delete-item i:hover {
-  font-size: 1.7rem;
 }

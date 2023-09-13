@@ -1,0 +1,64 @@
+﻿@model ShoppingCartVM
+
+<form method="post">
+    <div class="container mt-4">
+        <div class="row mb-5">
+            <div class="col-6">
+                <h2>Summary</h2>
+            </div>
+            <div class="col-6 text-end">
+                <a asp-action="ShoppingCart" class="primary-btn px-5 py-1">Back to Cart</a>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-6">
+                <h4 class="mb-3">Delivery details:</h4>
+                <div class="d-flex flex-column w-75">
+                    <div class="d-flex justify-content-between mb-1">
+                        <label asp-for="OrderHeader.Name"></label>
+                        <input asp-for="OrderHeader.Name" class="ps-2 py-1" />
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <label asp-for="OrderHeader.Phone"></label>
+                        <input asp-for="OrderHeader.Phone" class="ps-2 py-1" />
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <label asp-for="OrderHeader.StreetAddress"></label>
+                        <input asp-for="OrderHeader.StreetAddress" class="ps-2 py-1" />
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <label asp-for="OrderHeader.City"></label>
+                        <input asp-for="OrderHeader.City" class="ps-2 py-1" />
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <label asp-for="OrderHeader.PostalCode"></label>
+                        <input asp-for="OrderHeader.PostalCode" class="ps-2 py-1" />
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <label asp-for="OrderHeader.Country"></label>
+                        <input asp-for="OrderHeader.Country" class="ps-2 py-1" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <h4 class="mb-3">Items in cart:</h4>
+                <div class="d-flex flex-column">
+                    @foreach (var shoppingCartItem in Model.ShoppingCartItems)
+                    {
+                        <div class="d-flex justify-content-between align-items-center mb-2 ps-2 item-border-left">
+                            <div class="d-flex flex-column">
+                                <span class="poppins-font-family">@shoppingCartItem.Product.Name</span>
+                                <span class="poppins-font-family item-quantity">Quantity: @shoppingCartItem.Quantity</span>
+                            </div>
+                            <p>€@(shoppingCartItem.Product.Price * shoppingCartItem.Quantity)</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-between">
+            <p class="poppins-font-family">Estimated delivery: @DateTime.Now.AddDays(7).ToShortDateString() - @DateTime.Now.AddDays(14).ToShortDateString()</p>
+            <button class="primary-btn px-5 py-1">Place order</button>
+        </div>
+    </div>
+</form>

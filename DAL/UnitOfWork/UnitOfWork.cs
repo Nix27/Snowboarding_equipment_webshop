@@ -18,6 +18,8 @@ namespace DAL.UnitOfWork
             GalleryImage = new GalleryImageRepository(_db);
             User = new UserRepository(_db);
             ShoppingCartItem = new ShoppingCartItemRepository(_db);
+            OrderHeader = new OrderHeaderRepository(_db);
+            OrderDetail = new OrderDetailRepository(_db);
         }
 
         public ICategoryRepository Category { get; init; }
@@ -33,6 +35,10 @@ namespace DAL.UnitOfWork
         public IUserRepository User { get; init; }
 
         public IShoppingCartItemRepository ShoppingCartItem { get; init; }
+
+        public IOrderHeaderRepository OrderHeader { get; init; }
+
+        public IOrderDetailRepository OrderDetail { get; init; }
 
         public Task SaveAsync()
         {
