@@ -6,6 +6,8 @@ using Snowboarding_equipment_webshop.Mapping;
 using BL.Features.Categories.Queries.GetPagedCategories;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using BL.EmailService;
+using Snowboarding_equipment_webshop.ClassesForAppSettings;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +33,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
 });
 
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection(StripeSettings.sectionName));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -43,6 +47,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
 app.UseRouting();
 

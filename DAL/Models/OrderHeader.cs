@@ -20,6 +20,7 @@ namespace DAL.Models
         public string? PaymentStatus { get; set; }
         public string? TrackingNumber { get; set; }
         public string? Carrier { get; set; }
+        public string? SessionId { get; set; }
         public string? PaymentIntentId { get; set; }
         public double TotalPrice { get; set; }
 

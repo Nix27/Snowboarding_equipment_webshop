@@ -24,7 +24,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using Utilities.Constants.Roles;
+using Utilities.Constants.Role;
 
 namespace Snowboarding_equipment_webshop.Areas.Identity.Pages.Account
 {
@@ -149,6 +149,7 @@ namespace Snowboarding_equipment_webshop.Areas.Identity.Pages.Account
             {
                 await _roleManager.CreateAsync(new IdentityRole(AppRoles.ADMIN));
                 await _roleManager.CreateAsync(new IdentityRole(AppRoles.CUSTOMER));
+                await _roleManager.CreateAsync(new IdentityRole(AppRoles.COMPANY));
             }
 
             Input = new InputModel()

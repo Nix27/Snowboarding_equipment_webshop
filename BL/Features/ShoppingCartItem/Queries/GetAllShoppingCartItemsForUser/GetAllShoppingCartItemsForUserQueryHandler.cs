@@ -18,7 +18,7 @@ namespace BL.Features.ShoppingCartItem.Queries.GetAllShoppingCartItemsForUser
 
         public async Task<IEnumerable<ShoppingCartItemDto>> Handle(GetAllShoppingCartItemsForUserQuery request, CancellationToken cancellationToken)
         {
-            var shoppingCartItemsForUser = await _unitOfWork.ShoppingCartItem.GetAllAsync(s => s.UserId == request.userId, includeProperties:"Product");
+            var shoppingCartItemsForUser = await _unitOfWork.ShoppingCartItem.GetAllAsync(s => s.UserId == request.userId, includeProperties:"Product", isTracked:request.isTracked);
             return _mapper.Map<IEnumerable<ShoppingCartItemDto>>(shoppingCartItemsForUser);
         }
     }
