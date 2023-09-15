@@ -18,7 +18,7 @@ namespace BL.Features.OrderHeaders.Queries.GetOrderHeaderById
 
         public async Task<OrderHeaderDto?> Handle(GetOrderHeaderByIdQuery request, CancellationToken cancellationToken)
         {
-            var requestedOrderHeader = await _unitOfWork.OrderHeader.GetFirstOrDefaultAsync(o => o.Id == request.orderHeaderId);
+            var requestedOrderHeader = await _unitOfWork.OrderHeader.GetFirstOrDefaultAsync(o => o.Id == request.orderHeaderId, includeProperties:request.includeProperties);
             return _mapper.Map<OrderHeaderDto?>(requestedOrderHeader);
         }
     }

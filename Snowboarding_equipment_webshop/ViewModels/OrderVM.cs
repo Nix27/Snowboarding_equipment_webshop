@@ -1,8 +1,9 @@
 ﻿using DAL.Models;
+using System.ComponentModel;
 
-namespace BL.DTOs
+namespace Snowboarding_equipment_webshop.ViewModels
 {
-    public class OrderHeaderDto
+    public class OrderVM
     {
         public int Id { get; set; }
 
@@ -15,6 +16,8 @@ namespace BL.DTOs
         public DateTime CompanyPaymentDeadline { get; set; }
         public string? OrderStatus { get; set; }
         public string? PaymentStatus { get; set; }
+
+        [DisplayName("Tracking Number")]
         public string? TrackingNumber { get; set; }
         public string? Carrier { get; set; }
         public string? SessionId { get; set; }
@@ -23,8 +26,12 @@ namespace BL.DTOs
 
         public string Name { get; set; }
         public string Phone { get; set; }
+
+        [DisplayName("Street Address")]
         public string StreetAddress { get; set; }
         public string City { get; set; }
+
+        [DisplayName("Postal Code")]
         public string PostalCode { get; set; }
         public string Country { get; set; }
 

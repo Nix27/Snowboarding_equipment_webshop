@@ -30,5 +30,7 @@ namespace DAL.Models
         public string City { get; set; }
         public string PostalCode { get; set; }
         public string Country { get; set; }
+
+        public ICollection<OrderDetail> OrderItems { get; set; }
     }
 }

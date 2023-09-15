@@ -21,6 +21,10 @@ html {
   min-height: 100%;
 }
 
+.extra-small-font-size {
+  font-size: 0.8rem;
+}
+
 nav {
   background-color: #1A1A1A;
   color: #9A9A9A;

@@ -22,6 +22,10 @@ html{
     min-height: 100%;
 }
 
+.extra-small-font-size{
+    font-size: $extra-small;
+}
+
 nav {
     background-color: $primary-black;
     color: $nav-link;

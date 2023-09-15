@@ -1,0 +1,114 @@
+﻿@model OrderVM
+
+<form method="post">
+    <input asp-for="Id" hidden />
+    <div class="container">
+        <div class="row mt-4">
+            <div class="col-6">
+                <h2>Order details</h2>
+            </div>
+            <div class="col-6 text-end">
+                <a asp-action="AllOrders" class="primary-btn px-5 py-1">Back to orders</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <h4>Delivery details</h4>
+                <div class="d-flex flex-column">
+                    <div class="d-flex justify-content-between mb-1">
+                        <label asp-for="Name"></label>
+                        <input asp-for="Name" class="ps-2 py-1" />
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <label asp-for="Phone"></label>
+                        <input asp-for="Phone" class="ps-2 py-1" />
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <label asp-for="StreetAddress"></label>
+                        <input asp-for="StreetAddress" class="ps-2 py-1" />
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <label asp-for="City"></label>
+                        <input asp-for="City" class="ps-2 py-1" />
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <label asp-for="PostalCode"></label>
+                        <input asp-for="PostalCode" class="ps-2 py-1" />
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <label asp-for="Country"></label>
+                        <input asp-for="Country" class="ps-2 py-1" />
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <label asp-for="DateOfOrder"></label>
+                        <input asp-for="DateOfOrder" class="ps-2 py-1" />
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <label asp-for="Carrier"></label>
+                        <input asp-for="Carrier" class="ps-2 py-1" />
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <label asp-for="TrackingNumber"></label>
+                        <input asp-for="TrackingNumber" class="ps-2 py-1" />
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <label asp-for="DateOfShipping"></label>
+                        <input asp-for="DateOfShipping" class="ps-2 py-1" />
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <label asp-for="SessionId"></label>
+                        <input asp-for="SessionId" class="ps-2 py-1" />
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <label asp-for="PaymentIntentId"></label>
+                        <input asp-for="PaymentIntentId" class="ps-2 py-1" />
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <label asp-for="PaymentStatus"></label>
+                        <input asp-for="PaymentStatus" class="ps-2 py-1" />
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <label asp-for="PaymentDate"></label>
+                        <input asp-for="PaymentDate" class="ps-2 py-1" />
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <label asp-for="CompanyPaymentDeadline"></label>
+                        <input asp-for="CompanyPaymentDeadline" class="ps-2 py-1" />
+                    </div>
+                </div>
+                <button type="submit" class="primary-btn w-100 py-1 mt-2">Save Changes</button>
+            </div>
+            <div class="col-6">
+                <h4>Order summary</h4>
+                <p class="text-center">Order status - @Model.OrderStatus</p>
+
+                <div class="d-flex flex-column">
+                    @foreach (var item in Model.OrderItems)
+                    {
+                        <div class="d-flex justify-content-between align-items-center px-2 mb-2">
+                            <div class="d-flex flex-column">
+                                <span class="poppins-font-family">@item.Product.Name</span>
+                                <span class="poppins-font-family extra-small-font-size">Price: @item.Product.Price</span>
+                                <span class="poppins-font-family extra-small-font-size">Quantity: @item.Quantity</span>
+                            </div>
+                            <p>€@(item.Product.Price * item.Quantity)</p>
+                        </div>
+                    }
+                    <hr />
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <span>Total price</span>
+                    <span>€@Model.TotalPrice</span>
+                </div>
+
+                <div class="d-flex flex-column">
+                    <a asp-action="" class="primary-btn bg-success ps-2 py-1 mb-1">Pay Now</a>
+                    <a asp-action="" class="primary-btn ps-2 py-1 mb-1">Start Processing</a>
+                    <a asp-action="" class="primary-btn ps-2 py-1 mb-1">Ship Order</a>
+                    <a asp-action="" class="primary-btn bg-danger ps-2 py-1 mb-1">Cancel Order</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
