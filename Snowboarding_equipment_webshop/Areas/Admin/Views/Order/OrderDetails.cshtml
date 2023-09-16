@@ -1,7 +1,13 @@
-﻿@model OrderVM
+﻿@using Utilities.Constants.Role;
+@using Utilities.Constants.Status;
+@model OrderVM
 
 <form method="post">
     <input asp-for="Id" hidden />
+    <input asp-for="UserId" hidden />
+    <input asp-for="TotalPrice" hidden />
+    <input asp-for="OrderStatus" hidden />
+
     <div class="container">
         <div class="row mt-4">
             <div class="col-6">
@@ -17,63 +23,81 @@
                 <div class="d-flex flex-column">
                     <div class="d-flex justify-content-between mb-1">
                         <label asp-for="Name"></label>
-                        <input asp-for="Name" class="ps-2 py-1" />
+                        <div class="d-flex flex-column">
+                            <input asp-for="Name" class="ps-2 py-1" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
                     </div>
                     <div class="d-flex justify-content-between mb-1">
                         <label asp-for="Phone"></label>
-                        <input asp-for="Phone" class="ps-2 py-1" />
+                        <div class="d-flex flex-column">
+                            <input asp-for="Phone" class="ps-2 py-1" />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
                     </div>
                     <div class="d-flex justify-content-between mb-1">
                         <label asp-for="StreetAddress"></label>
-                        <input asp-for="StreetAddress" class="ps-2 py-1" />
+                        <div class="d-flex flex-column">
+                            <input asp-for="StreetAddress" class="ps-2 py-1" />
+                            <span asp-validation-for="StreetAddress" class="text-danger"></span>
+                        </div>
                     </div>
                     <div class="d-flex justify-content-between mb-1">
                         <label asp-for="City"></label>
-                        <input asp-for="City" class="ps-2 py-1" />
+                        <div class="d-flex flex-column">
+                            <input asp-for="City" class="ps-2 py-1" />
+                            <span asp-validation-for="City" class="text-danger"></span>
+                        </div>
                     </div>
                     <div class="d-flex justify-content-between mb-1">
                         <label asp-for="PostalCode"></label>
-                        <input asp-for="PostalCode" class="ps-2 py-1" />
+                        <div class="d-flex flex-column">
+                            <input asp-for="PostalCode" class="ps-2 py-1" />
+                            <span asp-validation-for="PostalCode" class="text-danger"></span>
+                        </div>
                     </div>
                     <div class="d-flex justify-content-between mb-1">
                         <label asp-for="Country"></label>
-                        <input asp-for="Country" class="ps-2 py-1" />
+                        <div class="d-flex flex-column">
+                            <input asp-for="Country" class="ps-2 py-1" />
+                            <span asp-validation-for="Country" class="text-danger"></span>
+                        </div>
                     </div>
                     <div class="d-flex justify-content-between mb-1">
                         <label asp-for="DateOfOrder"></label>
-                        <input asp-for="DateOfOrder" class="ps-2 py-1" />
+                        <input asp-for="DateOfOrder" readonly class="ps-2 py-1" />
                     </div>
                     <div class="d-flex justify-content-between mb-1">
                         <label asp-for="Carrier"></label>
-                        <input asp-for="Carrier" class="ps-2 py-1" />
+                        <input id="carrier" asp-for="Carrier" class="ps-2 py-1" />
                     </div>
                     <div class="d-flex justify-content-between mb-1">
                         <label asp-for="TrackingNumber"></label>
-                        <input asp-for="TrackingNumber" class="ps-2 py-1" />
+                        <input id="tracking-number" asp-for="TrackingNumber" class="ps-2 py-1" />
                     </div>
                     <div class="d-flex justify-content-between mb-1">
                         <label asp-for="DateOfShipping"></label>
-                        <input asp-for="DateOfShipping" class="ps-2 py-1" />
+                        <input asp-for="DateOfShipping" readonly class="ps-2 py-1" />
                     </div>
                     <div class="d-flex justify-content-between mb-1">
                         <label asp-for="SessionId"></label>
-                        <input asp-for="SessionId" class="ps-2 py-1" />
+                        <input asp-for="SessionId" readonly class="ps-2 py-1" />
                     </div>
                     <div class="d-flex justify-content-between mb-1">
                         <label asp-for="PaymentIntentId"></label>
-                        <input asp-for="PaymentIntentId" class="ps-2 py-1" />
+                        <input asp-for="PaymentIntentId" readonly class="ps-2 py-1" />
                     </div>
                     <div class="d-flex justify-content-between mb-1">
                         <label asp-for="PaymentStatus"></label>
-                        <input asp-for="PaymentStatus" class="ps-2 py-1" />
+                        <input asp-for="PaymentStatus" readonly class="ps-2 py-1" />
                     </div>
                     <div class="d-flex justify-content-between mb-1">
                         <label asp-for="PaymentDate"></label>
-                        <input asp-for="PaymentDate" class="ps-2 py-1" />
+                        <input asp-for="PaymentDate" readonly class="ps-2 py-1" />
                     </div>
                     <div class="d-flex justify-content-between mb-1">
                         <label asp-for="CompanyPaymentDeadline"></label>
-                        <input asp-for="CompanyPaymentDeadline" class="ps-2 py-1" />
+                        <input asp-for="CompanyPaymentDeadline" readonly class="ps-2 py-1" />
                     </div>
                 </div>
                 <button type="submit" class="primary-btn w-100 py-1 mt-2">Save Changes</button>
@@ -103,12 +127,61 @@
                 </div>
 
                 <div class="d-flex flex-column">
-                    <a asp-action="" class="primary-btn bg-success ps-2 py-1 mb-1">Pay Now</a>
-                    <a asp-action="" class="primary-btn ps-2 py-1 mb-1">Start Processing</a>
-                    <a asp-action="" class="primary-btn ps-2 py-1 mb-1">Ship Order</a>
-                    <a asp-action="" class="primary-btn bg-danger ps-2 py-1 mb-1">Cancel Order</a>
+                    @if(Model.PaymentStatus == PaymentStatuses.PaymentStatusDelayedPayment && Model.OrderStatus == OrderStatuses.StatusShipped)
+                    {
+                        <button asp-action="CompanyPay" class="primary-btn bg-success ps-2 py-1 mb-1">Pay</button>
+                    }
+                    
+                    @if (User.IsInRole(AppRoles.ADMIN))
+                    {
+                        if(Model.OrderStatus == OrderStatuses.StatusApproved)
+                        {
+                            <button asp-action="ChangeStatusToProcessing" class="primary-btn ps-2 py-1 mb-1">Start Processing</button>
+                        }
+
+                        if(Model.OrderStatus == OrderStatuses.StatusInProcess)
+                        {
+                            <button asp-action="ChangeStatusToShipped" onclick="return validateTrackingNumberField()" class="primary-btn ps-2 py-1 mb-1">Ship Order</button>
+                        }
+
+                        @if(Model.OrderStatus != OrderStatuses.StatusCancelled && Model.OrderStatus != PaymentStatuses.PaymentStatusRefunded &&
+                            Model.OrderStatus != OrderStatuses.StatusShipped)
+                        {
+                            <button asp-action="CancelOrder" class="primary-btn bg-danger ps-2 py-1 mb-1">Cancel Order</button>
+                        }
+                    }
                 </div>
             </div>
         </div>
     </div>
 </form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function validateTrackingNumberField(){
+            if ($('#carrier').val() == '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please enter carrier'
+                })
+
+                return false;
+            }
+
+            if ($('#tracking-number').val() == '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please enter tracking number'
+                })
+
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+}

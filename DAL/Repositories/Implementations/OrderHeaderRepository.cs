@@ -10,6 +10,11 @@ namespace DAL.Repositories.Implementations
         {
         }
 
+        public void Update(OrderHeader orderHeader)
+        {
+            dbSet.Update(orderHeader);
+        }
+
         public void UpdateStatus(int orderHeaderId, string orderStatus, string? paymentStatus = null)
         {
             var orderHeader = dbSet.FirstOrDefault(o => o.Id == orderHeaderId);
