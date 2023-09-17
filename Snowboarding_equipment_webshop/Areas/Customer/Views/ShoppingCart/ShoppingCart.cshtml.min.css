@@ -1,1 +1,1 @@
-﻿.item-border-right{border-right:2px solid #1a1a1a;}.delete-item i{font-size:1.5rem;transition:.2s ease-in-out;}.delete-item i:hover{font-size:1.7rem;}
+﻿.item-border-right{border-right:2px solid #1a1a1a;}.delete-item i{font-size:1.5rem;transition:.2s ease-in-out;}.delete-item i:hover{font-size:1.7rem;}@media only screen and (max-width:280px){.shopping-cart-item{padding:0;}}#total-price{width:50%;}@media only screen and (min-width:576px){#total-price{width:25%;}}

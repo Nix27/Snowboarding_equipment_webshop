@@ -26,6 +26,13 @@ html{
     font-size: $extra-small;
 }
 
+.responsive-btn {
+    @media only screen and (max-width: 575px) {
+        font-size: $extra-small;
+        text-align: center;
+    }
+}
+
 nav {
     background-color: $primary-black;
     color: $nav-link;
@@ -38,6 +45,11 @@ nav {
         &:hover {
             color: $primary-white;
         }
+    }
+
+    #logout {
+        background-color: $primary-white;
+        color: $primary-black;
     }
 
     i {
@@ -111,8 +123,15 @@ nav {
                 }
             }
 
-            button {
-                bottom: -15px;
+            #btn-close {
+                position: absolute;
+                border-radius: 50%;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 30px;
+                height: 30px;
+                text-align: center;
+                bottom: -12px;
             }
         }
     }

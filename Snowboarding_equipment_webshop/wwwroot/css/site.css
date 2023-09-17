@@ -25,6 +25,13 @@ html {
   font-size: 0.8rem;
 }
 
+@media only screen and (max-width: 575px) {
+  .responsive-btn {
+    font-size: 0.8rem;
+    text-align: center;
+  }
+}
+
 nav {
   background-color: #1A1A1A;
   color: #9A9A9A;
@@ -36,6 +43,10 @@ nav .nav-link {
 }
 nav .nav-link:hover {
   color: #ffffff;
+}
+nav #logout {
+  background-color: #ffffff;
+  color: #1A1A1A;
 }
 nav i {
   font-size: 1.5rem;
@@ -92,8 +103,15 @@ nav .mobile-menu, nav .menu-btn {
   nav .mobile-menu ul li .dropdown .dropdown-toggle {
     color: #1A1A1A;
   }
-  nav .mobile-menu button {
-    bottom: -15px;
+  nav .mobile-menu #btn-close {
+    position: absolute;
+    border-radius: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    bottom: -12px;
   }
 }
 

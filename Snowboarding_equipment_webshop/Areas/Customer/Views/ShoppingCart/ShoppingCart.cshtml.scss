@@ -14,3 +14,17 @@
         }
     }
 }
+
+.shopping-cart-item {
+    @media only screen and (max-width: 280px) {
+        padding: 0;
+    }
+}
+
+#total-price {
+    width: 50%;
+
+    @media only screen and (min-width: 576px) {
+        width: 25%;
+    }
+}
