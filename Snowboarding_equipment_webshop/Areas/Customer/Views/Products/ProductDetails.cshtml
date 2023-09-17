@@ -8,8 +8,8 @@
             <h2>@Model.Name</h2>
         </div>
 
-        <div class="row mx-4 justify-content-between">
-            <div class="col-4">
+        <div class="row mx-4 justify-content-between mb-5 mb-lg-0">
+            <div class="col-12 col-lg-4">
                 <div id="carouselExample" class="carousel slide carousel-dark">
                     <div class="carousel-inner">
                         @foreach (var galleryImage in Model.GalleryImages.Select((image, index) => new { ImageId = image.Id, Index = index }))
@@ -29,7 +29,7 @@
                     </button>
                 </div>
             </div>
-            <div class="col-6">
+            <div class="col-12 col-lg-6">
                 <h3>@Model.Name</h3><br />
                 <div class="d-flex flex-column">
                     @{
@@ -50,12 +50,15 @@
                             <input type="number" id="quantity" name="quantity" min="1" value="1" class="poppins-font-family ps-2" />
                         </div>
                     </div>
-                    <button type="submit" class="primary-btn text-center py-1">Add to cart</button>
+                    @if(Model.QuantityInStock > 0)
+                    {
+                        <button type="submit" class="primary-btn text-center py-1">Add to cart</button>
+                    }
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-12 d-flex justify-content-center align-items-center title mb-4">
+            <div class="col-12 d-flex justify-content-center align-items-center title px-2 mb-4">
                 <img src="~/images/black-mountain-icon.png" class="description-icon" alt="description icon" />
             </div>
             <div class="col-12">

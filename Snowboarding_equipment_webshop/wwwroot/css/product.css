@@ -20,10 +20,15 @@
 
 /*customer*/
 .bestseller-product-image {
-  width: 100%;
+  width: 200px;
+}
+@media only screen and (max-width: 767px) {
+  .bestseller-product-image {
+    width: 150px;
+  }
 }
 
-.bestseller-image {
+.phrase-image {
   width: 50%;
   height: 200px;
 }

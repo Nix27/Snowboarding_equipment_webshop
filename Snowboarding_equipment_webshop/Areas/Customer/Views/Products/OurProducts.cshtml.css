@@ -12,6 +12,53 @@
   color: #ffffff;
 }
 
+#close-filter-btn {
+  display: none;
+}
+
+@media only screen and (max-width: 991px) {
+  .filter-container {
+    display: none;
+  }
+  .mobile-filter-container {
+    display: block;
+    border: none;
+    position: fixed;
+    background-color: #ffffff;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    bottom: 0;
+    left: -2000px;
+    padding: 30px 40px;
+    transition: 0.3s ease-in-out;
+    z-index: 1;
+  }
+  .mobile-filter-container .price-filter {
+    width: 50%;
+  }
+  .mobile-filter-container .mobile-filter-header span {
+    display: block;
+    font-size: 1.4rem;
+    transition: 0.2s ease-in-out;
+  }
+  .mobile-filter-container .mobile-filter-header span:hover {
+    transform: scale(1.2);
+  }
+}
+#filter-btn {
+  display: none;
+  transition: 0.2s ease-in-out;
+}
+@media only screen and (max-width: 991px) {
+  #filter-btn {
+    display: inline-block;
+  }
+  #filter-btn:hover {
+    transform: scale(1.1);
+  }
+}
+
 input[type=checkbox] {
   appearance: none;
   background-color: white;

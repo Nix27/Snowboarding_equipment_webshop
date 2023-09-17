@@ -12,6 +12,60 @@
     color: $primary-white;
 }
 
+#close-filter-btn {
+    display: none;
+}
+
+@media only screen and (max-width: 991px) {
+    .filter-container {
+        display: none;
+    }
+
+    .mobile-filter-container {
+        display: block;
+        border: none;
+        position: fixed;
+        background-color: $primary-white;
+        width: 100vw;
+        height: 100vh;
+        top: 0;
+        bottom: 0;
+        left: -2000px;
+        padding: 30px 40px;
+        transition: .3s ease-in-out;
+        z-index: 1;
+
+        .price-filter {
+            width: 50%;
+        }
+
+        .mobile-filter-header {
+            span{
+                display: block;
+                font-size: $big;
+                transition: .2s ease-in-out;
+
+                &:hover{
+                    transform: scale(1.2);
+                }
+            }
+        }
+    }
+}
+
+#filter-btn {
+    display: none;
+    transition: .2s ease-in-out;
+
+    @media only screen and (max-width: 991px) {
+        display: inline-block;
+
+        &:hover{
+            transform: scale(1.1);
+        }
+    }
+}
+
 input[type="checkbox"] {
     appearance: none;
     background-color: white;

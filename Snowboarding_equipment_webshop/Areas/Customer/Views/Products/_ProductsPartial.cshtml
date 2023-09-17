@@ -5,7 +5,7 @@
     var description = product.Description.Length <= 22 ? product.Description : product.Description.Substring(0, 22) + "...";
     string stockClass = product.QuantityInStock > 0 ? "on-stock" : "out-of-stock";
 
-    <div class="col-12 col-sm-6 col-md-6 col-lg-3 product-item mb-5">
+    <div class="col-12 col-sm-6 col-lg-3 product-item mb-5">
         <div class="product-item-header d-flex justify-content-center">
             @{ var imageUrl = Url.Action("GetImage", "Image", new{ area = "Customer", imageType = ImageType.Thumbnail, id = product.ThumbnailImageId }); }
             <img src="@imageUrl" alt="product image" class="product-image pb-1" />

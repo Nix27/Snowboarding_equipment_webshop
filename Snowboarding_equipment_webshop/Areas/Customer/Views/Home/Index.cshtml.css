@@ -15,6 +15,27 @@
   padding: 1.2875rem 1.3625rem;
   width: 30%;
 }
+@media only screen and (max-width: 991px) {
+  .bestseller {
+    width: 50%;
+  }
+}
+@media only screen and (max-width: 767px) {
+  .bestseller {
+    width: 60%;
+  }
+}
+@media only screen and (max-width: 575px) {
+  .bestseller {
+    width: 90%;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .phrase {
+    display: none;
+  }
+}
 
 .grey-linear-gradient {
   border-radius: 1.5rem;
@@ -38,15 +59,37 @@
   background-color: #1A1A1A;
   padding: 30px 0;
 }
+@media only screen and (max-width: 991px) {
+  .newsletter-container {
+    width: 95%;
+    height: 50%;
+  }
+}
 .newsletter-container p {
   color: #ffffff;
   font-size: 1.4rem;
+  text-align: center;
+}
+@media only screen and (max-width: 575px) {
+  .newsletter-container p {
+    font-size: 0.9rem;
+  }
 }
 .newsletter-container input[type=email] {
   padding: 5px;
-  width: 400px;
   border-radius: 5px;
+  width: 400px;
   border: 0;
+}
+@media only screen and (max-width: 575px) {
+  .newsletter-container input[type=email] {
+    width: 200px;
+  }
+}
+@media only screen and (max-width: 280px) {
+  .newsletter-container input[type=email] {
+    width: 150px;
+  }
 }
 .newsletter-container input[type=email]:focus {
   outline: none;

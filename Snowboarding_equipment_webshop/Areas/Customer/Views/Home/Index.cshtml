@@ -33,116 +33,128 @@
 
 <div class="d-flex flex-column">
     <section>
-        <div class="container-fluid row mb-5">
+        <div class="container-fluid row justify-content-center mb-5">
             <div class="col-12 d-flex flex-column align-items-center">
                 <img src="~/images/best-seller.png" alt="Best seller" class="title-image mb-2" />
                 <h3 class="title text-center">Check our most wanted products</h3>
             </div>
         </div>
 
-        <div class="container-fluid row mb-5">
-            <div class="col-12 d-flex mb-5">
-                <div class="col-6 d-flex align-items-center justify-content-end pe-5">
-                    <div class="col-3">
+        <div class="container-fluid row justify-content-center mb-5">
+            <div class="row col-12 justify-content-center align-items-center pe-5 mb-5">
+                <div class="row col-12 col-md-6 justify-content-end justify-content-sm-center justify-content-lg-end align-items-center">
+                    <div class="row col-12 col-md-6 col-lg-3 justify-content-center mb-3 mb-md-0">
                         <img class="bestseller-product-image" src="@Url.Action("GetImage", "Image", new { area = "Customer", imageType = ImageType.Thumbnail, id = Model[0].ThumbnailImageId })" alt="Product thumbnail image" />
                     </div>
-                    <div class="bestseller col-3 d-flex flex-column grey-linear-gradient">
+                    <div class="bestseller col-12 col-md-6 col-lg-3 grey-linear-gradient">
                         <h5 class="mb-4">@Model[0].Name</h5>
                         <p class="poppins-font-family mb-4">@Model[0].Description</p>
 
-                        @{
-                            string stockClass = @Model[0].QuantityInStock > 0 ? "on-stock" : "out-of-stock";
-                        }
-                        <span class="poppins-font-family @stockClass mb-4">@(Model[0].QuantityInStock > 0 ? "On stock" : "Out of stock")</span>
+                        <div class="d-flex flex-column">
+                            @{
+                                string stockClass = @Model[0].QuantityInStock > 0 ? "on-stock" : "out-of-stock";
+                            }
+                            <span class="poppins-font-family @stockClass mb-4">@(Model[0].QuantityInStock > 0 ? "On stock" : "Out of stock")</span>
 
-                        @if (Model[0].OldPrice != null)
-                        {
-                            <s class="poppins-font-family old-price">€@Model[0].OldPrice</s>
-                        }
+                            @if (Model[0].OldPrice != null)
+                            {
+                                <s class="poppins-font-family old-price">€@Model[0].OldPrice</s>
+                            }
 
-                        <span class="poppins-font-family mb-3">€@Model[0].Price</span>
+                            <span class="poppins-font-family mb-3">€@Model[0].Price</span>
+                        </div>
+                        
                         <a asp-controller="Products" asp-action="ProductDetails" asp-route-productId="@Model[0].Id" class="btn-buy">Buy</a>
                     </div>
                 </div>
-                <div class="col-6 d-flex justify-content-start align-items-center ps-5">
-                    <img src="/images/phrase1.png" alt="Phrase image" class="bestseller-image" />
+                <div class="row col-12 col-lg-6 ps-5 phrase">
+                    <img src="/images/phrase1.png" alt="Phrase image" class="phrase-image" />
                 </div>
             </div>
-            <div class="col-12 d-flex mb-5">
-                <div class="col-6 d-flex justify-content-end align-items-center pe-5">
-                    <img src="/images/phrase2.png" alt="Phrase image" class="bestseller-image" />
+            <div class="row col-12 justify-content-center align-items-center pe-5 mb-5">
+                <div class="row col-12 col-lg-6 justify-content-end pe-5 phrase">
+                    <img src="/images/phrase2.png" alt="Phrase image" class="phrase-image" />
                 </div>
-                <div class="col-6 d-flex align-items-center justify-content-start ps-5">
-                    <div class="col-3">
+                <div class="row col-12 col-md-6 justify-content-end justify-content-sm-center justify-content-lg-start align-items-center">
+                    <div class="row col-12 col-md-6 col-lg-3 justify-content-center mb-3 mb-md-0">
                         <img class="bestseller-product-image" src="@Url.Action("GetImage", "Image", new { area = "Customer", imageType = ImageType.Thumbnail, id = Model[1].ThumbnailImageId })" alt="Product thumbnail image" />
                     </div>
-                    <div class="bestseller col-3 d-flex flex-column grey-linear-gradient">
+                    <div class="bestseller col-12 col-md-6 col-lg-3 grey-linear-gradient">
                         <h5 class="mb-4">@Model[1].Name</h5>
                         <p class="poppins-font-family mb-4">@Model[1].Description</p>
 
-                        <span class="poppins-font-family @stockClass mb-4">@(Model[1].QuantityInStock > 0 ? "On stock" : "Out of stock")</span>
+                        <div class="d-flex flex-column">
+                            <span class="poppins-font-family @stockClass mb-4">@(Model[1].QuantityInStock > 0 ? "On stock" : "Out of stock")</span>
 
-                        @if (Model[1].OldPrice != null)
-                        {
-                            <s class="poppins-font-family old-price">€@Model[1].OldPrice</s>
-                        }
+                            @if (Model[1].OldPrice != null)
+                            {
+                                <s class="poppins-font-family old-price">€@Model[1].OldPrice</s>
+                            }
 
-                        <span class="poppins-font-family mb-3">€@Model[1].Price</span>
+                            <span class="poppins-font-family mb-3">€@Model[1].Price</span>
+                        </div>
+                        
                         <a asp-controller="Products" asp-action="ProductDetails" asp-route-productId="@Model[1].Id" class="btn-buy">Buy</a>
                     </div>
                 </div>
             </div>
-            <div class="col-12 d-flex mb-5">
-                <div class="col-6 d-flex align-items-center justify-content-end pe-5">
-                    <div class="col-3">
+            <div class="row col-12 justify-content-center align-items-center pe-5 mb-5">
+                <div class="row col-12 col-md-6 justify-content-end justify-content-sm-center justify-content-lg-end align-items-center">
+                    <div class="row col-12 col-md-6 col-lg-3 justify-content-center mb-3 mb-md-0">
                         <img class="bestseller-product-image" src="@Url.Action("GetImage", "Image", new { area = "Customer", imageType = ImageType.Thumbnail, id = Model[2].ThumbnailImageId })" alt="Product thumbnail image" />
                     </div>
-                    <div class="bestseller col-3 d-flex flex-column grey-linear-gradient">
+                    <div class="bestseller col-12 col-md-6 col-lg-3 grey-linear-gradient">
                         <h5 class="mb-4">@Model[2].Name</h5>
                         <p class="poppins-font-family mb-4">@Model[2].Description</p>
 
-                        <span class="poppins-font-family @stockClass mb-4">@(Model[2].QuantityInStock > 0 ? "On stock" : "Out of stock")</span>
+                        <div class="d-flex flex-column">
+                            <span class="poppins-font-family @stockClass mb-4">@(Model[2].QuantityInStock > 0 ? "On stock" : "Out of stock")</span>
 
-                        @if (Model[2].OldPrice != null)
-                        {
-                            <s class="poppins-font-family old-price">€@Model[2].OldPrice</s>
-                        }
+                            @if (Model[0].OldPrice != null)
+                            {
+                                <s class="poppins-font-family old-price">€@Model[2].OldPrice</s>
+                            }
 
-                        <span class="poppins-font-family mb-3">€@Model[2].Price</span>
+                            <span class="poppins-font-family mb-3">€@Model[2].Price</span>
+                        </div>
+
                         <a asp-controller="Products" asp-action="ProductDetails" asp-route-productId="@Model[2].Id" class="btn-buy">Buy</a>
                     </div>
                 </div>
-                <div class="col-6 d-flex justify-content-start align-items-center ps-5">
-                    <img src="/images/phrase3.png" alt="Phrase image" class="bestseller-image" />
+                <div class="row col-12 col-lg-6 ps-5 phrase">
+                    <img src="/images/phrase3.png" alt="Phrase image" class="phrase-image" />
                 </div>
             </div>
-            <div class="col-12 d-flex mb-5">
-                <div class="col-6 d-flex justify-content-end align-items-center pe-5">
-                    <img src="/images/phrase4.png" alt="Phrase image" class="bestseller-image" />
+            <div class="row col-12 justify-content-center align-items-center pe-5 mb-5">
+                <div class="row col-12 col-lg-6 justify-content-end pe-5 phrase">
+                    <img src="/images/phrase4.png" alt="Phrase image" class="phrase-image" />
                 </div>
-                <div class="col-6 d-flex align-items-center justify-content-start ps-5">
-                    <div class="col-3">
+                <div class="row col-12 col-md-6 justify-content-end justify-content-sm-center justify-content-lg-start align-items-center">
+                    <div class="row col-12 col-md-6 col-lg-3 justify-content-center mb-3 mb-md-0">
                         <img class="bestseller-product-image" src="@Url.Action("GetImage", "Image", new { area = "Customer", imageType = ImageType.Thumbnail, id = Model[3].ThumbnailImageId })" alt="Product thumbnail image" />
                     </div>
-                    <div class="bestseller col-3 d-flex flex-column grey-linear-gradient">
+                    <div class="bestseller col-12 col-md-6 col-lg-3 grey-linear-gradient">
                         <h5 class="mb-4">@Model[3].Name</h5>
                         <p class="poppins-font-family mb-4">@Model[3].Description</p>
 
-                        <span class="poppins-font-family @stockClass mb-4">@(Model[3].QuantityInStock > 0 ? "On stock" : "Out of stock")</span>
+                        <div class="d-flex flex-column">
+                            <span class="poppins-font-family @stockClass mb-4">@(Model[3].QuantityInStock > 0 ? "On stock" : "Out of stock")</span>
 
-                        @if (Model[3].OldPrice != null)
-                        {
-                            <s class="poppins-font-family old-price">€@Model[3].OldPrice</s>
-                        }
+                            @if (Model[1].OldPrice != null)
+                            {
+                                <s class="poppins-font-family old-price">€@Model[3].OldPrice</s>
+                            }
 
-                        <span class="poppins-font-family mb-3">€@Model[3].Price</span>
+                            <span class="poppins-font-family mb-3">€@Model[3].Price</span>
+                        </div>
+
                         <a asp-controller="Products" asp-action="ProductDetails" asp-route-productId="@Model[3].Id" class="btn-buy">Buy</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    
+
     <section class="d-flex flex-column mb-5">
         <h2 class="title d-flex justify-content-center align-items-center">Reviews</h2>
         <div class="reviews w-100">
@@ -152,10 +164,10 @@
     <section class="d-flex flex-column mb-5">
         <h2 class="title d-flex justify-content-center align-items-center">Newsletter</h2>
         <div class="newsletter d-flex justify-content-center align-items-center">
-            <div class="newsletter-container d-flex flex-column align-items-center justify-content-center">
+            <div class="newsletter-container d-flex flex-column align-items-center justify-content-center px-1">
                 <p>Wanna be first to know about all special offers & promotions?</p>
                 <div class="d-flex gap-2">
-                    <input type="email" placeholder="Just input your e-mail address" />
+                    <input type="email" placeholder="Just input your e-mail" />
                     <button>Send</button>
                 </div>
             </div>

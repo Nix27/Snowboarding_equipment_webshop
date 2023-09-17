@@ -5,7 +5,7 @@
     var action = (string)ViewData["action"];
 }
 
-<div class="d-flex justify-content-lg-end justify-content-center mt-2">
+<div class="d-flex justify-content-center justify-content-lg-end mt-2">
     <a asp-action="@action" asp-route-page="0" asp-route-size="@size" data-page="0" class="first-btn btn-pagination mx-2">First</a>
     <a asp-action="@action" asp-route-page="@(page)" asp-route-size="@size" data-page="0" class="previous-btn btn-pagination mx-2">&lt;</a>
 

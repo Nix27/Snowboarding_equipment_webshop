@@ -14,6 +14,24 @@
 .bestseller {
     padding: 1.2875rem 1.3625rem;
     width: 30%;
+
+    @media only screen and (max-width: 991px) {
+        width: 50%;
+    }
+
+    @media only screen and (max-width: 767px) {
+        width: 60%;
+    }
+
+    @media only screen and (max-width: 575px) {
+        width: 90%;
+    }
+}
+
+.phrase {
+    @media only screen and (max-width: 991px) {
+        display: none;
+    }
 }
 
 .grey-linear-gradient {
@@ -39,18 +57,36 @@
     background-color: $primary-black;
     padding: 30px 0;
 
+    @media only screen and (max-width: 991px) {
+        width: 95%;
+        height: 50%;
+    }
+
     p {
         color: $primary-white;
         font-size: $big;
+        text-align: center;
+
+        @media only screen and (max-width: 575px) {
+            font-size: $small;
+        }
     }
 
-    input[type=email]{
+    input[type=email] {
         padding: 5px;
-        width: 400px;
         border-radius: 5px;
+        width: 400px;
         border: 0;
 
-        &:focus{
+        @media only screen and (max-width: 575px) {
+            width: 200px;
+        }
+
+        @media only screen and (max-width: 280px) {
+            width: 150px;
+        }
+
+        &:focus {
             outline: none;
         }
     }
@@ -62,7 +98,7 @@
         border: 0;
         transition: .2s ease-in-out;
 
-        &:hover{
+        &:hover {
             transform: scale(1.1);
         }
     }
