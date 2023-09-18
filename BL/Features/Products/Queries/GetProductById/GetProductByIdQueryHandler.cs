@@ -1,28 +1,29 @@
 ﻿using AutoMapper;
 using BL.DTOs;
-using DAL.UnitOfWork;
+using DAL.Repositories.Interfaces;
 using MediatR;
 
 namespace BL.Features.Products.Queries.GetProductById
 {
-    internal class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, ProductDto?>
+    internal class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, ProductDto>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
 
-        public GetProductByIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public GetProductByIdQueryHandler(IProductRepository productRepository, IMapper mapper)
         {
-            _unitOfWork = unitOfWork;
+            _productRepository = productRepository;
             _mapper = mapper;
         }
 
-        public async Task<ProductDto?> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
+        public async Task<ProductDto> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
         {
-            var requestedProduct = await _unitOfWork.Product.GetFirstOrDefaultAsync(p => p.Id == request.id, includeProperties: "Category,ThumbnailImage,GalleryImages", isTracked: request.isTracked);
+            var requestedProduct = await _productRepository.GetFirstOrDefaultAsync(p => p.Id == request.id, includeProperties:request.includeProperties, isTracked:request.isTracked);
 
-            if (requestedProduct == null) return null;
+            if (requestedProduct == null) 
+                throw new InvalidOperationException("Product not found");
 
-            return _mapper.Map<ProductDto?>(requestedProduct);
+            return _mapper.Map<ProductDto>(requestedProduct);
         }
     }
 }

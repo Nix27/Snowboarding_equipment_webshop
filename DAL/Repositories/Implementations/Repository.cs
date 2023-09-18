@@ -45,7 +45,7 @@ namespace DAL.Repositories.Implementations
             return result.AsEnumerable();
         }
 
-        public Task<T> GetFirstOrDefaultAsync(Expression<Func<T, bool>> filter, string? includeProperties = null, bool isTracked = true)
+        public Task<T?> GetFirstOrDefaultAsync(Expression<Func<T, bool>> filter, string? includeProperties = null, bool isTracked = true)
         {
             IQueryable<T> query;
 

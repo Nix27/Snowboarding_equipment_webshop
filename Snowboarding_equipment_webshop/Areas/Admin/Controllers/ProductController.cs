@@ -8,6 +8,7 @@ using BL.Features.Products.Commands.CreateProduct;
 using BL.Features.Products.Commands.DeleteProduct;
 using BL.Features.Products.Commands.UpdateProduct;
 using BL.Features.Products.Queries.GetAllProducts;
+using BL.Features.Products.Queries.GetNumberOfProducts;
 using BL.Features.Products.Queries.GetPagedProducts;
 using BL.Features.Products.Queries.GetProductById;
 using BL.Features.ThumbnailImages.Commands.CreateThumbnailImage;
@@ -30,6 +31,7 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
 
         private const string errorMessage = "Something went wrong. Try again later!";
 
+        //for include from get by id "Category,ThumbnailImage,GalleryImages"
         public ProductController(IMediator mediator, IMapper mapper, ILogger<ProductController> logger)
         {
             _mediator = mediator;
@@ -44,8 +46,8 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
 
             try
             {
-                var pagedProducts = await _mediator.Send(new GetPagedProductsQuery(_mapper.Map<PageProductsRequestDto>(pageRequest)));
-                int numberOfAllProducts = _mediator.Send(new GetAllProductsQuery()).GetAwaiter().GetResult().Count();
+                var pagedProducts = await _mediator.Send(new GetPagedProductsQuery(null, pageRequest.Page, pageRequest.Size));
+                int numberOfAllProducts = await _mediator.Send(new GetNumberOfProductsQuery());
 
                 ViewData["page"] = pageRequest.Page;
                 ViewData["size"] = pageRequest.Size;
@@ -70,8 +72,8 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
 
             try
             {
-                var pagedProducts = await _mediator.Send(new GetPagedProductsQuery(_mapper.Map<PageProductsRequestDto>(pageRequest)));
-                int numberOfAllProducts = _mediator.Send(new GetAllProductsQuery()).GetAwaiter().GetResult().Count();
+                var pagedProducts = await _mediator.Send(new GetPagedProductsQuery(null, pageRequest.Page, pageRequest.Size));
+                int numberOfAllProducts = await _mediator.Send(new GetNumberOfProductsQuery());
 
                 ViewData["page"] = pageRequest.Page;
                 ViewData["size"] = pageRequest.Size;

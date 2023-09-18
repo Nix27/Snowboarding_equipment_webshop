@@ -5,6 +5,7 @@ using BL.Features.Countries.Commands.DeleteCountry;
 using BL.Features.Countries.Commands.UpdateCountry;
 using BL.Features.Countries.Queries.GetAllCountries;
 using BL.Features.Countries.Queries.GetCountryById;
+using BL.Features.Countries.Queries.GetNumberOfCountries;
 using BL.Features.Countries.Queries.GetPagedCountries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -34,8 +35,8 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
 
             try
             {
-                var pagedCountries = await _mediator.Send(new GetPagedCountriesQuery(page, size));
-                int? numberOfAllCountries = _mediator.Send(new GetAllCountriesQuery()).GetAwaiter().GetResult()?.Count();
+                var pagedCountries = await _mediator.Send(new GetPagedCountriesQuery(null, page, size));
+                int numberOfAllCountries = await _mediator.Send(new GetNumberOfCountriesQuery());
 
                 ViewData["page"] = page;
                 ViewData["size"] = size;
@@ -51,31 +52,15 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
             }
         }
 
-        public async Task<IActionResult> CountryTableBodyPartial(int page, int size, string? searchTerm)
+        public async Task<IActionResult> CountryTableBodyPartial(int page, int size)
         {
             if (size == 0)
                 size = 5;
 
             try
             {
-                var pagedCountries = await _mediator.Send(new GetPagedCountriesQuery(page, size, searchTerm));
-                int? numberOfAllCountries;
-
-                if (searchTerm != null)
-                {
-                    numberOfAllCountries = _mediator.Send(new GetAllCountriesQuery())
-                                                     .GetAwaiter()
-                                                     .GetResult()?
-                                                     .Where(c => c.Name.ToLower().Contains(searchTerm))
-                                                     .Count();
-                }
-                else
-                {
-                    numberOfAllCountries = _mediator.Send(new GetAllCountriesQuery())
-                                                     .GetAwaiter()
-                                                     .GetResult()?
-                                                     .Count();
-                }
+                var pagedCountries = await _mediator.Send(new GetPagedCountriesQuery(null, page, size));
+                int numberOfAllCountries = await _mediator.Send(new GetNumberOfCountriesQuery());
 
                 ViewData["page"] = page;
                 ViewData["size"] = size;
@@ -160,12 +145,7 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
         {
             try
             {
-                var countryForDelete = await _mediator.Send(new GetCountryByIdQuery(id, false));
-
-                if (countryForDelete == null)
-                    return Json(new { success = false, message = "Country not found." });
-
-                var deletedCountry = await _mediator.Send(new DeleteCountryCommand(countryForDelete));
+                var deletedCountry = await _mediator.Send(new DeleteCountryCommand(id));
 
                 return Json(new { success = true, message = "Successfully deleted country." });
             }

@@ -1,24 +1,21 @@
-﻿using AutoMapper;
-using BL.DTOs;
-using DAL.UnitOfWork;
+﻿using BL.DTOs;
+using BL.Features.Products.Queries.GetAllProducts;
 using MediatR;
 
 namespace BL.Features.Products.Queries.GetFilteredProductsForCustomer
 {
     internal class GetFilteredProductsForCustomerQueryHandler : IRequestHandler<GetFilteredProductsForCustomerQuery, IEnumerable<ProductDto>>
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+        private readonly IMediator _mediator;
 
-        public GetFilteredProductsForCustomerQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public GetFilteredProductsForCustomerQueryHandler(IMediator mediator)
         {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
+            _mediator = mediator;
         }
 
         public async Task<IEnumerable<ProductDto>> Handle(GetFilteredProductsForCustomerQuery request, CancellationToken cancellationToken)
         {
-            var allProducts = await _unitOfWork.Product.GetAllAsync(includeProperties:"Category,ThumbnailImage");
+            var allProducts = await _mediator.Send(new GetAllProductsQuery(includeProperties: "Category,ThumbnailImage"));
 
             if(request.filter.MinPrice != null && request.filter.MaxPrice != null)
                 allProducts = allProducts.Where(p => p.Price >= request.filter.MinPrice && p.Price <= request.filter.MaxPrice);
@@ -26,7 +23,7 @@ namespace BL.Features.Products.Queries.GetFilteredProductsForCustomer
             if (request.filter.Categories != null)
                 allProducts = allProducts.Where(p => request.filter.Categories.Contains(p.Category.Name));
 
-            return _mapper.Map<IEnumerable<ProductDto>>(allProducts);
+            return allProducts;
         }
     }
 }

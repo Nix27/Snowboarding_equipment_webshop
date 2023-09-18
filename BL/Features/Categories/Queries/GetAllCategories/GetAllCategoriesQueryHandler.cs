@@ -1,24 +1,24 @@
 ﻿using AutoMapper;
 using BL.DTOs;
-using DAL.UnitOfWork;
+using DAL.Repositories.Interfaces;
 using MediatR;
 
 namespace BL.Features.Categories.Queries.GetAllCategories
 {
     internal class GetAllCategoriesQueryHandler : IRequestHandler<GetAllCategoriesQuery, IEnumerable<CategoryDto>>
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public GetAllCategoriesQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public GetAllCategoriesQueryHandler(IMapper mapper, ICategoryRepository categoryRepository)
         {
-            _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _categoryRepository = categoryRepository;
         }
 
         public async Task<IEnumerable<CategoryDto>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationToken)
         {
-            var allCategories = await _unitOfWork.Category.GetAllAsync();
+            var allCategories = await _categoryRepository.GetAllAsync(request.filter, includeProperties:request.includeProperties, isTracked:request.isTracked);
             return _mapper.Map<IEnumerable<CategoryDto>>(allCategories);
         }
     }

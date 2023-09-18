@@ -1,4 +1,5 @@
 ﻿using DAL.Models;
+using DAL.Repositories.Interfaces;
 using DAL.UnitOfWork;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -7,10 +8,12 @@ namespace BL.Features.ThumbnailImages.Commands.CreateThumbnailImage
 {
     internal class CreateThumbnailImageCommandHandler : IRequestHandler<CreateThumbnailImageCommand, int>
     {
+        private readonly IThumbnailImageRepository _thumbnailImageRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CreateThumbnailImageCommandHandler(IUnitOfWork unitOfWork)
+        public CreateThumbnailImageCommandHandler(IUnitOfWork unitOfWork,IThumbnailImageRepository thumbnailImageRepository)
         {
+            _thumbnailImageRepository = thumbnailImageRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -25,7 +28,7 @@ namespace BL.Features.ThumbnailImages.Commands.CreateThumbnailImage
                 Title = request.title
             };
 
-            await _unitOfWork.ThumbnailImage.CreateAsync(newThumbnailImage);
+            await _thumbnailImageRepository.CreateAsync(newThumbnailImage);
             await _unitOfWork.SaveAsync();
 
             return newThumbnailImage.Id;

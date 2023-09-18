@@ -1,42 +1,34 @@
 ﻿using AutoMapper;
 using BL.DTOs;
-using DAL.UnitOfWork;
+using BL.Features.Products.Queries.GetAllProducts;
 using MediatR;
 
 namespace BL.Features.Products.Queries.GetPagedProducts
 {
     internal class GetPagedProductsQueryHandler : IRequestHandler<GetPagedProductsQuery, IEnumerable<ProductDto>>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMediator _mediator;
         private readonly IMapper _mapper;
 
-        public GetPagedProductsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public GetPagedProductsQueryHandler(IMediator mediator, IMapper mapper)
         {
-            _unitOfWork = unitOfWork;
+            _mediator = mediator;
             _mapper = mapper;
         }
 
         public async Task<IEnumerable<ProductDto>> Handle(GetPagedProductsQuery request, CancellationToken cancellationToken)
         {
-            var allProducts = await _unitOfWork.Product.GetAllAsync(includeProperties: "Category,ThumbnailImage", isTracked: request.isTracked);
+            IEnumerable<ProductDto>? products = request.products;
 
-            if (request.productsRequest.SearchTerm != null)
+            if (products == null)
             {
-                request.productsRequest.SearchBy = request.productsRequest.SearchBy ?? "name";
-
-                if (String.Compare(request.productsRequest.SearchBy, "name", true) == 0)
-                {
-                    allProducts = allProducts.Where(p => p.Name.ToLower().Contains(request.productsRequest.SearchTerm.ToLower()));
-                }
-                else if (String.Compare(request.productsRequest.SearchBy, "category", true) == 0)
-                {
-                    allProducts = allProducts.Where(p => p.Category.Name.ToLower().Contains(request.productsRequest.SearchTerm.ToLower()));
-                }
+                var productsFromDb = await _mediator.Send(new GetAllProductsQuery());
+                products = _mapper.Map<IEnumerable<ProductDto>>(productsFromDb);
             }
 
-            var pagedProducts = allProducts.Skip(request.productsRequest.Page * request.productsRequest.Size).Take(request.productsRequest.Size);
+            var pagedProducts = products.Skip(request.page * request.size).Take(request.size);
 
-            return _mapper.Map<IEnumerable<ProductDto>>(pagedProducts);
+            return pagedProducts;
         }
     }
 }

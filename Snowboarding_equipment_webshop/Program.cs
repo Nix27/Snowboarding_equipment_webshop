@@ -1,13 +1,13 @@
 using DAL.AppDbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using DAL.UnitOfWork;
 using Snowboarding_equipment_webshop.Mapping;
 using BL.Features.Categories.Queries.GetPagedCategories;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using BL.EmailService;
 using Snowboarding_equipment_webshop.ClassesForAppSettings;
 using Stripe;
+using BL.ServiceRegistration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +21,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlSer
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddDefaultTokenProviders().AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+RepositoryRegistration.RegisterRepositories(builder.Services);
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetPagedCategoriesQuery).Assembly));

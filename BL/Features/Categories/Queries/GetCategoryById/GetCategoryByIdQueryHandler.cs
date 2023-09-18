@@ -1,24 +1,28 @@
 ﻿using AutoMapper;
 using BL.DTOs;
-using DAL.UnitOfWork;
+using DAL.Repositories.Interfaces;
 using MediatR;
 
 namespace BL.Features.Categories.Queries.GetCategoryById
 {
-    internal class GetCategoryByIdQueryHandler : IRequestHandler<GetCategoryByIdQuery, CategoryDto?>
+    internal class GetCategoryByIdQueryHandler : IRequestHandler<GetCategoryByIdQuery, CategoryDto>
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public GetCategoryByIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public GetCategoryByIdQueryHandler(IMapper mapper, ICategoryRepository categoryRepository)
         {
-            _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _categoryRepository = categoryRepository;
         }
 
-        public async Task<CategoryDto?> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
+        public async Task<CategoryDto> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
         {
-            var requestedCategory = await _unitOfWork.Category.GetFirstOrDefaultAsync(c => c.Id == request.id, isTracked: request.isTracked);
+            var requestedCategory = await _categoryRepository.GetFirstOrDefaultAsync(c => c.Id == request.id, isTracked: request.isTracked);
+
+            if (requestedCategory == null)
+                throw new InvalidOperationException("Category not found");
+            
             return _mapper.Map<CategoryDto>(requestedCategory);
         }
     }

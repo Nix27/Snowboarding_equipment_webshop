@@ -3,5 +3,5 @@ using MediatR;
 
 namespace BL.Features.Products.Queries.GetPagedProducts
 {
-    public record GetPagedProductsQuery(PageProductsRequestDto productsRequest, bool isTracked = true) : IRequest<IEnumerable<ProductDto>>;
+    public record GetPagedProductsQuery(IEnumerable<ProductDto>? products, int page, int size) : IRequest<IEnumerable<ProductDto>>;
 }

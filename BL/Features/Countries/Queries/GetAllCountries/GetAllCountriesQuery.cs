@@ -1,13 +1,12 @@
 ﻿using BL.DTOs;
+using DAL.Models;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BL.Features.Countries.Queries.GetAllCountries
 {
-    public record GetAllCountriesQuery() : IRequest<IEnumerable<CountryDto>>;
+    public record GetAllCountriesQuery(
+        Expression<Func<Country, bool>>? filter = null,
+        string? includeProperties = null, 
+        bool isTracked = true) : IRequest<IEnumerable<CountryDto>>;
 }

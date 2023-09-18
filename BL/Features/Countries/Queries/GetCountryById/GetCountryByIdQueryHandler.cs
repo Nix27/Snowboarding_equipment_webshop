@@ -1,24 +1,28 @@
 ﻿using AutoMapper;
 using BL.DTOs;
-using DAL.UnitOfWork;
+using DAL.Repositories.Interfaces;
 using MediatR;
 
 namespace BL.Features.Countries.Queries.GetCountryById
 {
-    internal class GetCountryByIdQueryHandler : IRequestHandler<GetCountryByIdQuery, CountryDto?>
+    internal class GetCountryByIdQueryHandler : IRequestHandler<GetCountryByIdQuery, CountryDto>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly ICountryRepository _countryRepository;
         private readonly IMapper _mapper;
 
-        public GetCountryByIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public GetCountryByIdQueryHandler(ICountryRepository countryRepository, IMapper mapper)
         {
-            _unitOfWork = unitOfWork;
+            _countryRepository = countryRepository;
             _mapper = mapper;
         }
 
-        public async Task<CountryDto?> Handle(GetCountryByIdQuery request, CancellationToken cancellationToken)
+        public async Task<CountryDto> Handle(GetCountryByIdQuery request, CancellationToken cancellationToken)
         {
-            var requestedCountry = await _unitOfWork.Country.GetFirstOrDefaultAsync(c => c.Id == request.id, isTracked: request.isTracked);
+            var requestedCountry = await _countryRepository.GetFirstOrDefaultAsync(c => c.Id == request.id, isTracked: request.isTracked);
+
+            if (requestedCountry == null)
+                throw new InvalidOperationException("Country not found");
+
             return _mapper.Map<CountryDto>(requestedCountry);
         }
     }

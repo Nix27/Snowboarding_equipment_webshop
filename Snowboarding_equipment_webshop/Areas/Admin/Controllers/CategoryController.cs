@@ -3,8 +3,8 @@ using BL.DTOs;
 using BL.Features.Categories.Commands.CreateCategory;
 using BL.Features.Categories.Commands.DeleteCategory;
 using BL.Features.Categories.Commands.UpdateCategory;
-using BL.Features.Categories.Queries.GetAllCategories;
 using BL.Features.Categories.Queries.GetCategoryById;
+using BL.Features.Categories.Queries.GetNumberOfCategories;
 using BL.Features.Categories.Queries.GetPagedCategories;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +18,7 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
         private readonly ILogger<CategoryController> _logger;
+
         private const string errorMessage = "Something went wrong. Try again later!";
 
         public CategoryController(IMediator mediator, IMapper mapper, ILogger<CategoryController> logger)
@@ -34,8 +35,8 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
 
             try
             {
-                var pagedCategories = await _mediator.Send(new GetPagedCategoriesQuery(page, size, searchTerm));
-                int? numberOfAllCategories = _mediator.Send(new GetAllCategoriesQuery()).GetAwaiter().GetResult()?.Count();
+                var pagedCategories = await _mediator.Send(new GetPagedCategoriesQuery(null, page, size));
+                int numberOfAllCategories = await _mediator.Send(new GetNumberOfCategoriesQuery());
 
                 ViewData["page"] = page;
                 ViewData["size"] = size;
@@ -51,31 +52,15 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
             }
         }
 
-        public async Task<IActionResult> CategoryTableBodyPartial(int page, int size, string? searchTerm)
+        public async Task<IActionResult> CategoryTableBodyPartial(IEnumerable<CategoryDto> categories, int page, int size, string? searchTerm)
         {
             if (size == 0)
                 size = 5;
 
             try
             {
-                var pagedCategories = await _mediator.Send(new GetPagedCategoriesQuery(page, size, searchTerm));
-                int? numberOfAllCategories;
-
-                if (searchTerm != null)
-                {
-                    numberOfAllCategories = _mediator.Send(new GetAllCategoriesQuery())
-                                                     .GetAwaiter()
-                                                     .GetResult()?
-                                                     .Where(c => c.Name.ToLower().Contains(searchTerm))
-                                                     .Count();
-                }
-                else
-                {
-                    numberOfAllCategories = _mediator.Send(new GetAllCategoriesQuery())
-                                                     .GetAwaiter()
-                                                     .GetResult()?
-                                                     .Count();
-                }
+                var pagedCategories = await _mediator.Send(new GetPagedCategoriesQuery(null, page, size));
+                int numberOfAllCategories = await _mediator.Send(new GetNumberOfCategoriesQuery());
 
                 ViewData["page"] = page;
                 ViewData["size"] = size;
@@ -160,12 +145,7 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
         {
             try
             {
-                var categoryForDelete = await _mediator.Send(new GetCategoryByIdQuery(id, false));
-
-                if (categoryForDelete == null)
-                    return Json(new { success = false, message = "Category not found" });
-
-                await _mediator.Send(new DeleteCategoryCommand(categoryForDelete));
+                await _mediator.Send(new DeleteCategoryCommand(id));
 
                 return Json(new { success = true, message = "Successfully deleted category" });
             }
