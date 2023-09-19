@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using BL.DTOs;
-using BL.Features.Products.Queries.GetAllProducts;
+using BL.Features.Products.Queries.GetNumberOfProducts;
 using BL.Features.Products.Queries.GetPagedProducts;
 using BL.Features.Products.Queries.GetProductById;
 using BL.Features.ShoppingCartItem.Commands.CreateShoppingCartItem;
 using BL.Features.ShoppingCartItem.Commands.IncrementQuantityOfShoppingCartItem;
-using BL.Features.ShoppingCartItem.Queries.GetShoppingCartItemByFilter;
+using BL.Features.ShoppingCartItem.Queries.GetShoppingCartItemByProductIdAndUserId;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -33,14 +33,12 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
         public async Task<IActionResult> OurProducts(PageProductsRequestVM productsRequest)
         {
             if(productsRequest.Size == 0)
-            {
                 productsRequest.Size = 20;
-            }
 
             try
             {
-                var pagedProducts = await _mediator.Send(new GetPagedProductsQuery(_mapper.Map<PageProductsRequestDto>(productsRequest)));
-                int numberOfAllProducts = _mediator.Send(new GetAllProductsQuery()).GetAwaiter().GetResult().Count();
+                var pagedProducts = await _mediator.Send(new GetPagedProductsQuery(null, productsRequest.Page, productsRequest.Size, includeProperties: "Category"));
+                int numberOfAllProducts = await _mediator.Send(new GetNumberOfProductsQuery());
 
                 ViewData["page"] = productsRequest.Page;
                 ViewData["size"] = productsRequest.Size;
@@ -64,7 +62,7 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
         {
             try
             {
-                var product = await _mediator.Send(new GetProductByIdQuery(productId));
+                var product = await _mediator.Send(new GetProductByIdQuery(productId, includeProperties: "Category,GalleryImages"));
                 return View(_mapper.Map<ProductVM>(product));
             }
             catch (Exception ex)
@@ -83,16 +81,16 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
             try
             {
                 var claimsIdentity = User.Identity as ClaimsIdentity;
-                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+                var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-                var shoppingCartItemFromDb = await _mediator.Send(new GetShoppingCartItemByFilterQuery(s => s.ProductId == product.Id && s.UserId == claim.Value));
+                var shoppingCartItemFromDb = await _mediator.Send(new GetShoppingCartItemByProductIdAndUserIdQuery(product.Id, userId));
 
                 if(shoppingCartItemFromDb == null)
                 {
                     ShoppingCartItemDto newShoppingCartItem = new()
                     {
                         ProductId = product.Id,
-                        UserId = claim.Value,
+                        UserId = userId,
                         Quantity = quantity
                     };
 

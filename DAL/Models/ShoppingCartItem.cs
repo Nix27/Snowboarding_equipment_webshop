@@ -17,8 +17,5 @@ namespace DAL.Models
         public User User { get; set; }
 
         public int Quantity { get; set; }
-
-        [NotMapped]
-        public double Price { get; set; }
     }
 }

@@ -17,8 +17,8 @@ namespace DAL.AppDbContext
         public DbSet<GalleryImage> GalleryImages { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
-        public DbSet<OrderHeader> OrderHeaders { get; set; }
-        public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -1,24 +1,24 @@
 ﻿using AutoMapper;
 using BL.DTOs;
-using DAL.UnitOfWork;
+using DAL.Repositories.Interfaces;
 using MediatR;
 
 namespace BL.Features.ShoppingCartItem.Queries.GetAllShoppingCartItemsForUser
 {
     internal class GetAllShoppingCartItemsForUserQueryHandler : IRequestHandler<GetAllShoppingCartItemsForUserQuery, IEnumerable<ShoppingCartItemDto>>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IShoppingCartItemRepository _shoppingCartItemRepository;
         private readonly IMapper _mapper;
 
-        public GetAllShoppingCartItemsForUserQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public GetAllShoppingCartItemsForUserQueryHandler(IShoppingCartItemRepository shoppingCartItemRepository, IMapper mapper)
         {
-            _unitOfWork = unitOfWork;
+            _shoppingCartItemRepository = shoppingCartItemRepository;
             _mapper = mapper;
         }
 
         public async Task<IEnumerable<ShoppingCartItemDto>> Handle(GetAllShoppingCartItemsForUserQuery request, CancellationToken cancellationToken)
         {
-            var shoppingCartItemsForUser = await _unitOfWork.ShoppingCartItem.GetAllAsync(s => s.UserId == request.userId, includeProperties:"Product", isTracked:request.isTracked);
+            var shoppingCartItemsForUser = await _shoppingCartItemRepository.GetAllAsync(s => s.UserId == request.userId, includeProperties:request.includeProperties, isTracked:request.isTracked);
             return _mapper.Map<IEnumerable<ShoppingCartItemDto>>(shoppingCartItemsForUser);
         }
     }

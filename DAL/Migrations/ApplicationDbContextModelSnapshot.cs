@@ -36,7 +36,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("DAL.Models.Country", b =>
@@ -53,7 +53,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Countries", (string)null);
+                    b.ToTable("Countries");
                 });
 
             modelBuilder.Entity("DAL.Models.GalleryImage", b =>
@@ -79,39 +79,10 @@ namespace DAL.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("GalleryImages", (string)null);
+                    b.ToTable("GalleryImages");
                 });
 
-            modelBuilder.Entity("DAL.Models.OrderDetail", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("OrderHeaderId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderHeaderId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("OrderDetails", (string)null);
-                });
-
-            modelBuilder.Entity("DAL.Models.OrderHeader", b =>
+            modelBuilder.Entity("DAL.Models.Order", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -184,7 +155,36 @@ namespace DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("OrderHeaders", (string)null);
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("DAL.Models.OrderItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("DAL.Models.Product", b =>
@@ -229,7 +229,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("ThumbnailImageId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("DAL.Models.ShoppingCartItem", b =>
@@ -256,7 +256,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ShoppingCartItems", (string)null);
+                    b.ToTable("ShoppingCartItems");
                 });
 
             modelBuilder.Entity("DAL.Models.ThumbnailImage", b =>
@@ -277,7 +277,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ThumbnailImages", (string)null);
+                    b.ToTable("ThumbnailImages");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -529,11 +529,22 @@ namespace DAL.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("DAL.Models.OrderDetail", b =>
+            modelBuilder.Entity("DAL.Models.Order", b =>
                 {
-                    b.HasOne("DAL.Models.OrderHeader", "OrderHeader")
+                    b.HasOne("DAL.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("OrderHeaderId")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DAL.Models.OrderItem", b =>
+                {
+                    b.HasOne("DAL.Models.Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -543,20 +554,9 @@ namespace DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("OrderHeader");
+                    b.Navigation("Order");
 
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("DAL.Models.OrderHeader", b =>
-                {
-                    b.HasOne("DAL.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DAL.Models.Product", b =>
@@ -665,6 +665,11 @@ namespace DAL.Migrations
             modelBuilder.Entity("DAL.Models.Country", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("DAL.Models.Order", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("DAL.Models.Product", b =>

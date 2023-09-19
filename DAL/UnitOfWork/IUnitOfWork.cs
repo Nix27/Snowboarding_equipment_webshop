@@ -11,8 +11,8 @@ namespace DAL.UnitOfWork
         public IGalleryImageRepository GalleryImage { get; }
         public IUserRepository User { get; }
         public IShoppingCartItemRepository ShoppingCartItem { get; }
-        public IOrderHeaderRepository OrderHeader { get; }
-        public IOrderDetailRepository OrderDetail { get; }
+        public IOrderRepository OrderHeader { get; }
+        public IOrderItemRepository OrderDetail { get; }
 
         Task SaveAsync();
     }

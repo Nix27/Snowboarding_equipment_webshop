@@ -22,7 +22,7 @@ namespace BL.Features.Products.Queries.GetPagedProducts
 
             if (products == null)
             {
-                var productsFromDb = await _mediator.Send(new GetAllProductsQuery());
+                var productsFromDb = await _mediator.Send(new GetAllProductsQuery(includeProperties:request.includeProperties));
                 products = _mapper.Map<IEnumerable<ProductDto>>(productsFromDb);
             }
 

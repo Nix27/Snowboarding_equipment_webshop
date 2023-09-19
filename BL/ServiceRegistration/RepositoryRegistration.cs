@@ -15,6 +15,10 @@ namespace BL.ServiceRegistration
             services.AddScoped<IGalleryImageRepository, GalleryImageRepository>();
             services.AddScoped<IThumbnailImageRepository, ThumbnailImageRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IShoppingCartItemRepository, ShoppingCartItemRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IOrderItemRepository, OrderItemRepository>();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using DAL.Repositories.Interfaces;
 using DAL.UnitOfWork;
 using MediatR;
 
@@ -6,18 +6,18 @@ namespace BL.Features.ShoppingCartItem.Commands.DecrementQuantityOfShoppingCartI
 {
     internal class DecrementQuantityOfShoppingCartItemCommandHandler : IRequestHandler<DecrementQuantityOfShoppingCartItemCommand>
     {
+        private readonly IShoppingCartItemRepository _shoppingCartItemRepository;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
 
-        public DecrementQuantityOfShoppingCartItemCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public DecrementQuantityOfShoppingCartItemCommandHandler(IShoppingCartItemRepository shoppingCartItemRepository, IUnitOfWork unitOfWork)
         {
+            _shoppingCartItemRepository = shoppingCartItemRepository;
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
         }
 
         public async Task Handle(DecrementQuantityOfShoppingCartItemCommand request, CancellationToken cancellationToken)
         {
-            await _unitOfWork.ShoppingCartItem.DecrementQuantity(request.shoppingCartItemId, request.quantity);
+            await _shoppingCartItemRepository.DecrementQuantity(request.shoppingCartItemId, request.quantity);
             await _unitOfWork.SaveAsync();
         }
     }

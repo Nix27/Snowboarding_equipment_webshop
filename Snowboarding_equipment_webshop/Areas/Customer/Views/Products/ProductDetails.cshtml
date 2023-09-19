@@ -1,5 +1,9 @@
 ﻿@model ProductVM
 
+@{
+    ViewData["Title"] = "Product details";
+}
+
 <form method="post" asp-action="AddProductItem">
     <input asp-for="Id" hidden />
     <div class="container">

@@ -45,8 +45,8 @@ nav .nav-link:hover {
   color: #ffffff;
 }
 nav #logout {
-  background-color: #ffffff;
-  color: #1A1A1A;
+  background-color: #1A1A1A;
+  color: #9A9A9A;
 }
 nav i {
   font-size: 1.5rem;

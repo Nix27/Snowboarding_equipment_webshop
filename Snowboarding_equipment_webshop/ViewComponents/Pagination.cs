@@ -4,9 +4,9 @@ namespace Snowboarding_equipment_webshop.ViewComponents
 {
     public class Pagination : ViewComponent
     {
-        public async Task<IViewComponentResult> InvokeAsync()
+        public Task<IViewComponentResult> InvokeAsync()
         {
-            return View();
+            return Task.FromResult<IViewComponentResult>(View());
         }
     }
 }

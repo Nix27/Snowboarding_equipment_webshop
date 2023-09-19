@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
 using BL.DTOs;
-using BL.Features.OrderHeaders.Commands.UpdateOrder;
-using BL.Features.OrderHeaders.Commands.UpdateOrderStatus;
-using BL.Features.OrderHeaders.Commands.UpdateSessionIdAndPaymentIntentId;
-using BL.Features.OrderHeaders.Queries.GetAllOrders;
-using BL.Features.OrderHeaders.Queries.GetOrderHeaderById;
-using BL.Features.OrderHeaders.Queries.GetPagedOrders;
-using DAL.Models;
+using BL.Features.Orders.Commands.UpdateOrder;
+using BL.Features.Orders.Commands.UpdateOrderStatus;
+using BL.Features.Orders.Commands.UpdateSessionIdAndPaymentIntentId;
+using BL.Features.Orders.Queries.GetAllOrders;
+using BL.Features.Orders.Queries.GetOrderById;
+using BL.Features.Orders.Queries.GetPagedOrders;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Snowboarding_equipment_webshop.ViewModels;
@@ -35,14 +34,14 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> AllOrders(int size, int page, string filterBy)
+        public async Task<IActionResult> AllOrders(int size, int page)
         {
             if (size == 0)
                 size = 5;
 
             try
             {
-                var pagedOrders = await _mediator.Send(new GetPagedOrdersQuery(size, page, filterBy));
+                var pagedOrders = await _mediator.Send(new GetPagedOrdersQuery(null, size, page));
                 int numberOfAllOrders = _mediator.Send(new GetAllOrdersQuery(includeProperties: "User")).GetAwaiter().GetResult().Count();
 
                 ViewData["size"] = size;
@@ -61,14 +60,14 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
             }
         }
 
-        public async Task<IActionResult> OrderTableBodyPartial(int size, int page, string filterBy)
+        public async Task<IActionResult> OrderTableBodyPartial(int size, int page)
         {
             if (size == 0)
                 size = 5;
 
             try
             {
-                var pagedOrders = await _mediator.Send(new GetPagedOrdersQuery(size, page, filterBy));
+                var pagedOrders = await _mediator.Send(new GetPagedOrdersQuery(null, size, page));
                 int numberOfAllOrders = _mediator.Send(new GetAllOrdersQuery(includeProperties: "User")).GetAwaiter().GetResult().Count();
 
                 ViewData["size"] = size;
@@ -92,7 +91,7 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
         {
             try
             {
-                var order = await _mediator.Send(new GetOrderHeaderByIdQuery(orderId, includeProperties: "OrderItems.Product"));
+                var order = await _mediator.Send(new GetOrderByIdQuery(orderId, includeProperties: "OrderItems.Product"));
 
                 OrderVM = _mapper.Map<OrderVM>(order);
 
@@ -112,7 +111,7 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
         {
             try
             {
-                int updatedOrderId = await _mediator.Send(new UpdateOrderCommand(_mapper.Map<OrderHeaderDto>(OrderVM)));
+                int updatedOrderId = await _mediator.Send(new UpdateOrderCommand(_mapper.Map<OrderDto>(OrderVM)));
 
                 TempData["success"] = "Order updated successfully";
 
@@ -147,7 +146,7 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
         {
             try
             {
-                var orderFromDb = await _mediator.Send(new GetOrderHeaderByIdQuery(OrderVM.Id, isTracked:false));
+                var orderFromDb = await _mediator.Send(new GetOrderByIdQuery(OrderVM.Id, isTracked:false));
                 if (orderFromDb == null)
                     throw new InvalidOperationException("Order not found");
 
@@ -176,7 +175,7 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
         {
             try
             {
-                var orderFromDb = await _mediator.Send(new GetOrderHeaderByIdQuery(OrderVM.Id, isTracked:false, includeProperties:"OrderItems.Product"));
+                var orderFromDb = await _mediator.Send(new GetOrderByIdQuery(OrderVM.Id, isTracked:false, includeProperties:"OrderItems.Product"));
                 if (orderFromDb == null)
                     throw new InvalidOperationException("Order not found");
 
@@ -230,7 +229,7 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
         {
             try
             {
-                var orderFromDb = await _mediator.Send(new GetOrderHeaderByIdQuery(orderId, isTracked:false));
+                var orderFromDb = await _mediator.Send(new GetOrderByIdQuery(orderId, isTracked:false));
                 if (orderFromDb == null)
                     throw new InvalidOperationException("Order not found");
 
@@ -262,7 +261,7 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
         {
             try
             {
-                var orderFromDb = await _mediator.Send(new GetOrderHeaderByIdQuery(OrderVM.Id, isTracked:false));
+                var orderFromDb = await _mediator.Send(new GetOrderByIdQuery(OrderVM.Id, isTracked:false));
                 if (orderFromDb == null)
                     throw new InvalidOperationException("Order not found");
 

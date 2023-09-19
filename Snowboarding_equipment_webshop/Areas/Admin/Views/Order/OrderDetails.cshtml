@@ -2,6 +2,10 @@
 @using Utilities.Constants.Status;
 @model OrderVM
 
+@{
+    ViewData["Title"] = "Order details";
+}
+
 <form method="post">
     <input asp-for="Id" hidden />
     <input asp-for="UserId" hidden />

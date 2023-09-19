@@ -1,24 +1,16 @@
 ﻿using AutoMapper;
 using BL.DTOs;
 using BL.Features.Categories.Queries.GetAllCategories;
-using BL.Features.GalleryImages.Commands.CreateGalleryImages;
-using BL.Features.GalleryImages.Commands.DeleteGalleryImages;
-using BL.Features.GalleryImages.Queries.GetGalleryImagesByProductId;
 using BL.Features.Products.Commands.CreateProduct;
 using BL.Features.Products.Commands.DeleteProduct;
 using BL.Features.Products.Commands.UpdateProduct;
-using BL.Features.Products.Queries.GetAllProducts;
 using BL.Features.Products.Queries.GetNumberOfProducts;
 using BL.Features.Products.Queries.GetPagedProducts;
 using BL.Features.Products.Queries.GetProductById;
-using BL.Features.ThumbnailImages.Commands.CreateThumbnailImage;
-using BL.Features.ThumbnailImages.Commands.DeleteThumbnailImage;
-using BL.Features.ThumbnailImages.Queries.GetThumbnailById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Snowboarding_equipment_webshop.ViewModels;
-using System.Transactions;
 
 namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
 {
@@ -31,7 +23,6 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
 
         private const string errorMessage = "Something went wrong. Try again later!";
 
-        //for include from get by id "Category,ThumbnailImage,GalleryImages"
         public ProductController(IMediator mediator, IMapper mapper, ILogger<ProductController> logger)
         {
             _mediator = mediator;
@@ -46,7 +37,7 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
 
             try
             {
-                var pagedProducts = await _mediator.Send(new GetPagedProductsQuery(null, pageRequest.Page, pageRequest.Size));
+                var pagedProducts = await _mediator.Send(new GetPagedProductsQuery(null, pageRequest.Page, pageRequest.Size, includeProperties:"Category"));
                 int numberOfAllProducts = await _mediator.Send(new GetNumberOfProductsQuery());
 
                 ViewData["page"] = pageRequest.Page;
@@ -72,7 +63,7 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
 
             try
             {
-                var pagedProducts = await _mediator.Send(new GetPagedProductsQuery(null, pageRequest.Page, pageRequest.Size));
+                var pagedProducts = await _mediator.Send(new GetPagedProductsQuery(null, pageRequest.Page, pageRequest.Size, includeProperties: "Category"));
                 int numberOfAllProducts = await _mediator.Send(new GetNumberOfProductsQuery());
 
                 ViewData["page"] = pageRequest.Page;
@@ -134,23 +125,9 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
                     return View(newProduct);
                 }
 
-                using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
-                {
-                    if(newProduct.NewThumbnailImage != null)
-                    {
-                        var createdThumbnailImageId = await _mediator.Send(new CreateThumbnailImageCommand(newProduct.NewThumbnailImage, newProduct.Name));
-                        newProduct.ThumbnailImageId = createdThumbnailImageId;
-                    }
+                var newProductDto = _mapper.Map<ProductDto>(newProduct);
 
-                    var createdProductId = await _mediator.Send(new CreateProductCommand(_mapper.Map<ProductDto>(newProduct)));
-
-                    if(newProduct.NewGalleryImages != null)
-                    {
-                        await _mediator.Send(new CreateGalleryImagesCommand(newProduct.NewGalleryImages, createdProductId, newProduct.Name));
-                    }
-                    
-                    transaction.Complete();
-                }
+                await _mediator.Send(new CreateProductCommand(newProductDto, newProduct.NewThumbnailImage, newProduct.NewGalleryImages));
 
                 TempData["success"] = "Product created successfully";
                 return RedirectToAction(nameof(AllProducts));
@@ -167,7 +144,7 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
         {
             try
             {
-                var productForUpdate = await _mediator.Send(new GetProductByIdQuery(id));
+                var productForUpdate = await _mediator.Send(new GetProductByIdQuery(id, includeProperties:"Category,GalleryImages"));
                 var allCategories = await _mediator.Send(new GetAllCategoriesQuery());
 
                 var productVM = _mapper.Map<ProductVM>(productForUpdate);
@@ -196,33 +173,8 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
             {
                 if (!ModelState.IsValid) return View(productForUpdate);
 
-                var oldThumbnailImageId = productForUpdate.ThumbnailImageId;
-
-                using(var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
-                {
-                    if (productForUpdate.NewThumbnailImage != null)
-                    {
-                        var updatedThumbnailImageId = await _mediator.Send(new CreateThumbnailImageCommand(productForUpdate.NewThumbnailImage, productForUpdate.Name));
-                        productForUpdate.ThumbnailImageId = updatedThumbnailImageId;
-                    }
-
-                    var updatedProductId = await _mediator.Send(new UpdateProductCommand(_mapper.Map<ProductDto>(productForUpdate)));
-
-                    if (oldThumbnailImageId != null && productForUpdate.NewThumbnailImage != null)
-                    {
-                        var thumbnailImageForDelete = await _mediator.Send(new GetThumbnailImageByIdQuery((int)oldThumbnailImageId, false));
-                        var deletedThumbnailImage = await _mediator.Send(new DeleteThumbnailImageCommand(thumbnailImageForDelete));
-                    }
-
-                    if (productForUpdate.NewGalleryImages != null)
-                    {
-                        var galleryImagesForDelete = await _mediator.Send(new GetGalleryImagesByProductIdQuery(updatedProductId, false));
-                        await _mediator.Send(new DeleteGalleryImagesCommand(galleryImagesForDelete));
-                        await _mediator.Send(new CreateGalleryImagesCommand(productForUpdate.NewGalleryImages, updatedProductId, productForUpdate.Name));
-                    }
-
-                    transaction.Complete();
-                }
+                var productForUpdateDto = _mapper.Map<ProductDto>(productForUpdate);
+                await _mediator.Send(new UpdateProductCommand(productForUpdateDto, productForUpdate.NewThumbnailImage, productForUpdate.NewGalleryImages));
 
                 TempData["success"] = "Product updated successfully";
                 return RedirectToAction(nameof(AllProducts));
@@ -241,12 +193,7 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
         {
             try
             {
-                var productForDelete = await _mediator.Send(new GetProductByIdQuery(id, false));
-
-                if (productForDelete == null)
-                    return Json(new { success = false, message = "Product not found." });
-
-                var deletedProduct = await _mediator.Send(new DeleteProductCommand(productForDelete));
+                var deletedProduct = await _mediator.Send(new DeleteProductCommand(id));
 
                 return Json(new { success = true, message = "Successfully deleted product" });
             }

@@ -1,7 +1,6 @@
-﻿using BL.DTOs;
-using MediatR;
+﻿using MediatR;
 
 namespace BL.Features.ShoppingCartItem.Commands.DeleteShoppingCartItem
 {
-    public record DeleteShoppingCartItemCommand(ShoppingCartItemDto ShoppingCartItemForDelete) : IRequest;
+    public record DeleteShoppingCartItemCommand(int shoppingCartItemId) : IRequest<int>;
 }

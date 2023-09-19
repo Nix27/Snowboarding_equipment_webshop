@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using BL.DTOs;
-using BL.Features.OrderDetails.Commands.CreateOrderDetail;
-using BL.Features.OrderHeaders.Commands.CreateOrderHeader;
-using BL.Features.OrderHeaders.Commands.UpdateOrderStatus;
-using BL.Features.OrderHeaders.Commands.UpdateSessionIdAndPaymentIntentId;
-using BL.Features.OrderHeaders.Queries.GetOrderHeaderById;
+using BL.Features.OrderItems.Commands.CreateOrderItem;
+using BL.Features.Orders.Commands.CreateOrder;
+using BL.Features.Orders.Commands.UpdateOrderStatus;
+using BL.Features.Orders.Commands.UpdateSessionIdAndPaymentIntentId;
+using BL.Features.Orders.Queries.GetOrderById;
 using BL.Features.ShoppingCartItem.Commands.DecrementQuantityOfShoppingCartItem;
 using BL.Features.ShoppingCartItem.Commands.DeleteMultipleShoppingCartItems;
 using BL.Features.ShoppingCartItem.Commands.DeleteShoppingCartItem;
@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Mvc;
 using Snowboarding_equipment_webshop.ViewModels;
 using Stripe.Checkout;
 using System.Security.Claims;
+using System.Transactions;
 using Utilities.Constants.Role;
 using Utilities.Constants.Status;
 
@@ -48,17 +49,17 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
                 var claimsIdentity = User.Identity as ClaimsIdentity;
                 var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-                var shoppingCartItems = await _mediator.Send(new GetAllShoppingCartItemsForUserQuery(userId));
+                var shoppingCartItems = await _mediator.Send(new GetAllShoppingCartItemsForUserQuery(userId, includeProperties:"Product"));
 
                 ShoppingCartVM shoppingCartVM = new()
                 {
                     ShoppingCartItems = shoppingCartItems,
-                    OrderHeader = new()
+                    Order = new()
                 };
 
                 foreach (var item in shoppingCartItems)
                 {
-                    shoppingCartVM.OrderHeader.TotalPrice += item.Product.Price * item.Quantity;
+                    shoppingCartVM.Order.TotalPrice += item.Product.Price * item.Quantity;
                 }
 
                 return View(shoppingCartVM);
@@ -93,15 +94,11 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
                 var shoppingCartItem = await _mediator.Send(new GetShoppingCartItemByIdQuery(shoppingCartId, isTracked: false));
 
                 if (shoppingCartItem == null)
-                {
-                    _logger.LogError("Shopping cart item not found");
-                    TempData["error"] = errorMessage;
-                    return RedirectToAction(nameof(ShoppingCart));
-                }
+                    throw new InvalidOperationException("Shopping cart item not found");
 
                 if (shoppingCartItem.Quantity <= 1)
                 {
-                    await _mediator.Send(new DeleteShoppingCartItemCommand(shoppingCartItem));
+                    await _mediator.Send(new DeleteShoppingCartItemCommand(shoppingCartItem.Id));
                     //add session
                 }
                 else
@@ -123,16 +120,7 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
         {
             try
             {
-                var shoppingCartItemForDelete = await _mediator.Send(new GetShoppingCartItemByIdQuery(shoppingCartItemId, isTracked: false));
-
-                if (shoppingCartItemForDelete == null)
-                {
-                    _logger.LogError("Shopping cart item not found.");
-                    TempData["error"] = errorMessage;
-                    return RedirectToAction(nameof(ShoppingCart));
-                }
-
-                await _mediator.Send(new DeleteShoppingCartItemCommand(shoppingCartItemForDelete));
+                await _mediator.Send(new DeleteShoppingCartItemCommand(shoppingCartItemId));
                 return RedirectToAction(nameof(ShoppingCart));
             }
             catch (Exception ex)
@@ -150,27 +138,27 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
                 var claimsIdentity = User.Identity as ClaimsIdentity;
                 var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-                var shoppingCartItems = await _mediator.Send(new GetAllShoppingCartItemsForUserQuery(userId));
+                var shoppingCartItems = await _mediator.Send(new GetAllShoppingCartItemsForUserQuery(userId, includeProperties: "Product"));
 
                 ShoppingCartVM shoppingCartVM = new()
                 {
                     ShoppingCartItems = shoppingCartItems,
-                    OrderHeader = new()
+                    Order = new()
                 };
 
                 var user = await _mediator.Send(new GetUserByIdQuery(userId));
-                shoppingCartVM.OrderHeader.User = _mapper.Map<User>(user);
+                shoppingCartVM.Order.User = _mapper.Map<User>(user);
 
-                shoppingCartVM.OrderHeader.Name = shoppingCartVM.OrderHeader.User.Name;
-                shoppingCartVM.OrderHeader.Phone = shoppingCartVM.OrderHeader.User.Phone;
-                shoppingCartVM.OrderHeader.StreetAddress = shoppingCartVM.OrderHeader.User.StreetAddress;
-                shoppingCartVM.OrderHeader.City = shoppingCartVM.OrderHeader.User.City;
-                shoppingCartVM.OrderHeader.PostalCode = shoppingCartVM.OrderHeader.User.PostalCode;
-                shoppingCartVM.OrderHeader.Country = shoppingCartVM.OrderHeader.User.Country.Name;
+                shoppingCartVM.Order.Name = shoppingCartVM.Order.User.Name;
+                shoppingCartVM.Order.Phone = shoppingCartVM.Order.User.Phone;
+                shoppingCartVM.Order.StreetAddress = shoppingCartVM.Order.User.StreetAddress;
+                shoppingCartVM.Order.City = shoppingCartVM.Order.User.City;
+                shoppingCartVM.Order.PostalCode = shoppingCartVM.Order.User.PostalCode;
+                shoppingCartVM.Order.Country = shoppingCartVM.Order.User.Country.Name;
 
                 foreach (var item in shoppingCartItems)
                 {
-                    shoppingCartVM.OrderHeader.TotalPrice += item.Product.Price * item.Quantity;
+                    shoppingCartVM.Order.TotalPrice += item.Product.Price * item.Quantity;
                 }
 
                 return View(shoppingCartVM);
@@ -193,39 +181,47 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
                 var claimsIdentity = User.Identity as ClaimsIdentity;
                 var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-                shoppingCartVM.ShoppingCartItems = await _mediator.Send(new GetAllShoppingCartItemsForUserQuery(userId));
-                shoppingCartVM.OrderHeader.DateOfOrder = DateTime.Now;
-                shoppingCartVM.OrderHeader.UserId = userId;
+                shoppingCartVM.ShoppingCartItems = await _mediator.Send(new GetAllShoppingCartItemsForUserQuery(userId, includeProperties:"Product"));
+                shoppingCartVM.Order.DateOfOrder = DateTime.Now;
+                shoppingCartVM.Order.UserId = userId;
 
                 if (!User.IsInRole(AppRoles.COMPANY))
                 {
-                    shoppingCartVM.OrderHeader.OrderStatus = OrderStatuses.StatusPending;
-                    shoppingCartVM.OrderHeader.PaymentStatus = PaymentStatuses.PaymentStatusPending;
+                    shoppingCartVM.Order.OrderStatus = OrderStatuses.StatusPending;
+                    shoppingCartVM.Order.PaymentStatus = PaymentStatuses.PaymentStatusPending;
                 }
                 else
                 {
-                    shoppingCartVM.OrderHeader.OrderStatus = OrderStatuses.StatusApproved;
-                    shoppingCartVM.OrderHeader.PaymentStatus = PaymentStatuses.PaymentStatusDelayedPayment;
+                    shoppingCartVM.Order.OrderStatus = OrderStatuses.StatusApproved;
+                    shoppingCartVM.Order.PaymentStatus = PaymentStatuses.PaymentStatusDelayedPayment;
                 }
 
-                int orderHeaderId = await _mediator.Send(new CreateOrderHeaderCommand(shoppingCartVM.OrderHeader));
+                int orderId = 0;
 
-                foreach (var item in shoppingCartVM.ShoppingCartItems)
+                using(var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    OrderDetailDto newOrderDetail = new()
-                    {
-                        ProductId = item.ProductId,
-                        OrderHeaderId = orderHeaderId,
-                        Price = item.Product.Price,
-                        Quantity = item.Quantity
-                    };
+                    orderId = await _mediator.Send(new CreateOrderCommand(shoppingCartVM.Order));
 
-                    await _mediator.Send(new CreateOrderDetailCommand(newOrderDetail));
+                    foreach (var item in shoppingCartVM.ShoppingCartItems)
+                    {
+                        OrderItemDto newOrderDetail = new()
+                        {
+                            ProductId = item.ProductId,
+                            OrderId = orderId,
+                            Price = item.Product.Price,
+                            Quantity = item.Quantity
+                        };
+
+                        await _mediator.Send(new CreateOrderItemCommand(newOrderDetail));
+                    }
+
+                    transaction.Complete();
                 }
+                
 
                 if (!User.IsInRole(AppRoles.COMPANY))
                 {
-                    string successUrl = $"https://localhost:44335/Customer/ShoppingCart/OrderConfirmation?orderHeaderId={orderHeaderId}";
+                    string successUrl = $"https://localhost:44335/Customer/ShoppingCart/OrderConfirmation?orderId={orderId}";
                     const string cancelUrl = "https://localhost:44335/Customer/ShoppingCart/OrderSummary";
 
                     var options = new SessionCreateOptions
@@ -258,7 +254,7 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
                     var service = new SessionService();
                     var session = service.Create(options);
 
-                    await _mediator.Send(new UpdateSessionIdAndPaymentIntentIdCommand(orderHeaderId, session.Id, session.PaymentIntentId));
+                    await _mediator.Send(new UpdateSessionIdAndPaymentIntentIdCommand(orderId, session.Id, session.PaymentIntentId));
 
                     Response.Headers.Add("Location", session.Url);
 
@@ -275,28 +271,25 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
             }
         }
 
-        public async Task<IActionResult> OrderConfirmation(int orderHeaderId)
+        public async Task<IActionResult> OrderConfirmation(int orderId)
         {
             try
             {
-                var orderHeader = await _mediator.Send(new GetOrderHeaderByIdQuery(orderHeaderId));
+                var order = await _mediator.Send(new GetOrderByIdQuery(orderId));
 
-                if (orderHeader == null)
-                    throw new InvalidOperationException("OrderHeader not found.");
-
-                if (orderHeader.PaymentStatus != PaymentStatuses.PaymentStatusDelayedPayment)
+                if (order.PaymentStatus != PaymentStatuses.PaymentStatusDelayedPayment)
                 {
                     var service = new SessionService();
-                    var session = service.Get(orderHeader.SessionId);
+                    var session = service.Get(order.SessionId);
 
                     if(session.PaymentStatus.ToLower() == "paid")
                     {
-                        await _mediator.Send(new UpdateSessionIdAndPaymentIntentIdCommand(orderHeader.Id, session.Id, session.PaymentIntentId));
-                        await _mediator.Send(new UpdateOrderStatusCommand(orderHeader.Id, OrderStatuses.StatusApproved, PaymentStatuses.PaymentStatusApproved));
+                        await _mediator.Send(new UpdateSessionIdAndPaymentIntentIdCommand(order.Id, session.Id, session.PaymentIntentId));
+                        await _mediator.Send(new UpdateOrderStatusCommand(order.Id, OrderStatuses.StatusApproved, PaymentStatuses.PaymentStatusApproved));
                     }
                 }
 
-                var shoppingCartItemsForDelete = await _mediator.Send(new GetAllShoppingCartItemsForUserQuery(orderHeader.UserId, isTracked:false));
+                var shoppingCartItemsForDelete = await _mediator.Send(new GetAllShoppingCartItemsForUserQuery(order.UserId, isTracked:false));
                 await _mediator.Send(new DeleteMultipleShoppingCartItemsCommand(shoppingCartItemsForDelete));
 
                 return View();

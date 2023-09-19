@@ -53,6 +53,6 @@ namespace Snowboarding_equipment_webshop.ViewModels
         [Required(ErrorMessage = "Country is required")]
         public string Country { get; set; }
 
-        public ICollection<OrderDetail> OrderItems { get; set; }
+        public ICollection<OrderItem> OrderItems { get; set; }
     }
 }
