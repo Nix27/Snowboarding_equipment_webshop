@@ -26,7 +26,7 @@ namespace BL.Features.Categories.Queries.GetPagedCategories
                 categories = _mapper.Map<IEnumerable<CategoryDto>>(categoriesFromDb);
             }
                 
-            var pagedCategories = categories.Skip(request.page * request.size).Take(request.size);
+            var pagedCategories = categories.Skip((request.page - 1) * (int)request.size).Take((int)request.size);
 
             return pagedCategories;
         }

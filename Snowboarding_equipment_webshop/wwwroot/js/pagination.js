@@ -15,19 +15,23 @@ $('.pager-btn').on('click', function (event) {
 $('.first-btn').on('click', function (event) {
     event.preventDefault();
 
-    getPagedData(0, size, url);
+    if ($('.pager-btn.btn-pagination-active').data('page') !== $('.first-btn').data('page')) {
+        getPagedData(1, size, url);
 
-    $('.next-btn').data('page', $(this).data('page') + 1);
-    $('.previous-btn').data('page', $(this).data('page') - 1);
+        $('.next-btn').data('page', $(this).data('page') + 1);
+        $('.previous-btn').data('page', $(this).data('page') - 1);
+    }
 });
 
 $('.last-btn').on('click', function (event) {
     event.preventDefault();
 
-    getPagedData(pages, size, url);
+    if ($('.pager-btn.btn-pagination-active').data('page') !== $('.last-btn').data('page')) {
+        getPagedData(pages, size, url);
 
-    $('.next-btn').data('page', $(this).data('page') + 1);
-    $('.previous-btn').data('page', $(this).data('page') - 1);
+        $('.next-btn').data('page', $(this).data('page') + 1);
+        $('.previous-btn').data('page', $(this).data('page') - 1);
+    }
 });
 
 $('.previous-btn').on('click', function (event) {
@@ -35,7 +39,7 @@ $('.previous-btn').on('click', function (event) {
 
     let page = $(this).data('page');
 
-    if (page >= 0) {
+    if (page >= 1) {
         getPagedData(page, size, url);
         $(this).data('page', page - 1);
         $('.next-btn').data('page', $(this).data('page') + 2);
@@ -65,7 +69,7 @@ function getPagedData(page, size, url) {
         url: url,
         data: ajaxData,
         success: function (data) {
-            $('.content').html(data);
+            $('#table-body-content').html(data);
 
             $('.pager-btn').removeClass('btn-pagination-active');
             $('.pager-btn').addClass('btn-pagination');
@@ -75,6 +79,11 @@ function getPagedData(page, size, url) {
         },
         error: function (data) {
             console.log('error', data);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!'
+            });
         }
     });
 }

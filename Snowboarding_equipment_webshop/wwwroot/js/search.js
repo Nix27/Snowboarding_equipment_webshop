@@ -1,5 +1,7 @@
-﻿$('#search-term').on('keyup', function () {
-    let page = 0;
+﻿let tableId = $('#tableDate').data('tableid');
+
+$('#search-term').on('keyup', function () {
+    let page = 1;
     let searchTerm = $('#search-term').val();
 
     getSearchedData(page, size, url, searchTerm);
@@ -17,10 +19,15 @@ function getSearchedData(page, size, url, searchTerm) {
         url: url,
         data: ajaxData,
         success: function (data) {
-            $('.content').html(data);
+            $('#table-body-content').html(data);
         },
         error: function (data) {
             console.log('error', data);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!'
+            });
         }
     });
 }

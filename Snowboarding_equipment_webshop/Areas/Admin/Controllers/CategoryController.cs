@@ -3,6 +3,7 @@ using BL.DTOs;
 using BL.Features.Categories.Commands.CreateCategory;
 using BL.Features.Categories.Commands.DeleteCategory;
 using BL.Features.Categories.Commands.UpdateCategory;
+using BL.Features.Categories.Queries.GetAllCategories;
 using BL.Features.Categories.Queries.GetCategoryById;
 using BL.Features.Categories.Queries.GetNumberOfCategories;
 using BL.Features.Categories.Queries.GetPagedCategories;
@@ -28,19 +29,31 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> AllCategories(int page, int size, string? searchTerm)
+        public async Task<IActionResult> AllCategories(int page, float size, string? searchTerm)
         {
-            if (size == 0)
-                size = 5;
+            if (size == 0) size = 5f;
+            if(page == 0) page = 1;
+
+            IEnumerable<CategoryDto>? categories = null;
+            int numberOfAllCategories;
 
             try
             {
-                var pagedCategories = await _mediator.Send(new GetPagedCategoriesQuery(null, page, size));
-                int numberOfAllCategories = await _mediator.Send(new GetNumberOfCategoriesQuery());
+                if(searchTerm != null)
+                {
+                    categories = await _mediator.Send(new GetAllCategoriesQuery(c => c.Name.Contains(searchTerm)));
+                    numberOfAllCategories = await _mediator.Send(new GetNumberOfCategoriesQuery(c => c.Name.Contains(searchTerm)));
+                }
+                else
+                {
+                    numberOfAllCategories = await _mediator.Send(new GetNumberOfCategoriesQuery());
+                }
 
+                var pagedCategories = await _mediator.Send(new GetPagedCategoriesQuery(categories, page, size));
+                
                 ViewData["page"] = page;
-                ViewData["size"] = size;
-                ViewData["pages"] = (int)Math.Ceiling((double)numberOfAllCategories / size);
+                ViewData["size"] = (int)size;
+                ViewData["pages"] = (int)Math.Ceiling(numberOfAllCategories / size);
 
                 return View(_mapper.Map<IEnumerable<CategoryVM>>(pagedCategories));
             }
@@ -52,20 +65,28 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
             }
         }
 
-        public async Task<IActionResult> CategoryTableBodyPartial(IEnumerable<CategoryDto> categories, int page, int size, string? searchTerm)
+        public async Task<IActionResult> CategoryTableBodyPartial(int page, float size, string? searchTerm)
         {
-            if (size == 0)
-                size = 5;
+            IEnumerable<CategoryDto>? categories = null;
+            int numberOfAllCategories;
 
             try
             {
-                var pagedCategories = await _mediator.Send(new GetPagedCategoriesQuery(null, page, size));
-                int numberOfAllCategories = await _mediator.Send(new GetNumberOfCategoriesQuery());
+                if (searchTerm != null)
+                {
+                    categories = await _mediator.Send(new GetAllCategoriesQuery(c => c.Name.Contains(searchTerm)));
+                    numberOfAllCategories = await _mediator.Send(new GetNumberOfCategoriesQuery(c => c.Name.Contains(searchTerm)));
+                }
+                else
+                {
+                    numberOfAllCategories = await _mediator.Send(new GetNumberOfCategoriesQuery());
+                }
+
+                var pagedCategories = await _mediator.Send(new GetPagedCategoriesQuery(categories, page, size));
 
                 ViewData["page"] = page;
-                ViewData["size"] = size;
-                ViewData["pages"] = (int)Math.Ceiling((double)numberOfAllCategories / size);
-                ViewData["action"] = nameof(AllCategories);
+                ViewData["size"] = (int)size;
+                ViewData["pages"] = (int)Math.Ceiling(numberOfAllCategories / size);
 
                 return PartialView("_CategoryTableBodyPartial", _mapper.Map<IEnumerable<CategoryVM>>(pagedCategories));
             }

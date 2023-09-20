@@ -2,20 +2,21 @@
     var page = (int)ViewData["page"];
     var size = (int)ViewData["size"];
     var pages = (int)ViewData["pages"];
-    var action = (string)ViewData["action"];
 }
 
+<input id="hiddenData" data-pages="@pages" data-size="@size" data-url="CategoryTableBodyPartial" hidden />
+
 <div class="d-flex justify-content-center justify-content-lg-end mt-2">
-    <a asp-action="@action" asp-route-page="0" asp-route-size="@size" data-page="0" class="first-btn btn-pagination mx-2">First</a>
-    <a asp-action="@action" asp-route-page="@(page)" asp-route-size="@size" data-page="0" class="previous-btn btn-pagination mx-2">&lt;</a>
+    <a asp-action="AllCategories" asp-route-page="1" asp-route-size="@size" data-page="1" class="first-btn btn-pagination mx-2">First</a>
+    <a asp-action="AllCategories" asp-route-page="@(page)" asp-route-size="@size" data-page="1" class="previous-btn btn-pagination mx-2">&lt;</a>
 
     @for (int i = 1; i <= pages; i++)
     {
-        var btnClass = page == (i - 1) ? "btn-pagination-active" : "btn-pagination";
-        var marginRight = i != pages ? "me-1" : "me-0"; 
-        <a asp-action="@action" asp-route-page="@(i - 1)" asp-route-size="@size" data-page="@(i - 1)" class="pager-btn @marginRight @btnClass">@i</a>
+        var btnClass = page == i ? "btn-pagination-active" : "btn-pagination";
+        var marginRight = i != pages ? "me-1" : "me-0";
+        <a asp-action="AllCategories" asp-route-page="@i" asp-route-size="@size" data-page="@i" class="pager-btn @marginRight @btnClass">@i</a>
     }
 
-    <a asp-action="@action" asp-route-page="@(page)" asp-route-size="@size" data-page="1" class="next-btn btn-pagination mx-2">&gt;</a>
-    <a asp-action="@action" asp-route-page="@pages" asp-route-size="@size" data-page="@pages" class="last-btn btn-pagination mx-2">Last</a>
+    <a asp-action="AllCategories" asp-route-page="@(page)" asp-route-size="@size" data-page="2" class="next-btn btn-pagination mx-2">&gt;</a>
+    <a asp-action="AllCategories" asp-route-page="@pages" asp-route-size="@size" data-page="@pages" class="last-btn btn-pagination mx-2">Last</a>
 </div>

@@ -5,9 +5,7 @@
 
     var page = (int)ViewData["page"];
     var size = (int)ViewData["size"];
-    var pages = (int)ViewData["pages"] - 1;
-
-    ViewData["action"] = "AllCategories";
+    var pages = (int)ViewData["pages"];
 }
 
 <input id="hiddenData" data-pages="@pages" data-size="@size" data-url="CategoryTableBodyPartial" hidden />
@@ -24,7 +22,8 @@
 
     @await Component.InvokeAsync("Search")
     <div class="table-responsive">
-        <table id="category-table" class="w-100 table content">
+        <input id="tableDate" data-tableid="#category-table" hidden />
+        <table id="category-table" class="w-100 table">
             <partial name="_CategoryTableBodyPartial" />
         </table>
     </div>

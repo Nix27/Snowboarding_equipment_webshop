@@ -48,7 +48,11 @@
                     </div>
                     <div class="bestseller col-12 col-md-6 col-lg-3 grey-linear-gradient">
                         <h5 class="mb-4">@Model[0].Name</h5>
-                        <p class="poppins-font-family mb-4">@Model[0].Description</p>
+
+                        @if (Model[0].Description != null)
+                        {
+                            <p class="poppins-font-family mb-4">@(Model[0].Description.Length <= 30 ? Model[0].Description : Model[0].Description.Substring(0, 30) + "...")</p>
+                        }
 
                         <div class="d-flex flex-column">
                             @{
@@ -81,7 +85,11 @@
                     </div>
                     <div class="bestseller col-12 col-md-6 col-lg-3 grey-linear-gradient">
                         <h5 class="mb-4">@Model[1].Name</h5>
-                        <p class="poppins-font-family mb-4">@Model[1].Description</p>
+
+                        @if (Model[1].Description != null)
+                        {
+                            <p class="poppins-font-family mb-4">@(Model[1].Description.Length <= 30 ? Model[1].Description : Model[1].Description.Substring(0, 30) + "...")</p>
+                        }
 
                         <div class="d-flex flex-column">
                             <span class="poppins-font-family @stockClass mb-4">@(Model[1].QuantityInStock > 0 ? "On stock" : "Out of stock")</span>
@@ -105,7 +113,11 @@
                     </div>
                     <div class="bestseller col-12 col-md-6 col-lg-3 grey-linear-gradient">
                         <h5 class="mb-4">@Model[2].Name</h5>
-                        <p class="poppins-font-family mb-4">@Model[2].Description</p>
+                        
+                        @if (Model[2].Description != null)
+                        {
+                            <p class="poppins-font-family mb-4">@(Model[2].Description.Length <= 30 ? Model[2].Description : Model[2].Description.Substring(0, 30) + "...")</p>
+                        }
 
                         <div class="d-flex flex-column">
                             <span class="poppins-font-family @stockClass mb-4">@(Model[2].QuantityInStock > 0 ? "On stock" : "Out of stock")</span>
@@ -135,7 +147,11 @@
                     </div>
                     <div class="bestseller col-12 col-md-6 col-lg-3 grey-linear-gradient">
                         <h5 class="mb-4">@Model[3].Name</h5>
-                        <p class="poppins-font-family mb-4">@Model[3].Description</p>
+                        
+                        @if (Model[3].Description != null)
+                        {
+                            <p class="poppins-font-family mb-4">@(Model[3].Description.Length <= 30 ? Model[3].Description : Model[3].Description.Substring(0, 30) + "...")</p>
+                        }
 
                         <div class="d-flex flex-column">
                             <span class="poppins-font-family @stockClass mb-4">@(Model[3].QuantityInStock > 0 ? "On stock" : "Out of stock")</span>
