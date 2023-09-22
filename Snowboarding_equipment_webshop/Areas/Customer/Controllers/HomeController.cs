@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using BL.Features.Products.Queries.GetAllProducts;
+using BL.Features.ShoppingCartItem.Queries.GetNumberOfShoppingCartItemsForUser;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Snowboarding_equipment_webshop.Models;
 using Snowboarding_equipment_webshop.ViewModels;
 using System.Diagnostics;
+using System.Security.Claims;
+using Utilities.Constants.SessionKeys;
 
 namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
 {
@@ -28,6 +31,15 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
         {
             try
             {
+                var claimsIdentity = User.Identity as ClaimsIdentity;
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+                if(claim != null)
+                {
+                    int numberOfShoppingCartItems = await _mediator.Send(new GetNumberOfShoppingCartItemsForUserQuery(claim.Value));
+                    HttpContext.Session.SetInt32(SessionKey.ShoppingCart, numberOfShoppingCartItems);
+                }
+
                 var bestSellers = _mediator.Send(new GetAllProductsQuery()).GetAwaiter().GetResult().Take(4);
                 return View(_mapper.Map<IEnumerable<ProductVM>>(bestSellers).ToList());
             }

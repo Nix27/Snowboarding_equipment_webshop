@@ -10,6 +10,7 @@ using BL.Features.ShoppingCartItem.Commands.DeleteMultipleShoppingCartItems;
 using BL.Features.ShoppingCartItem.Commands.DeleteShoppingCartItem;
 using BL.Features.ShoppingCartItem.Commands.IncrementQuantityOfShoppingCartItem;
 using BL.Features.ShoppingCartItem.Queries.GetAllShoppingCartItemsForUser;
+using BL.Features.ShoppingCartItem.Queries.GetNumberOfShoppingCartItemsForUser;
 using BL.Features.ShoppingCartItem.Queries.GetShoppingCartItemById;
 using BL.Features.Users.Queries.GetUserById;
 using DAL.Models;
@@ -21,6 +22,7 @@ using Stripe.Checkout;
 using System.Security.Claims;
 using System.Transactions;
 using Utilities.Constants.Role;
+using Utilities.Constants.SessionKeys;
 using Utilities.Constants.Status;
 
 namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
@@ -98,8 +100,11 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
 
                 if (shoppingCartItem.Quantity <= 1)
                 {
+                    string userId = shoppingCartItem.UserId;
                     await _mediator.Send(new DeleteShoppingCartItemCommand(shoppingCartItem.Id));
-                    //add session
+
+                    int numberOfShoppingCartItems = await _mediator.Send(new GetNumberOfShoppingCartItemsForUserQuery(userId));
+                    HttpContext.Session.SetInt32(SessionKey.ShoppingCart, numberOfShoppingCartItems);
                 }
                 else
                 {
@@ -121,6 +126,13 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
             try
             {
                 await _mediator.Send(new DeleteShoppingCartItemCommand(shoppingCartItemId));
+
+                var claimsIdentity = User.Identity as ClaimsIdentity;
+                var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                int numberOfShoppingCartItems = await _mediator.Send(new GetNumberOfShoppingCartItemsForUserQuery(userId));
+                HttpContext.Session.SetInt32(SessionKey.ShoppingCart, numberOfShoppingCartItems);
+
                 return RedirectToAction(nameof(ShoppingCart));
             }
             catch (Exception ex)
@@ -291,6 +303,8 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
 
                 var shoppingCartItemsForDelete = await _mediator.Send(new GetAllShoppingCartItemsForUserQuery(order.UserId, isTracked:false));
                 await _mediator.Send(new DeleteMultipleShoppingCartItemsCommand(shoppingCartItemsForDelete));
+
+                HttpContext.Session.Remove(SessionKey.ShoppingCart);
 
                 return View();
             }

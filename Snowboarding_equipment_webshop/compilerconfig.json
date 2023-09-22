@@ -54,5 +54,9 @@
   {
     "outputFile": "Areas/Customer/Views/ShoppingCart/ShoppingCart.cshtml.css",
     "inputFile": "Areas/Customer/Views/ShoppingCart/ShoppingCart.cshtml.scss"
+  },
+  {
+    "outputFile": "Views/Shared/Components/ShoppingCart/Default.cshtml.css",
+    "inputFile": "Views/Shared/Components/ShoppingCart/Default.cshtml.scss"
   }
 ]

@@ -41,7 +41,7 @@ namespace DAL.Repositories.Implementations
                 }
             }
 
-            var result =  await query.ToListAsync();
+            var result = await query.ToListAsync();
             return result.AsEnumerable();
         }
 

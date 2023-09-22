@@ -6,6 +6,7 @@ using BL.Features.Products.Queries.GetProductById;
 using BL.Features.ShoppingCartItem.Commands.CreateShoppingCartItem;
 using BL.Features.ShoppingCartItem.Commands.IncrementQuantityOfShoppingCartItem;
 using BL.Features.ShoppingCartItem.Queries.GetAllShoppingCartItemsForUser;
+using BL.Features.ShoppingCartItem.Queries.GetNumberOfShoppingCartItemsForUser;
 using BL.Features.ShoppingCartItem.Queries.GetShoppingCartItemByProductIdAndUserId;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -98,10 +99,7 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
 
                     await _mediator.Send(new CreateShoppingCartItemCommand(newShoppingCartItem));
 
-                    int numberOfItemsInShoppingCart = _mediator.Send(new GetAllShoppingCartItemsForUserQuery(userId))
-                                                               .GetAwaiter()
-                                                               .GetResult()
-                                                               .Count();
+                    int numberOfItemsInShoppingCart = await _mediator.Send(new GetNumberOfShoppingCartItemsForUserQuery(userId));
 
                     HttpContext.Session.SetInt32(SessionKey.ShoppingCart, numberOfItemsInShoppingCart);
                 }

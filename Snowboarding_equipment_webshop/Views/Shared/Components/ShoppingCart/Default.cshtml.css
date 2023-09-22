@@ -1,0 +1,19 @@
+﻿/*colors*/
+/*font size*/
+.shoppingcart-items-indicator {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #9A9A9A;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  top: 27px;
+  right: 14px;
+}
+.shoppingcart-items-indicator:hover {
+  background-color: #ffffff;
+  color: #1A1A1A;
+}
