@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using BL.DTOs;
+using BL.Features.Categories.Queries.GetAllCategories;
+using BL.Features.Categories.Queries.GetNumberOfCategories;
 using BL.Features.Countries.Commands.CreateCountry;
 using BL.Features.Countries.Commands.DeleteCountry;
 using BL.Features.Countries.Commands.UpdateCountry;
@@ -28,19 +30,35 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> AllCountries(int page, int size)
+        public async Task<IActionResult> AllCountries(int page, float size, string? searchTerm)
         {
-            if (size == 0)
-                size = 5;
+            if (size == 0) size = 5f;
+            if (page == 0) page = 1;
+
+            IEnumerable<CountryDto>? countries = null;
+            int numberOfAllCountries;
 
             try
             {
-                var pagedCountries = await _mediator.Send(new GetPagedCountriesQuery(null, page, size));
-                int numberOfAllCountries = await _mediator.Send(new GetNumberOfCountriesQuery());
+                if (!String.IsNullOrEmpty(searchTerm))
+                {
+                    countries = await _mediator.Send(new GetAllCountriesQuery(c => c.Name.Contains(searchTerm)));
+                    numberOfAllCountries = await _mediator.Send(new GetNumberOfCountriesQuery(c => c.Name.Contains(searchTerm)));
+                    HttpContext.Response.Cookies.Append("countrySearchTerm", searchTerm);
+                }
+                else
+                {
+                    HttpContext.Response.Cookies.Delete("countrySearchTerm");
+                    countries = await _mediator.Send(new GetAllCountriesQuery());
+                    numberOfAllCountries = await _mediator.Send(new GetNumberOfCountriesQuery());
+                }
+
+                var pagedCountries = await _mediator.Send(new GetPagedCountriesQuery(countries, page, size));
 
                 ViewData["page"] = page;
-                ViewData["size"] = size;
-                ViewData["pages"] = (int)Math.Ceiling((double)numberOfAllCountries / size);
+                ViewData["size"] = (int)size;
+                ViewData["pages"] = (int)Math.Ceiling(numberOfAllCountries / size);
+                ViewData["action"] = nameof(AllCountries);
 
                 return View(_mapper.Map<IEnumerable<CountryVM>>(pagedCountries));
             }
@@ -52,20 +70,31 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
             }
         }
 
-        public async Task<IActionResult> CountryTableBodyPartial(int page, int size)
+        public async Task<IActionResult> CountryTableBodyPartial(int page, float size, string? searchTerm)
         {
-            if (size == 0)
-                size = 5;
+            IEnumerable<CountryDto>? countries = null;
+            int numberOfAllCountries;
+
+            searchTerm = HttpContext.Request.Cookies["countrySearchTerm"];
 
             try
             {
-                var pagedCountries = await _mediator.Send(new GetPagedCountriesQuery(null, page, size));
-                int numberOfAllCountries = await _mediator.Send(new GetNumberOfCountriesQuery());
+                if (!String.IsNullOrEmpty(searchTerm))
+                {
+                    countries = await _mediator.Send(new GetAllCountriesQuery(c => c.Name.Contains(searchTerm)));
+                    numberOfAllCountries = await _mediator.Send(new GetNumberOfCountriesQuery(c => c.Name.Contains(searchTerm)));
+                }
+                else
+                {
+                    countries = await _mediator.Send(new GetAllCountriesQuery());
+                    numberOfAllCountries = await _mediator.Send(new GetNumberOfCountriesQuery());
+                }
+
+                var pagedCountries = await _mediator.Send(new GetPagedCountriesQuery(countries, page, size));
 
                 ViewData["page"] = page;
                 ViewData["size"] = size;
                 ViewData["pages"] = (int)Math.Ceiling((double)numberOfAllCountries / size);
-                ViewData["action"] = nameof(AllCountries);
 
                 return PartialView("_CountryTableBodyPartial", _mapper.Map<IEnumerable<CountryVM>>(pagedCountries));
             }

@@ -68,6 +68,7 @@ function getPagedData(page, size, url) {
         type: 'GET',
         url: url,
         data: ajaxData,
+        contentType: 'application/json',
         success: function (data) {
             $('#table-body-content').html(data);
 

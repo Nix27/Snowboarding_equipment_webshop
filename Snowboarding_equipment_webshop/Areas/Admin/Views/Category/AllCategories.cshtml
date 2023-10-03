@@ -6,6 +6,8 @@
     var page = (int)ViewData["page"];
     var size = (int)ViewData["size"];
     var pages = (int)ViewData["pages"];
+
+    ViewData["action"] = "AllCategories";
 }
 
 <input id="hiddenData" data-pages="@pages" data-size="@size" data-url="CategoryTableBodyPartial" hidden />
@@ -21,18 +23,42 @@
     </div>
 
     @await Component.InvokeAsync("Search")
-    <div class="table-responsive">
-        <input id="tableDate" data-tableid="#category-table" hidden />
-        <table id="category-table" class="w-100 table">
-            <partial name="_CategoryTableBodyPartial" />
-        </table>
-    </div>
+
+    @if(Model.Count() > 0)
+    {
+        <div class="table-responsive">
+            <table id="category-table" class="w-100 table">
+                <thead>
+                    <tr class="pb-2">
+                        <th>Name</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="table-body-content">
+                    <partial name="_CategoryTableBodyPartial" />
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="2">
+                            @await Component.InvokeAsync("Pagination")
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="w-100">
+            <h4 class="text-center mt-2">No categories to display</h4>
+        </div>
+    }
+
 </div>
 
 @section Scripts{
     <partial name="_NotificationPartial" />
     <script src="~/js/delete-warning.js"></script>
     <script src="~/js/pagination.js" asp-append-version="true"></script>
-    <script src="~/js/search.js" asp-append-version="true"></script>
 }
 

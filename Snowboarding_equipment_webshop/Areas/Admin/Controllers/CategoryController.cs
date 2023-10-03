@@ -39,13 +39,16 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
 
             try
             {
-                if(searchTerm != null)
+                if(!String.IsNullOrEmpty(searchTerm))
                 {
                     categories = await _mediator.Send(new GetAllCategoriesQuery(c => c.Name.Contains(searchTerm)));
                     numberOfAllCategories = await _mediator.Send(new GetNumberOfCategoriesQuery(c => c.Name.Contains(searchTerm)));
+                    HttpContext.Response.Cookies.Append("categorySearchTerm", searchTerm);
                 }
                 else
                 {
+                    HttpContext.Response.Cookies.Delete("categorySearchTerm");
+                    categories = await _mediator.Send(new GetAllCategoriesQuery());
                     numberOfAllCategories = await _mediator.Send(new GetNumberOfCategoriesQuery());
                 }
 
@@ -54,6 +57,7 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
                 ViewData["page"] = page;
                 ViewData["size"] = (int)size;
                 ViewData["pages"] = (int)Math.Ceiling(numberOfAllCategories / size);
+                ViewData["action"] = nameof(AllCategories);
 
                 return View(_mapper.Map<IEnumerable<CategoryVM>>(pagedCategories));
             }
@@ -70,15 +74,18 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
             IEnumerable<CategoryDto>? categories = null;
             int numberOfAllCategories;
 
+            searchTerm = HttpContext.Request.Cookies["categorySearchTerm"];
+
             try
             {
-                if (searchTerm != null)
+                if (!String.IsNullOrEmpty(searchTerm))
                 {
                     categories = await _mediator.Send(new GetAllCategoriesQuery(c => c.Name.Contains(searchTerm)));
                     numberOfAllCategories = await _mediator.Send(new GetNumberOfCategoriesQuery(c => c.Name.Contains(searchTerm)));
                 }
                 else
                 {
+                    categories = await _mediator.Send(new GetAllCategoriesQuery());
                     numberOfAllCategories = await _mediator.Send(new GetNumberOfCategoriesQuery());
                 }
 

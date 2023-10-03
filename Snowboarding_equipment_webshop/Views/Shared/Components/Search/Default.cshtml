@@ -1,6 +1,12 @@
-﻿<div class="row">
-    <div class="col-12 text-md-end text-center">
-        <label for="search-term" class="me-2">Search:</label>
-        <input type="text" id="search-term" class="border-2" />
+﻿@{
+    var action = (string)ViewData["action"];
+}
+
+<form method="post" action="@action">
+    <div class="row">
+        <div class="col-12 text-md-end text-center">
+            <input type="text" name="searchTerm" id="search-term" class="border-2" />
+            <button type="submit" class="px-3"><i class="bi bi-search"></i></button>
+        </div>
     </div>
-</div>
+</form>

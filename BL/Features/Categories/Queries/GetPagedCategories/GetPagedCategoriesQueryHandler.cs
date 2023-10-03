@@ -16,19 +16,11 @@ namespace BL.Features.Categories.Queries.GetPagedCategories
             _mediator = mediator;
         }
 
-        public async Task<IEnumerable<CategoryDto>> Handle(GetPagedCategoriesQuery request, CancellationToken cancellationToken)
-        {
-            IEnumerable<CategoryDto>? categories = request.categories;
+        public Task<IEnumerable<CategoryDto>> Handle(GetPagedCategoriesQuery request, CancellationToken cancellationToken)
+        { 
+            var pagedCategories = request.categories.Skip((request.page - 1) * (int)request.size).Take((int)request.size);
 
-            if(categories == null)
-            {
-                var categoriesFromDb = await _mediator.Send(new GetAllCategoriesQuery());
-                categories = _mapper.Map<IEnumerable<CategoryDto>>(categoriesFromDb);
-            }
-                
-            var pagedCategories = categories.Skip((request.page - 1) * (int)request.size).Take((int)request.size);
-
-            return pagedCategories;
+            return Task.FromResult(pagedCategories);
         }
     }
 }
