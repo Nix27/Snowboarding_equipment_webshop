@@ -4,8 +4,8 @@ using MediatR;
 namespace BL.Features.Products.Queries.GetPagedProducts
 {
     public record GetPagedProductsQuery(
-        IEnumerable<ProductDto>? products, 
+        IEnumerable<ProductDto> products, 
         int page, 
-        int size, 
+        float size, 
         string? includeProperties = null) : IRequest<IEnumerable<ProductDto>>;
 }

@@ -4,6 +4,7 @@ using BL.Features.Categories.Queries.GetAllCategories;
 using BL.Features.Products.Commands.CreateProduct;
 using BL.Features.Products.Commands.DeleteProduct;
 using BL.Features.Products.Commands.UpdateProduct;
+using BL.Features.Products.Queries.GetAllProducts;
 using BL.Features.Products.Queries.GetNumberOfProducts;
 using BL.Features.Products.Queries.GetPagedProducts;
 using BL.Features.Products.Queries.GetProductById;
@@ -32,16 +33,31 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
 
         public async Task<IActionResult> AllProducts(PageProductsRequestVM pageRequest)
         {
-            if (pageRequest.Size == 0)
-                pageRequest.Size = 5;
+            if (pageRequest.Size == 0) pageRequest.Size = 5f;
+            if(pageRequest.Page == 0) pageRequest.Page = 1;
+
+            IEnumerable<ProductDto>? products = null;
+            int numberOfAllProducts;
 
             try
             {
-                var pagedProducts = await _mediator.Send(new GetPagedProductsQuery(null, pageRequest.Page, pageRequest.Size, includeProperties:"Category"));
-                int numberOfAllProducts = await _mediator.Send(new GetNumberOfProductsQuery());
+                if (!String.IsNullOrEmpty(pageRequest.SearchTerm))
+                {
+                    products = await _mediator.Send(new GetAllProductsQuery(p => p.Name.Contains(pageRequest.SearchTerm), includeProperties: "Category"));
+                    numberOfAllProducts = await _mediator.Send(new GetNumberOfProductsQuery(p => p.Name.Contains(pageRequest.SearchTerm)));
+                    HttpContext.Response.Cookies.Append("productSearchTerm", pageRequest.SearchTerm);
+                }
+                else
+                {
+                    HttpContext.Response.Cookies.Delete("productSearchTerm");
+                    products = await _mediator.Send(new GetAllProductsQuery(includeProperties: "Category"));
+                    numberOfAllProducts = await _mediator.Send(new GetNumberOfProductsQuery());
+                }
+
+                var pagedProducts = await _mediator.Send(new GetPagedProductsQuery(products, pageRequest.Page, pageRequest.Size));
 
                 ViewData["page"] = pageRequest.Page;
-                ViewData["size"] = pageRequest.Size;
+                ViewData["size"] = (int)pageRequest.Size;
                 ViewData["pages"] = (int)Math.Ceiling((double)numberOfAllProducts / pageRequest.Size);
 
                 var pagedProductsVm = _mapper.Map<IEnumerable<ProductVM>>(pagedProducts);
@@ -58,18 +74,29 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
 
         public async Task<IActionResult> ProductTableBodyPartial(PageProductsRequestVM pageRequest)
         {
-            if (pageRequest.Size == 0)
-                pageRequest.Size = 5;
+            IEnumerable<ProductDto>? products = null;
+            int numberOfAllProducts;
+
+            pageRequest.SearchTerm = HttpContext.Request.Cookies["productSearchTerm"];
 
             try
             {
-                var pagedProducts = await _mediator.Send(new GetPagedProductsQuery(null, pageRequest.Page, pageRequest.Size, includeProperties: "Category"));
-                int numberOfAllProducts = await _mediator.Send(new GetNumberOfProductsQuery());
+                if (!String.IsNullOrEmpty(pageRequest.SearchTerm))
+                {
+                    products = await _mediator.Send(new GetAllProductsQuery(p => p.Name.Contains(pageRequest.SearchTerm), includeProperties: "Category"));
+                    numberOfAllProducts = await _mediator.Send(new GetNumberOfProductsQuery(p => p.Name.Contains(pageRequest.SearchTerm)));
+                }
+                else
+                {
+                    products = await _mediator.Send(new GetAllProductsQuery(includeProperties: "Category"));
+                    numberOfAllProducts = await _mediator.Send(new GetNumberOfProductsQuery());
+                }
+
+                var pagedProducts = await _mediator.Send(new GetPagedProductsQuery(products, pageRequest.Page, pageRequest.Size, includeProperties: "Category"));
 
                 ViewData["page"] = pageRequest.Page;
-                ViewData["size"] = pageRequest.Size;
+                ViewData["size"] = (int)pageRequest.Size;
                 ViewData["pages"] = (int)Math.Ceiling((double)numberOfAllProducts / pageRequest.Size);
-                ViewData["action"] = nameof(AllProducts);
 
                 return PartialView("_ProductTableBodyPartial", _mapper.Map<IEnumerable<ProductVM>>(pagedProducts));
             }

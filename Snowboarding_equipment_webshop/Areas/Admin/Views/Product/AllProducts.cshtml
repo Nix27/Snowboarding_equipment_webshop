@@ -13,9 +13,8 @@
 <input id="hiddenData" data-size="@size" 
                        data-pages="@pages" 
                        data-url="ProductTableBodyPartial" 
-                       data-keysearchby="productSearchBy" 
-                       data-keysearchTerm="productSearchTerm" 
-                       data-keypage="productPage" hidden />
+                       data-searchby="productSearchBy" 
+                       data-searchTerm="productSearchTerm" hidden />
 
 <div class="container p-2">
     <div class="row mb-4">
@@ -42,7 +41,26 @@
 
         <div class="table-responsive">
             <table id="product-table" class="w-100 table content">
-                <partial name="_ProductTableBodyPartial" />
+                <thead>
+                    <tr class="pb-2">
+                        <th>Thumbnail</th>
+                        <th>Name</th>
+                        <th>Quantity in stock</th>
+                        <th>Price</th>
+                        <th>Category</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="table-body-content">
+                    <partial name="_ProductTableBodyPartial" />
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="6">
+                            @await Component.InvokeAsync("Pagination")
+                        </td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     }
@@ -56,5 +74,10 @@
     <partial name="_NotificationPartial" />
     <script src="~/js/delete-warning.js"></script>
     <script src="~/js/pagination.js"></script>
-    <script src="~/js/search-with-filtering.js" asp-append-version="true"></script>
+
+    <script>
+        $('#searchBy').on('change', function(){
+
+        })
+    </script>
 }

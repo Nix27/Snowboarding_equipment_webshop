@@ -16,19 +16,11 @@ namespace BL.Features.Products.Queries.GetPagedProducts
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ProductDto>> Handle(GetPagedProductsQuery request, CancellationToken cancellationToken)
+        public Task<IEnumerable<ProductDto>> Handle(GetPagedProductsQuery request, CancellationToken cancellationToken)
         {
-            IEnumerable<ProductDto>? products = request.products;
+            var pagedProducts = request.products.Skip((request.page - 1) * (int)request.size).Take((int)request.size);
 
-            if (products == null)
-            {
-                var productsFromDb = await _mediator.Send(new GetAllProductsQuery(includeProperties:request.includeProperties));
-                products = _mapper.Map<IEnumerable<ProductDto>>(productsFromDb);
-            }
-
-            var pagedProducts = products.Skip(request.page * request.size).Take(request.size);
-
-            return pagedProducts;
+            return Task.FromResult(pagedProducts);
         }
     }
 }

@@ -4,7 +4,7 @@ namespace Snowboarding_equipment_webshop.ViewModels
 {
     public class PageProductsRequestVM
     {
-        public int Size { get; set; }
+        public float Size { get; set; }
         public int Page { get; set; }
         public string SortBy { get; set; } = "Name";
         public string? SearchBy { get; set; }
