@@ -10,11 +10,7 @@
     ViewData["action"] = "AllProducts";
 }
 
-<input id="hiddenData" data-size="@size" 
-                       data-pages="@pages" 
-                       data-url="ProductTableBodyPartial" 
-                       data-searchby="productSearchBy" 
-                       data-searchTerm="productSearchTerm" hidden />
+<input id="hiddenData" data-size="@size" data-pages="@pages" data-url="ProductTableBodyPartial" hidden />
 
 <div class="container p-2">
     <div class="row mb-4">
@@ -29,14 +25,21 @@
     @if(Model.Count() > 0)
     {
         <div class="d-flex justify-content-between mb-2">
-            <div class="d-flex">
-                <label for="searchBy" class="me-3 pt-1">Search by:</label>
-                <select id="searchBy">
-                    <option value="name" selected>Name</option>
-                    <option value="category">Category</option>
-                </select>
-            </div>
-            @await Component.InvokeAsync("Search")
+            <form method="post" action="AllProducts">
+                <div class="w-100 d-flex justify-content-between">
+                    <div class="d-flex">
+                        <label for="searchBy" class="me-3 pt-1">Search by:</label>
+                        <select id="searchBy" name="searchBy">
+                            <option value="name" selected>Name</option>
+                            <option value="category">Category</option>
+                        </select>
+                    </div>
+                    <div class="d-flex text-md-end text-center">
+                        <input type="text" name="searchTerm" id="search-term" class="border-2" />
+                        <button type="submit" class="px-3"><i class="bi bi-search"></i></button>
+                    </div>
+                </div>
+            </form>
         </div>
 
         <div class="table-responsive">
@@ -74,10 +77,4 @@
     <partial name="_NotificationPartial" />
     <script src="~/js/delete-warning.js"></script>
     <script src="~/js/pagination.js"></script>
-
-    <script>
-        $('#searchBy').on('change', function(){
-
-        })
-    </script>
 }

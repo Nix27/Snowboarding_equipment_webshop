@@ -12,8 +12,10 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using BL.Features.Countries.Queries.GetAllCountries;
 using DAL.Models;
 using DAL.UnitOfWork;
+using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -37,7 +39,7 @@ namespace Snowboarding_equipment_webshop.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMediator _mediator;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
@@ -46,7 +48,7 @@ namespace Snowboarding_equipment_webshop.Areas.Identity.Pages.Account
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
             RoleManager<IdentityRole> roleManager,
-            IUnitOfWork unitOfWork)
+            IMediator mediator)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -55,7 +57,7 @@ namespace Snowboarding_equipment_webshop.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _roleManager = roleManager;
-            _unitOfWork = unitOfWork;
+            _mediator = mediator;
         }
 
         /// <summary>
@@ -152,9 +154,11 @@ namespace Snowboarding_equipment_webshop.Areas.Identity.Pages.Account
                 await _roleManager.CreateAsync(new IdentityRole(AppRoles.COMPANY));
             }
 
+            var countries = await _mediator.Send(new GetAllCountriesQuery());
+
             Input = new InputModel()
             {
-                Countries = _unitOfWork.Country.GetAllAsync().GetAwaiter().GetResult().Select(c => new SelectListItem()
+                Countries = countries.Select(c => new SelectListItem()
                 {
                     Text = c.Name,
                     Value = c.Id.ToString()
