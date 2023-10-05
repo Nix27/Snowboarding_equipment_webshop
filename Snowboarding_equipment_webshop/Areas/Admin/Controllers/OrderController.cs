@@ -3,7 +3,7 @@ using BL.DTOs;
 using BL.Features.Orders.Commands.UpdateOrder;
 using BL.Features.Orders.Commands.UpdateOrderStatus;
 using BL.Features.Orders.Commands.UpdateSessionIdAndPaymentIntentId;
-using BL.Features.Orders.Queries.GetAllOrders;
+using BL.Features.Orders.Queries.GetNumberOfOrders;
 using BL.Features.Orders.Queries.GetOrderById;
 using BL.Features.Orders.Queries.GetPagedOrders;
 using MediatR;
@@ -34,19 +34,33 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> AllOrders(int size, int page)
+        public async Task<IActionResult> AllOrders(float size, int page, string filterBy)
         {
-            if (size == 0)
-                size = 5;
+            if (size == 0) size = 5f;
+            if (page == 0) page = 1;
+            if (filterBy == null) filterBy = "None";
 
             try
             {
-                var pagedOrders = await _mediator.Send(new GetPagedOrdersQuery(null, size, page));
-                int numberOfAllOrders = _mediator.Send(new GetAllOrdersQuery(includeProperties: "User")).GetAwaiter().GetResult().Count();
+                var pagedOrders = await _mediator.Send(new GetPagedOrdersQuery(size, page, filterBy));
 
-                ViewData["size"] = size;
+                int numberOfAllOrders;
+
+                if (filterBy != "None")
+                {
+                    numberOfAllOrders = await _mediator.Send(new GetNumberOfOrdersQuery(o => o.OrderStatus == filterBy));
+                }
+                else
+                {
+                    numberOfAllOrders = await _mediator.Send(new GetNumberOfOrdersQuery());
+                }
+                
+                HttpContext.Response.Cookies.Append("ordersFilterBy", filterBy);
+
                 ViewData["page"] = page;
-                ViewData["pages"] = (int)Math.Ceiling((double)numberOfAllOrders / size);
+                ViewData["size"] = (int)size;
+                ViewData["pages"] = (int)Math.Ceiling(numberOfAllOrders / size);
+                ViewData["filterBy"] = filterBy;
 
                 var pagedOrdersVm = _mapper.Map<IEnumerable<OrderVM>>(pagedOrders);
 
@@ -60,20 +74,28 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
             }
         }
 
-        public async Task<IActionResult> OrderTableBodyPartial(int size, int page)
+        public async Task<IActionResult> OrderTableBodyPartial(float size, int page, string filterBy)
         {
-            if (size == 0)
-                size = 5;
-
             try
             {
-                var pagedOrders = await _mediator.Send(new GetPagedOrdersQuery(null, size, page));
-                int numberOfAllOrders = _mediator.Send(new GetAllOrdersQuery(includeProperties: "User")).GetAwaiter().GetResult().Count();
+                filterBy = HttpContext.Request.Cookies["ordersFilterBy"] ?? "None";
 
-                ViewData["size"] = size;
+                var pagedOrders = await _mediator.Send(new GetPagedOrdersQuery(size, page, filterBy));
+
+                int numberOfAllOrders;
+
+                if (filterBy != "None")
+                {
+                    numberOfAllOrders = await _mediator.Send(new GetNumberOfOrdersQuery(o => o.OrderStatus == filterBy));
+                }
+                else
+                {
+                    numberOfAllOrders = await _mediator.Send(new GetNumberOfOrdersQuery());
+                }
+
                 ViewData["page"] = page;
-                ViewData["pages"] = (int)Math.Ceiling((double)numberOfAllOrders / size);
-                ViewData["action"] = nameof(AllOrders);
+                ViewData["size"] = (int)size;
+                ViewData["pages"] = (int)Math.Ceiling(numberOfAllOrders / size);
 
                 var pagedOrdersVm = _mapper.Map<IEnumerable<OrderVM>>(pagedOrders);
 

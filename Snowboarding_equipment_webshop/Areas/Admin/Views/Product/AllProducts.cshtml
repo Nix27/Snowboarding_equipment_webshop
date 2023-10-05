@@ -6,6 +6,7 @@
     var page = (int)ViewData["page"];
     var size = (int)ViewData["size"];
     var pages = (int)ViewData["pages"];
+    var searchBy = (string)ViewData["searchBy"];
 
     ViewData["action"] = "AllProducts";
 }
@@ -22,26 +23,34 @@
         </div>
     </div>
 
-    @if(Model.Count() > 0)
-    {
-        <div class="d-flex justify-content-between mb-2">
-            <form method="post" action="AllProducts">
-                <div class="w-100 d-flex justify-content-between">
-                    <div class="d-flex">
-                        <label for="searchBy" class="me-3 pt-1">Search by:</label>
-                        <select id="searchBy" name="searchBy">
+    <div class="mb-2">
+        <form method="post" action="AllProducts">
+            <div class="d-flex justify-content-between">
+                <div class="d-flex">
+                    <label for="searchBy" class="me-3 pt-1">Search by:</label>
+                    <select id="searchBy" name="searchBy">
+                        @if (searchBy != "category")
+                        {
                             <option value="name" selected>Name</option>
                             <option value="category">Category</option>
-                        </select>
-                    </div>
-                    <div class="d-flex text-md-end text-center">
-                        <input type="text" name="searchTerm" id="search-term" class="border-2" />
-                        <button type="submit" class="px-3"><i class="bi bi-search"></i></button>
-                    </div>
+                        }
+                        else
+                        {
+                            <option value="name">Name</option>
+                            <option value="category" selected>Category</option>
+                        }
+                    </select>
                 </div>
-            </form>
-        </div>
+                <div class="d-flex text-md-end text-center gap-2">
+                    <input type="text" name="searchTerm" id="search-term" class="border-2" />
+                    <button type="submit" class="px-3"><i class="bi bi-search"></i></button>
+                </div>
+            </div>
+        </form>
+    </div>
 
+    @if(Model.Count() > 0)
+    {
         <div class="table-responsive">
             <table id="product-table" class="w-100 table content">
                 <thead>

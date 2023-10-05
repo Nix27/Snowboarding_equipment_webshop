@@ -1,8 +1,12 @@
-﻿using NuGet.Protocol.Core.Types;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Snowboarding_equipment_webshop.ViewModels
+namespace BL.DTOs
 {
-    public class PageProductsRequestVM
+    public class PageProductsRequest
     {
         public float Size { get; set; }
         public int Page { get; set; }

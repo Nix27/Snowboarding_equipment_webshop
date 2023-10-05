@@ -5,7 +5,6 @@ using BL.Features.Products.Queries.GetPagedProducts;
 using BL.Features.Products.Queries.GetProductById;
 using BL.Features.ShoppingCartItem.Commands.CreateShoppingCartItem;
 using BL.Features.ShoppingCartItem.Commands.IncrementQuantityOfShoppingCartItem;
-using BL.Features.ShoppingCartItem.Queries.GetAllShoppingCartItemsForUser;
 using BL.Features.ShoppingCartItem.Queries.GetNumberOfShoppingCartItemsForUser;
 using BL.Features.ShoppingCartItem.Queries.GetShoppingCartItemByProductIdAndUserId;
 using MediatR;
@@ -33,19 +32,31 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> OurProducts(PageProductsRequestVM productsRequest)
+        public async Task<IActionResult> OurProducts(PageProductsRequest productsRequest)
         {
-            if(productsRequest.Size == 0)
-                productsRequest.Size = 20;
+            if(productsRequest.Size == 0) productsRequest.Size = 3f;
+            if(productsRequest.Page == 0) productsRequest.Page = 1;
+
+            int numberOfAllProducts;
 
             try
             {
-                var pagedProducts = await _mediator.Send(new GetPagedProductsQuery(null, productsRequest.Page, productsRequest.Size, includeProperties: "Category"));
-                int numberOfAllProducts = await _mediator.Send(new GetNumberOfProductsQuery());
+                if (!String.IsNullOrEmpty(productsRequest.SearchTerm))
+                {
+                    numberOfAllProducts = await _mediator.Send(new GetNumberOfProductsQuery(p => p.Name.Contains(productsRequest.SearchTerm)));
+                    HttpContext.Response.Cookies.Append("ourProductsSearchTerm", productsRequest.SearchTerm);
+                }
+                else
+                {
+                    HttpContext.Response.Cookies.Delete("ourProductsSearchTerm");
+                    numberOfAllProducts = await _mediator.Send(new GetNumberOfProductsQuery());
+                }
+
+                var pagedProducts = await _mediator.Send(new GetPagedProductsQuery(productsRequest, includeProperties: "Category"));
 
                 ViewData["page"] = productsRequest.Page;
-                ViewData["size"] = productsRequest.Size;
-                ViewData["pages"] = (int)Math.Ceiling((double)numberOfAllProducts / productsRequest.Size);
+                ViewData["size"] = (int)productsRequest.Size;
+                ViewData["pages"] = (int)Math.Ceiling(numberOfAllProducts / productsRequest.Size);
 
                 var pagedProductsVm = _mapper.Map<IEnumerable<ProductVM>>(pagedProducts);
 
@@ -59,7 +70,40 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
             }
         }
 
-        //need to add a partial view for products
+        public async Task<IActionResult> OurProductsTableBodyPartial(PageProductsRequest productsRequest)
+        {
+            int numberOfAllProducts;
+
+            productsRequest.SearchTerm = HttpContext.Request.Cookies["ourProductsSearchTerm"];
+
+            try
+            {
+                if (!String.IsNullOrEmpty(productsRequest.SearchTerm))
+                {
+                    numberOfAllProducts = await _mediator.Send(new GetNumberOfProductsQuery(p => p.Name.Contains(productsRequest.SearchTerm)));
+                }
+                else
+                {
+                    numberOfAllProducts = await _mediator.Send(new GetNumberOfProductsQuery());
+                }
+
+                var pagedProducts = await _mediator.Send(new GetPagedProductsQuery(productsRequest, includeProperties: "Category"));
+
+                ViewData["page"] = productsRequest.Page;
+                ViewData["size"] = (int)productsRequest.Size;
+                ViewData["pages"] = (int)Math.Ceiling(numberOfAllProducts / productsRequest.Size);
+
+                var pagedProductsVm = _mapper.Map<IEnumerable<ProductVM>>(pagedProducts);
+
+                return PartialView("_ProductsPartial", pagedProductsVm);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message + "\n" + ex.StackTrace);
+                TempData["error"] = errorMessage;
+                return RedirectToAction("Index", "Home");
+            }
+        }
 
         public async Task<IActionResult> ProductDetails(int productId)
         {

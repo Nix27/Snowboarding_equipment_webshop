@@ -94,7 +94,7 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
 
                 ViewData["page"] = page;
                 ViewData["size"] = size;
-                ViewData["pages"] = (int)Math.Ceiling((double)numberOfAllCountries / size);
+                ViewData["pages"] = (int)Math.Ceiling(numberOfAllCountries / size);
 
                 return PartialView("_CountryTableBodyPartial", _mapper.Map<IEnumerable<CountryVM>>(pagedCountries));
             }
