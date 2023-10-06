@@ -10,12 +10,15 @@ using BL.Features.Countries.Queries.GetCountryById;
 using BL.Features.Countries.Queries.GetNumberOfCountries;
 using BL.Features.Countries.Queries.GetPagedCountries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Snowboarding_equipment_webshop.ViewModels;
+using Utilities.Constants.Role;
 
 namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = AppRoles.ADMIN)]
     public class CountryController : Controller
     {
         private readonly IMediator _mediator;

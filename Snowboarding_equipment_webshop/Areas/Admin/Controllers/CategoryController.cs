@@ -8,12 +8,15 @@ using BL.Features.Categories.Queries.GetCategoryById;
 using BL.Features.Categories.Queries.GetNumberOfCategories;
 using BL.Features.Categories.Queries.GetPagedCategories;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Snowboarding_equipment_webshop.ViewModels;
+using Utilities.Constants.Role;
 
 namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = AppRoles.ADMIN)]
     public class CategoryController : Controller
     {
         private readonly IMapper _mapper;

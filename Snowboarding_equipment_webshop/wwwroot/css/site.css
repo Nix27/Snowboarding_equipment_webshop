@@ -92,6 +92,14 @@ nav .mobile-menu, nav .menu-btn {
     border-bottom: 2px solid #1A1A1A;
     z-index: 1;
   }
+  nav .mobile-menu #logout {
+    background-color: #ffffff;
+    color: #1A1A1A;
+  }
+  nav .mobile-menu #manage-subtitle {
+    font-size: 1.2rem;
+    border-bottom: 2px solid #1A1A1A;
+  }
   nav .mobile-menu ul {
     display: flex;
     flex-direction: column;

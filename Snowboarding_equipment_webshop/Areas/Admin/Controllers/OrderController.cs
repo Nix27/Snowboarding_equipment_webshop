@@ -7,15 +7,18 @@ using BL.Features.Orders.Queries.GetNumberOfOrders;
 using BL.Features.Orders.Queries.GetOrderById;
 using BL.Features.Orders.Queries.GetPagedOrders;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Snowboarding_equipment_webshop.ViewModels;
 using Stripe;
 using Stripe.Checkout;
+using Utilities.Constants.Role;
 using Utilities.Constants.Status;
 
 namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = AppRoles.ADMIN)]
     public class OrderController : Controller
     {
         private readonly IMediator _mediator;

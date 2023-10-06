@@ -105,6 +105,16 @@ nav {
             border-bottom: 2px solid $primary-black;
             z-index: 1;
 
+            #logout {
+                background-color: $primary-white;
+                color: $primary-black;
+            }
+
+            #manage-subtitle{
+                font-size: 1.2rem;
+                border-bottom: 2px solid $primary-black;
+            }
+
             ul {
                 display: flex;
                 flex-direction: column;

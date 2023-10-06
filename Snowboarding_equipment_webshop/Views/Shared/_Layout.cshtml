@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Http;
+@using Utilities.Constants.Role;
 @using Utilities.Constants.SessionKeys;
 @inject IHttpContextAccessor HttpContextAccessor;
 
@@ -41,24 +42,27 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="Customer" asp-controller="Products" asp-action="OurProducts">Products</a>
                             </li>
-                            <li class="nav-item">
-                                <div class="dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Manage
-                                    </a>
+                            @if (User.IsInRole(AppRoles.ADMIN))
+                            {
+                                <li class="nav-item">
+                                    <div class="dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Manage
+                                        </a>
 
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="AllCategories">Categories</a></li>
-                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Country" asp-action="AllCountries">Countries</a></li>
-                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="AllProducts">Products</a></li>
-                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Order" asp-action="AllOrders">Orders</a></li>
-                                    </ul>
-                                </div>
-                            </li>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="AllCategories">Categories</a></li>
+                                            <li><a class="dropdown-item" asp-area="Admin" asp-controller="Country" asp-action="AllCountries">Countries</a></li>
+                                            <li><a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="AllProducts">Products</a></li>
+                                            <li><a class="dropdown-item" asp-area="Admin" asp-controller="Order" asp-action="AllOrders">Orders</a></li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            }
                         </ul>
                     </div>
                     <div class="menu">
-                        <ul class="navbar-nav flex-grow-1">
+                        <ul class="navbar-nav flex-grow-1 gap-2">
                             <li class="nav-item d-flex justify-content-center align-items-center">
                                 <a asp-area="Customer" asp-controller="ShoppingCart" asp-action="ShoppingCart" class="d-flex align-items-center text-decoration-none">
                                     @await Component.InvokeAsync("ShoppingCart")
@@ -86,18 +90,19 @@
                             <li class="nav-item">
                                 <a class="nav-link pt-1" asp-area="Customer" asp-controller="Products" asp-action="OurProducts">Products</a>
                             </li>
-                            <li class="nav-item d-flex flex-column align-items-start justify-content-center">
-                                <div class="dropdown-divider"></div>
-                                <span class="text-black">
-                                    Manage
-                                </span>
+                            @if (User.IsInRole(AppRoles.ADMIN))
+                            {
+                                <li class="nav-item d-flex flex-column align-items-center justify-content-center">
+                                    <div class="dropdown-divider"></div>
+                                    <span id="manage-subtitle" class="text-black mb-2">Manage</span>
 
-                                <ul class="d-flex justify-content-center">
-                                    <li class="list-unstyled"><a class="text-decoration-none" asp-area="Admin" asp-controller="Category" asp-action="AllCategories">Categories</a></li>
-                                    <li class="list-unstyled"><a class="text-decoration-none" asp-area="Admin" asp-controller="Country" asp-action="AllCountries">Countries</a></li>
-                                    <li class="list-unstyled"><a class="text-decoration-none" asp-area="Admin" asp-controller="Product" asp-action="AllProducts">Products</a></li>
-                                </ul>
-                            </li>
+                                    <ul class="d-flex justify-content-center align-items-center p-0">
+                                        <li class="list-unstyled"><a class="text-decoration-none" asp-area="Admin" asp-controller="Category" asp-action="AllCategories">Categories</a></li>
+                                        <li class="list-unstyled"><a class="text-decoration-none" asp-area="Admin" asp-controller="Country" asp-action="AllCountries">Countries</a></li>
+                                        <li class="list-unstyled"><a class="text-decoration-none" asp-area="Admin" asp-controller="Product" asp-action="AllProducts">Products</a></li>
+                                    </ul>
+                                </li>
+                            }
                         </ul>
                         <button id="btn-close">X</button>
                     </div>

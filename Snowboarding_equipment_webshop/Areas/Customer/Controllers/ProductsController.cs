@@ -33,7 +33,7 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
 
         public async Task<IActionResult> OurProducts(CustomerProductsPageRequest productsRequest)
         {
-            if(productsRequest.Size == 0) productsRequest.Size = 3f;
+            if(productsRequest.Size == 0) productsRequest.Size = 16f;
             if(productsRequest.Page == 0) productsRequest.Page = 1;
             if (productsRequest.Categories == null) productsRequest.Categories = new List<string>() { "all" };
 
@@ -83,7 +83,7 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
 
         public async Task<IActionResult> OurProductsTableBodyPartial(CustomerProductsPageRequest productsRequest)
         {
-            if (productsRequest.Size == 0) productsRequest.Size = 3f;
+            if (productsRequest.Size == 0) productsRequest.Size = 16f;
             if (productsRequest.Page == 0) productsRequest.Page = 1;
             if (productsRequest.Categories == null) productsRequest.Categories = new List<string>() { "all" };
 

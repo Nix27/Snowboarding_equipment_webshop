@@ -8,13 +8,16 @@ using BL.Features.Products.Queries.GetNumberOfProducts;
 using BL.Features.Products.Queries.GetPagedProducts;
 using BL.Features.Products.Queries.GetProductById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Snowboarding_equipment_webshop.ViewModels;
+using Utilities.Constants.Role;
 
 namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = AppRoles.ADMIN)]
     public class ProductController : Controller
     {
         private readonly IMediator _mediator;
