@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BL.Features.Products.Queries.GetAllProducts;
+using BL.Features.Products.Queries.GetBestsellers;
 using BL.Features.ShoppingCartItem.Queries.GetNumberOfShoppingCartItemsForUser;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -40,7 +41,7 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
                     HttpContext.Session.SetInt32(SessionKey.ShoppingCart, numberOfShoppingCartItems);
                 }
 
-                var bestSellers = _mediator.Send(new GetAllProductsQuery()).GetAwaiter().GetResult().Take(4);
+                var bestSellers = await _mediator.Send(new GetBestsellersQuery());
                 return View(_mapper.Map<IEnumerable<ProductVM>>(bestSellers).ToList());
             }
             catch (Exception ex)

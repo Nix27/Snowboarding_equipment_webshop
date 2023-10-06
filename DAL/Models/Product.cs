@@ -20,6 +20,7 @@ namespace DAL.Models
         public double PriceFor5To10 { get; set; }
         public double PriceForMoreThan10 { get; set; }
         public double? OldPrice { get; set; }
+        public int AmountOfSold { get; set; }
 
         public int CategoryId { get; set; }
         [ForeignKey(nameof(CategoryId))]

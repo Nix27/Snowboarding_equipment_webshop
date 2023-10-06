@@ -1,20 +1,30 @@
 ﻿@import '../../../../wwwroot/css/variables';
 
-.shoppingcart-items-indicator{
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background-color: $nav-link;
-    color: $primary-white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    top: 27px;
-    right: 14px;
+.shopping-cart-container {
+    color: $nav-link;
 
-    &:hover{
-        background-color: $primary-white;
-        color: $primary-black;
+    .shoppingcart-items-indicator {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: $nav-link;
+        color: $primary-white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        top: 20px;
+        right: 14px;
+    }
+
+    &:hover {
+        i {
+            color: $primary-white;
+        }
+
+        .shoppingcart-items-indicator {
+            background-color: $primary-white;
+            color: $primary-black;
+        }
     }
 }

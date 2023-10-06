@@ -5,6 +5,7 @@ using BL.Features.Orders.Commands.CreateOrder;
 using BL.Features.Orders.Commands.UpdateOrderStatus;
 using BL.Features.Orders.Commands.UpdateSessionIdAndPaymentIntentId;
 using BL.Features.Orders.Queries.GetOrderById;
+using BL.Features.Products.Commands.IncreaseAmountOfSoldProduct;
 using BL.Features.ShoppingCartItem.Commands.DecrementQuantityOfShoppingCartItem;
 using BL.Features.ShoppingCartItem.Commands.DeleteMultipleShoppingCartItems;
 using BL.Features.ShoppingCartItem.Commands.DeleteShoppingCartItem;
@@ -273,7 +274,7 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
                     return new StatusCodeResult(303);
                 }
 
-                return RedirectToAction(nameof(OrderConfirmation));
+                return RedirectToAction(nameof(OrderConfirmation), new { orderId = orderId });
             }
             catch (Exception ex)
             {
@@ -303,6 +304,15 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
 
                 var shoppingCartItemsForDelete = await _mediator.Send(new GetAllShoppingCartItemsForUserQuery(order.UserId, isTracked:false));
                 await _mediator.Send(new DeleteMultipleShoppingCartItemsCommand(shoppingCartItemsForDelete));
+
+                Dictionary<int, int> productsAndQuantities = new();
+
+                foreach(var shoppingCartItem in shoppingCartItemsForDelete)
+                {
+                    productsAndQuantities.Add(shoppingCartItem.ProductId, shoppingCartItem.Quantity);
+                }
+
+                await _mediator.Send(new IncreaseAmountOfSoldProductCommand(productsAndQuantities));
 
                 HttpContext.Session.Remove(SessionKey.ShoppingCart);
 

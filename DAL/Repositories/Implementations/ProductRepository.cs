@@ -16,6 +16,16 @@ namespace DAL.Repositories.Implementations
         {
         }
 
+        public async Task IncreaseAmountOfSoldAsync(int productId, int increaseOfAmount)
+        {
+            var productFromDb = await dbSet.FirstOrDefaultAsync(p => p.Id == productId);
+
+            if (productFromDb != null)
+            {
+                productFromDb.AmountOfSold += increaseOfAmount;
+            }
+        }
+
         public async Task UpdateAsync(Product productForUpdate)
         {
             var productFromDb = await dbSet.FirstOrDefaultAsync(p => p.Id == productForUpdate.Id);

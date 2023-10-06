@@ -26,6 +26,7 @@ namespace Snowboarding_equipment_webshop.ViewModels
 
         [DisplayName("Old price")]
         public double? OldPrice { get; set; }
+        public int AmountOfSold { get; set; }
 
         [Required(ErrorMessage = "Category of product is required")]
         [DisplayName("Category")]

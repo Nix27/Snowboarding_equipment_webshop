@@ -39,6 +39,12 @@ nav {
     height: 5rem;
     padding: 0 4rem;
 
+    .menu {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
     .nav-link {
         color: $nav-link;
 

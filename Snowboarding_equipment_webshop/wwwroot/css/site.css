@@ -38,6 +38,11 @@ nav {
   height: 5rem;
   padding: 0 4rem;
 }
+nav .menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 nav .nav-link {
   color: #9A9A9A;
 }

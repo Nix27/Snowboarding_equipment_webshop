@@ -10,5 +10,6 @@ namespace DAL.Repositories.Interfaces
     public interface IProductRepository : IRepository<Product>
     {
         Task UpdateAsync(Product productForUpdate);
+        Task IncreaseAmountOfSoldAsync(int productId, int increaseOfAmount);
     }
 }

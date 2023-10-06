@@ -1,6 +1,9 @@
 ﻿/*colors*/
 /*font size*/
-.shoppingcart-items-indicator {
+.shopping-cart-container {
+  color: #9A9A9A;
+}
+.shopping-cart-container .shoppingcart-items-indicator {
   width: 20px;
   height: 20px;
   border-radius: 50%;
@@ -10,10 +13,13 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  top: 27px;
+  top: 20px;
   right: 14px;
 }
-.shoppingcart-items-indicator:hover {
+.shopping-cart-container:hover i {
+  color: #ffffff;
+}
+.shopping-cart-container:hover .shoppingcart-items-indicator {
   background-color: #ffffff;
   color: #1A1A1A;
 }
