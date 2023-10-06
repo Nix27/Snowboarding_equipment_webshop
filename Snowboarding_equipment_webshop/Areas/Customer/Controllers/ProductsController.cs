@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BL.DTOs;
-using BL.Features.Products.Queries.GetNumberOfProducts;
-using BL.Features.Products.Queries.GetPagedProducts;
+using BL.Features.Products.Queries.GetPagedProductsForCustomer;
 using BL.Features.Products.Queries.GetProductById;
 using BL.Features.ShoppingCartItem.Commands.CreateShoppingCartItem;
 using BL.Features.ShoppingCartItem.Commands.IncrementQuantityOfShoppingCartItem;
@@ -32,31 +31,43 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> OurProducts(PageProductsRequest productsRequest)
+        public async Task<IActionResult> OurProducts(CustomerProductsPageRequest productsRequest)
         {
             if(productsRequest.Size == 0) productsRequest.Size = 3f;
             if(productsRequest.Page == 0) productsRequest.Page = 1;
+            if (productsRequest.Categories == null) productsRequest.Categories = new List<string>() { "all" };
 
-            int numberOfAllProducts;
+            productsRequest.SortBy = HttpContext.Request.Cookies["ourProductsSortBy"] ?? "none";
 
             try
             {
                 if (!String.IsNullOrEmpty(productsRequest.SearchTerm))
                 {
-                    numberOfAllProducts = await _mediator.Send(new GetNumberOfProductsQuery(p => p.Name.Contains(productsRequest.SearchTerm)));
                     HttpContext.Response.Cookies.Append("ourProductsSearchTerm", productsRequest.SearchTerm);
+
+                    string? categoriesAsString = HttpContext.Request.Cookies["ourProductsCategories"];
+
+                    if(categoriesAsString != null)
+                        productsRequest.Categories = categoriesAsString.Split(new char[] { ',' }).Select(c => c);
                 }
                 else
-                {
                     HttpContext.Response.Cookies.Delete("ourProductsSearchTerm");
-                    numberOfAllProducts = await _mediator.Send(new GetNumberOfProductsQuery());
-                }
+                
+                HttpContext.Response.Cookies.Append("ourProductsMinPrice", productsRequest.MinPrice.ToString());
+                HttpContext.Response.Cookies.Append("ourProductsMaxPrice", productsRequest.MaxPrice.ToString());
+                HttpContext.Response.Cookies.Append("ourProductsSortBy", productsRequest.SortBy);
 
-                var pagedProducts = await _mediator.Send(new GetPagedProductsQuery(productsRequest, includeProperties: "Category"));
+                string categories = String.Join(",", productsRequest.Categories);
+                HttpContext.Response.Cookies.Append("ourProductsCategories", categories);
+
+                (IEnumerable<ProductDto> pagedProducts, int numberOfAllProducts) = await _mediator.Send(new GetPagedProductsForCustomerQuery(productsRequest));
 
                 ViewData["page"] = productsRequest.Page;
                 ViewData["size"] = (int)productsRequest.Size;
                 ViewData["pages"] = (int)Math.Ceiling(numberOfAllProducts / productsRequest.Size);
+                ViewData["sortBy"] = productsRequest.SortBy;
+                ViewData["minPrice"] = productsRequest.MinPrice;
+                ViewData["maxPrice"] = productsRequest.MaxPrice;
 
                 var pagedProductsVm = _mapper.Map<IEnumerable<ProductVM>>(pagedProducts);
 
@@ -70,24 +81,31 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
             }
         }
 
-        public async Task<IActionResult> OurProductsTableBodyPartial(PageProductsRequest productsRequest)
+        public async Task<IActionResult> OurProductsTableBodyPartial(CustomerProductsPageRequest productsRequest)
         {
-            int numberOfAllProducts;
+            if (productsRequest.Size == 0) productsRequest.Size = 3f;
+            if (productsRequest.Page == 0) productsRequest.Page = 1;
+            if (productsRequest.Categories == null) productsRequest.Categories = new List<string>() { "all" };
 
             productsRequest.SearchTerm = HttpContext.Request.Cookies["ourProductsSearchTerm"];
+            productsRequest.MinPrice = double.Parse(HttpContext.Request.Cookies["ourProductsMinPrice"]);
+            productsRequest.MaxPrice = double.Parse(HttpContext.Request.Cookies["ourProductsMaxPrice"]);
+
+            if(productsRequest.SortBy == null)
+            {
+                productsRequest.SortBy = HttpContext.Request.Cookies["ourProductsSortBy"] ?? "none";
+            }
+            else
+            {
+                HttpContext.Response.Cookies.Append("ourProductsSortBy", productsRequest.SortBy);
+            }
+
+            string categories = HttpContext.Request.Cookies["ourProductsCategories"] ?? "all";
+            productsRequest.Categories = categories.Split(new char[] { ',' }).Select(c => c);
 
             try
             {
-                if (!String.IsNullOrEmpty(productsRequest.SearchTerm))
-                {
-                    numberOfAllProducts = await _mediator.Send(new GetNumberOfProductsQuery(p => p.Name.Contains(productsRequest.SearchTerm)));
-                }
-                else
-                {
-                    numberOfAllProducts = await _mediator.Send(new GetNumberOfProductsQuery());
-                }
-
-                var pagedProducts = await _mediator.Send(new GetPagedProductsQuery(productsRequest, includeProperties: "Category"));
+                (IEnumerable<ProductDto> pagedProducts, int numberOfAllProducts) = await _mediator.Send(new GetPagedProductsForCustomerQuery(productsRequest));
 
                 ViewData["page"] = productsRequest.Page;
                 ViewData["size"] = (int)productsRequest.Size;
