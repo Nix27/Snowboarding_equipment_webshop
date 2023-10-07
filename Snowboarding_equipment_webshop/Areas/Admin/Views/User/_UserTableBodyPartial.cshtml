@@ -1,0 +1,20 @@
+﻿@model IEnumerable<UserVM>
+
+@foreach(var user in Model)
+{
+    <tr>
+        <td>@user.Name</td>
+        <td>@user.Phone</td>
+        <td>@user.StreetAddress</td>
+        <td>@user.City</td>
+        <td>@user.PostalCode</td>
+        <td>@user.Country.Name</td>
+        <td class="text-end">
+            <div class="btn-group" role="group">
+                <a asp-action="UpdateUser" asp-route-id="@user.Id" class="primary-btn mx-2 px-5 py-2">
+                    <i class="bi bi-pencil"></i>
+                </a>
+            </div>
+        </td>
+    </tr>
+}

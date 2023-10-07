@@ -1,0 +1,67 @@
+﻿@model UserVM
+
+@{
+    ViewData["Title"] = "Update user";
+
+    var countries = (IEnumerable<SelectListItem>)ViewData["countries"];
+}
+
+<div class="d-flex justify-content-center">
+    <div class="col-10 col-md-8 col-lg-4">
+        <h2 class="d-flex justify-content-center align-items-center mt-3 mb-5">Update User</h2>
+        <form method="post">
+            <div class="row">
+                <div class="col-6 form-floating mb-3">
+                    <input asp-for="UserName" class="form-control" autocomplete="name" aria-required="true" placeholder="" />
+                    <label asp-for="UserName">Uername</label>
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+                <div class="col-6 form-floating mb-3">
+                    <input asp-for="Email" class="form-control" autocomplete="username" aria-required="true" placeholder="" />
+                    <label asp-for="Email">E-mail</label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="col-6 form-floating mb-3">
+                    <input asp-for="Name" class="form-control" autocomplete="name" aria-required="true" placeholder="" />
+                    <label asp-for="Name">Full Name</label>
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="col-6 form-floating mb-3">
+                    <input asp-for="Phone" class="form-control" autocomplete="phone" aria-required="true" placeholder="" />
+                    <label asp-for="Phone">Phone Number</label>
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+                <div class="col-6 form-floating mb-3">
+                    <input asp-for="StreetAddress" class="form-control" autocomplete="street-address" aria-required="true" placeholder="" />
+                    <label asp-for="StreetAddress">Street Address</label>
+                    <span asp-validation-for="StreetAddress" class="text-danger"></span>
+                </div>
+                <div class="col-6 form-floating mb-3">
+                    <input asp-for="City" class="form-control" autocomplete="city" aria-required="true" placeholder="" />
+                    <label asp-for="City">City</label>
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+                <div class="col-6 form-floating mb-3">
+                    <input asp-for="PostalCode" class="form-control" autocomplete="postal-code" aria-required="true" placeholder="" />
+                    <label asp-for="PostalCode">Postal Code</label>
+                    <span asp-validation-for="PostalCode" class="text-danger"></span>
+                </div>
+                <div class="col-6 form-floating mb-3">
+                    <select asp-for="CountryId" asp-items="@countries" class="form-select">
+                        <option disabled selected>-- Select Country --</option>
+                    </select>
+                    <label asp-for="CountryId">Country</label>
+                    <span asp-validation-for="CountryId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <a asp-action="AllUsers" class="w-50 secondary-btn text-decoration-none d-flex justify-content-center align-items-center">Back</a>
+                <button type="submit" class="w-50 py-1 primary-btn">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

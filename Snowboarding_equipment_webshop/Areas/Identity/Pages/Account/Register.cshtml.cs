@@ -217,7 +217,16 @@ namespace Snowboarding_equipment_webshop.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        if (!User.IsInRole(AppRoles.ADMIN))
+                        {
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+                        }
+                        else
+                        {
+                            TempData["success"] = "User added successfully";
+                            return LocalRedirect("/Admin/User/AllUsers");
+                        }
+                        
                         return LocalRedirect(returnUrl);
                     }
                 }

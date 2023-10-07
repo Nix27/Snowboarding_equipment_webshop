@@ -1,0 +1,89 @@
+﻿@model IEnumerable<UserVM>
+
+@{
+    ViewData["Title"] = "All users";
+
+    var page = (int)ViewData["page"];
+    var size = (int)ViewData["size"];
+    var pages = (int)ViewData["pages"];
+    var searchBy = (string)ViewData["searchBy"];
+
+    ViewData["action"] = "AllUsers";
+}
+
+<input id="hiddenData" data-size="@size" data-pages="@pages" data-url="UserTableBodyPartial" hidden />
+
+<div class="container p-2">
+    <div class="row mb-4">
+        <div class="col-6">
+            <h2>All Users</h2>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-area="Identity" asp-page="/Account/Register" class="primary-btn py-2 px-5"><i class="bi bi-plus-circle"></i> &nbsp; Add</a>
+        </div>
+    </div>
+
+    <div class="mb-2">
+        <form method="post" action="AllUsers">
+            <div class="d-flex justify-content-between">
+                <div class="d-flex">
+                    <label for="searchBy" class="me-3 pt-1">Search by:</label>
+                    <select id="searchBy" name="searchBy">
+                        <option value="name" selected>Name</option>
+                        <option value="city">City</option>
+                        <option value="country">Country</option>
+                    </select>
+                </div>
+                <div class="d-flex text-md-end text-center gap-2">
+                    <input type="text" name="searchTerm" id="search-term" class="border-2" />
+                    <button type="submit" class="px-3"><i class="bi bi-search"></i></button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    @if (Model.Count() > 0)
+    {
+        <div class="table-responsive">
+            <table id="user-table" class="w-100 table content">
+                <thead>
+                    <tr class="pb-2">
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>StreetAddress</th>
+                        <th>City</th>
+                        <th>Postal Code</th>
+                        <th>Country</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="table-body-content">
+                    <partial name="_UserTableBodyPartial" />
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="7">
+                            @await Component.InvokeAsync("Pagination")
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    }
+    else
+    {
+        <h4 class="text-center">No users to display</h4>
+    }
+</div>
+
+@section Scripts{
+    <partial name="_NotificationPartial" />
+    <script src="~/js/delete-warning.js"></script>
+    <script src="~/js/pagination.js"></script>
+
+    <script>
+        $(() => {
+            $('#searchBy').val('@searchBy');
+        })
+    </script>
+}
