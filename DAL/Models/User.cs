@@ -16,8 +16,8 @@ namespace DAL.Models
         public string City { get; set; }
         public string PostalCode { get; set; }
 
-        public int CountryId { get; set; }
+        public int? CountryId { get; set; }
         [ForeignKey(nameof(CountryId))]
-        public Country Country { get; set; }
+        public Country? Country { get; set; }
     }
 }

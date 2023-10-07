@@ -147,13 +147,6 @@ namespace Snowboarding_equipment_webshop.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            if (!_roleManager.RoleExistsAsync(AppRoles.ADMIN).GetAwaiter().GetResult())
-            {
-                await _roleManager.CreateAsync(new IdentityRole(AppRoles.ADMIN));
-                await _roleManager.CreateAsync(new IdentityRole(AppRoles.CUSTOMER));
-                await _roleManager.CreateAsync(new IdentityRole(AppRoles.COMPANY));
-            }
-
             var countries = await _mediator.Send(new GetAllCountriesQuery());
 
             Input = new InputModel()
