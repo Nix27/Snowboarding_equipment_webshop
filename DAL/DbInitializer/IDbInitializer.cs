@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DAL.DbInitializer
+﻿namespace DAL.DbInitializer
 {
     public interface IDbInitializer
     {
-        Task Initialize();
+        void Initialize();
     }
 }

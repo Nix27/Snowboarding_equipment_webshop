@@ -26,33 +26,34 @@ namespace DAL.DbInitializer
             _logger = logger;
         }
 
-        public async Task Initialize()
+        public void Initialize()
         {
             try
             {
-                if(_dbContext.Database.GetPendingMigrationsAsync().GetAwaiter().GetResult().Count() > 0)
+                if(_dbContext.Database.GetPendingMigrations().Any())
                 {
                     _dbContext.Database.Migrate();
                 }
 
                 if (!_roleManager.RoleExistsAsync(AppRoles.ADMIN).GetAwaiter().GetResult())
                 {
-                    await _roleManager.CreateAsync(new IdentityRole(AppRoles.ADMIN));
-                    await _roleManager.CreateAsync(new IdentityRole(AppRoles.CUSTOMER));
-                    await _roleManager.CreateAsync(new IdentityRole(AppRoles.COMPANY));
+                    _roleManager.CreateAsync(new IdentityRole(AppRoles.ADMIN)).GetAwaiter().GetResult();
+                    _roleManager.CreateAsync(new IdentityRole(AppRoles.CUSTOMER)).GetAwaiter().GetResult();
+                    _roleManager.CreateAsync(new IdentityRole(AppRoles.COMPANY)).GetAwaiter().GetResult();
 
-                    await _userManager.CreateAsync(new User
+                    _userManager.CreateAsync(new User
                     {
+                        UserName = "admin@gmail.com",
                         Email = "admin@gmail.com",
                         Name = "Admin",
                         Phone = "1234567",
                         StreetAddress = "Address 1",
                         City = "Zagreb",
                         PostalCode = "10000"
-                    }, "Admin123*");
+                    }, "Admin123*").GetAwaiter().GetResult();
 
-                    var adminUser = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == "admin@gmail.com");
-                    await _userManager.AddToRoleAsync(adminUser, AppRoles.ADMIN);
+                    var adminUser = _dbContext.Users.FirstOrDefault(u => u.Email == "admin@gmail.com");
+                    _userManager.AddToRoleAsync(adminUser, AppRoles.ADMIN).GetAwaiter().GetResult();
                 }
             }
             catch (Exception ex)
