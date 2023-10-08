@@ -139,9 +139,9 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> AddProductItem(ProductVM product, int quantity)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ProductDetails(ProductVM product, int quantity)
         {
             try
             {

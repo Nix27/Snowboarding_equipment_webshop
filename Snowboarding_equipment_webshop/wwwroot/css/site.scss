@@ -153,6 +153,47 @@ nav {
     }
 }
 
+.info-btn{
+    position: fixed;
+    top: 85%;
+    right: 20px;
+    font-size: 2.7rem;
+    color: $primary-black;
+    z-index: 10;
+    transition: .2s ease-in-out;
+    cursor: pointer;
+
+    &:hover{
+        transform: scale(1.2);
+    }
+}
+
+.app-info{
+    position: fixed;
+    top: 100px;
+    left: -500px;
+    background-color: $primary-black;
+    color: $primary-white;
+    padding: 1rem;
+    z-index: 10;
+    transition: .3s ease-in-out;
+}
+
+.close-info-btn{
+    position: absolute;
+    top: 7px;
+    right: 20px;
+    border: 0;
+    background-color: $primary-black;
+    color: $primary-white;
+    transition: .2s ease-in-out;
+    font-size: 1.5rem;
+
+    &:hover{
+        transform: scale(1.1);
+    }
+}
+
 .footer {
     background-color: $primary-black;
     padding: 3rem 4rem;
