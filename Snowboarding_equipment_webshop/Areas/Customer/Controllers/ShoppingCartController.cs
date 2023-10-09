@@ -234,8 +234,8 @@ namespace Snowboarding_equipment_webshop.Areas.Customer.Controllers
 
                 if (!User.IsInRole(AppRoles.COMPANY))
                 {
-                    string successUrl = $"https://localhost:44335/Customer/ShoppingCart/OrderConfirmation?orderId={orderId}";
-                    const string cancelUrl = "https://localhost:44335/Customer/ShoppingCart/OrderSummary";
+                    string successUrl = Request.Scheme + $"://{Request.Host.Value}/Customer/ShoppingCart/OrderConfirmation?orderId={orderId}";
+                    string cancelUrl = Request.Scheme + $"://{Request.Host.Value}/Customer/ShoppingCart/OrderSummary";
 
                     var options = new SessionCreateOptions
                     {

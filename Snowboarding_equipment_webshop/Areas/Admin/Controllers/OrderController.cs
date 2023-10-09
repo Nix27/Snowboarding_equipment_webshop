@@ -204,8 +204,8 @@ namespace Snowboarding_equipment_webshop.Areas.Admin.Controllers
                 if (orderFromDb == null)
                     throw new InvalidOperationException("Order not found");
 
-                string successUrl = $"https://localhost:44335/Admin/Order/CompanyOrderConfirmation?orderId={orderFromDb.Id}";
-                string cancelUrl = $"https://localhost:44335/Admin/Order/OrderDetails?orderId={orderFromDb.Id}";
+                string successUrl = Request.Scheme + $"://{Request.Host.Value}/Admin/Order/CompanyOrderConfirmation?orderId={orderFromDb.Id}";
+                string cancelUrl = Request.Scheme + $"://{Request.Host.Value}/Admin/Order/OrderDetails?orderId={orderFromDb.Id}";
 
                 var options = new SessionCreateOptions
                 {
