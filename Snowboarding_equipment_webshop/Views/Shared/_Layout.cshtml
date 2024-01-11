@@ -76,7 +76,7 @@
                     </div>
                     <div class="menu-btn">
                         <a class="nav-link" asp-area="Customer" asp-controller="ShoppingCart" asp-action="ShoppingCart">
-                            <i class="bi bi-cart-fill nav-link text-light"></i>
+                            @await Component.InvokeAsync("ShoppingCart")
                         </a>
                         <i class="bi bi-list" id="mobile-menu-btn"></i>
                     </div>
